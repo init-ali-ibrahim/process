@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:process/cart_info_screen.dart';
 import 'package:process/screens/profile/profile_screen.dart';
 import 'package:process/screens/home/home_screen.dart';
 import 'package:process/screens/cart/cart_screen.dart';
+import 'package:process/testJson.dart';
+
+
 
 class navbar extends StatefulWidget {
   const navbar({Key? key}) : super(key: key);
@@ -16,6 +20,8 @@ class _navbar extends State<navbar> {
   final pages = [
     const home_screen(),
     const cart_screen(),
+    const testJson(),
+    const cart_info_screen(),
     const profile_screen(),
   ];
 

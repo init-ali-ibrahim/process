@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:process/screens/home/bloc/home_bloc.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_widget.dart';
@@ -198,7 +199,14 @@ class _home_screenState extends State<home_screen> {
           ),
           const SizedBox(
             height: 40,
-          )
+          ),
+
+          ElevatedButton(
+            onPressed: () {
+              context.read<HomeBloc>().add(homeChangeCityEvent());
+            },
+            child: Text('Загрузить магазин'),
+          ),
         ],
       )),
     );
