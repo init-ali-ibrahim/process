@@ -1,29 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:process/NotificationPage.dart';
 import 'package:process/cart_info_screen.dart';
+
+// import 'package:process/item_screen.dart';
 import 'package:process/screens/profile/profile_screen.dart';
 import 'package:process/screens/home/home_screen.dart';
 import 'package:process/screens/cart/cart_screen.dart';
-import 'package:process/testJson.dart';
-
-
 
 class navbar extends StatefulWidget {
-  const navbar({Key? key}) : super(key: key);
+  navbar({required this.initialPageIndex});
+
+  final int initialPageIndex;
 
   @override
   _navbar createState() => _navbar();
 }
 
 class _navbar extends State<navbar> {
-  int pageIndex = 0;
+  late int pageIndex;
+
 
   final pages = [
+    CakeCustomizationScreen(),
     const home_screen(),
     const cart_screen(),
-    const testJson(),
+    // ItemScreen(),
+    // NotificationPage(),
+    // const testJson(),
     const cart_info_screen(),
     const profile_screen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    pageIndex = widget.initialPageIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +68,7 @@ class _navbar extends State<navbar> {
                     },
                     child: Container(
                       padding:
-                          const EdgeInsets.only(right: 10, left: 10, top: 5),
+                          const EdgeInsets.only(right: 20, left: 20, top: 5),
                       child: Column(
                         children: [
                           () {
@@ -100,7 +112,7 @@ class _navbar extends State<navbar> {
                     },
                     child: Container(
                       padding:
-                          const EdgeInsets.only(right: 10, left: 10, top: 5),
+                          const EdgeInsets.only(right: 20, left: 20, top: 5),
                       child: Column(
                         children: [
                           () {
@@ -144,7 +156,7 @@ class _navbar extends State<navbar> {
                     },
                     child: Container(
                       padding:
-                          const EdgeInsets.only(right: 10, left: 10, top: 5),
+                          const EdgeInsets.only(right: 20, left: 20, top: 5),
                       child: Column(
                         children: [
                           () {

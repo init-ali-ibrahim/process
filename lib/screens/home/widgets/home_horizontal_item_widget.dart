@@ -29,52 +29,59 @@ class _home_horizontal_item_widgetState
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
-        margin: const EdgeInsets.only(left: 20),
-        height: 120,
-        width: 180,
+        // margin: const EdgeInsets.only(left: 0, top: 5),
+        padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
+        // decoration: BoxDecoration(
+        //     border: Border.all(width: 2.0, color: Colors.green),
+        //     boxShadow: [
+        //       BoxShadow(
+        //           color: Colors.red,
+        //           offset: Offset(1, 1),
+        //           spreadRadius: 1,
+        //           blurRadius: 1)
+        //     ]
+        // ),
+        width: 160,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    height: 80,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFD0BFE8),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(4),
-                          topRight: Radius.circular(4)),
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 1,
-                            offset: Offset(1, 1),
-                            spreadRadius: 0,
-                            color: Colors.grey)
-                      ],
-                    ),
+            Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  // margin: const EdgeInsets.only(top: 0),
+                  height: 80,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFD0BFE8),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(4),
+                        topRight: Radius.circular(4)),
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 8,
+                          offset: Offset(1, 0),
+                          spreadRadius: 1,
+                          color: Color(0xFFE3E3E3))
+                    ],
                   ),
-                  Positioned(
-                    top: 10,
-                    left: -10,
-                    child: Image(image: AssetImage(widget.img), width: 130),
-                  ),
-                ],
-              ),
+                ),
+                Positioned(
+                  bottom: 8,
+                  left: 15,
+                  right: 15,
+                  child: Image(image: AssetImage(widget.img)),
+                ),
+              ],
             ),
-
             Container(
-              width: 180,
               decoration: const BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                        blurRadius: 0.2,
-                        offset: Offset(0.2, 0.1),
-                        spreadRadius: 0,
-                        color: Colors.grey)
+                        blurRadius: 8,
+                        // offset: Offset(0, 0),
+                        offset: Offset(1, 0),
+                        spreadRadius: 1,
+                        color: Color(0xFFE3E3E3))
                   ],
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(4),
@@ -85,23 +92,21 @@ class _home_horizontal_item_widgetState
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-
                   Text(
                     widget.title,
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     widget.type,
                     style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold),
+                        fontSize: 12, fontWeight: FontWeight.w400),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.cash,
+                        '${widget.cash} ₸',
                         style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -110,9 +115,8 @@ class _home_horizontal_item_widgetState
                       Container(
                           decoration: const BoxDecoration(
                               color: Color(0xFF953282),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4),
-                                  bottomRight: Radius.circular(4))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4))),
                           child: const Icon(
                             Icons.add,
                             color: Colors.white,

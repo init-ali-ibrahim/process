@@ -10,7 +10,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<homeChangeCityEvent>((event, emit) {
       debugPrint("City changed!");
     });
-
-
   }
 }

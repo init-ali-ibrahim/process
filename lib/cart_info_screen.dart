@@ -12,7 +12,6 @@ class _cart_info_screenState extends State<cart_info_screen> {
   int quantity = 1;
   int price = 15;
 
-
   List<String> cartItems = [];
 
   void addToCart(String item) {
@@ -49,7 +48,7 @@ class _cart_info_screenState extends State<cart_info_screen> {
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
                       border:
-                          Border.all(width: 1, color: const Color(0xFFB2B2B2))),
+                          Border.all(width: 1, color: const Color(0xFFDADADA))),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,11 +137,10 @@ class _cart_info_screenState extends State<cart_info_screen> {
                   ),
                 ),
                 Container(
-                  height: 181,
+                  height: 185,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: const [
-                      SizedBox(width: 10),
                       cart_info_widget(
                         title: 'Cake 9',
                         cash: '300',
@@ -173,52 +171,53 @@ class _cart_info_screenState extends State<cart_info_screen> {
                         cash: '400',
                         img: 'assets/3.png',
                       ),
+                      SizedBox(width: 10),
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
-                Container(
-                  margin: const EdgeInsets.only(right: 10, left: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Card message',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        // width: MediaQuery.of(context).size.width - 10,
-                        // margin: EdgeInsets.only(),
-                        padding: const EdgeInsets.only(
-                            right: 10, left: 10, top: 8, bottom: 8),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          color: Color(0xFFE0D1BB),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width - 200,
-                              child: const Text(
-                                  'There`s no card message included with your order'),
-                            ),
-                            TextButton(
-                                onPressed: () => widget,
-                                child: const Text(
-                                  'Add card message',
-                                  style: TextStyle(color: Color(0xFF953282)),
-                                ))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // const SizedBox(height: 40),
+                // Container(
+                //   margin: const EdgeInsets.only(right: 10, left: 10),
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       const Text(
+                //         'Card message',
+                //         style: TextStyle(
+                //             fontWeight: FontWeight.bold, fontSize: 20),
+                //       ),
+                //       const SizedBox(height: 8),
+                //       Container(
+                //         // width: MediaQuery.of(context).size.width - 10,
+                //         // margin: EdgeInsets.only(),
+                //         padding: const EdgeInsets.only(
+                //             right: 10, left: 10, top: 8, bottom: 8),
+                //         decoration: const BoxDecoration(
+                //           borderRadius: BorderRadius.all(Radius.circular(8)),
+                //           color: Color(0xFFE0D1BB),
+                //         ),
+                //         child: Row(
+                //           crossAxisAlignment: CrossAxisAlignment.center,
+                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //           children: [
+                //             SizedBox(
+                //               width: MediaQuery.of(context).size.width - 200,
+                //               child: const Text(
+                //                   'There`s no card message included with your order'),
+                //             ),
+                //             TextButton(
+                //                 onPressed: () => widget,
+                //                 child: const Text(
+                //                   'Add card message',
+                //                   style: TextStyle(color: Color(0xFF953282)),
+                //                 ))
+                //           ],
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(height: 40),
                 Container(
                   margin: const EdgeInsets.only(right: 10, left: 10),
@@ -229,7 +228,7 @@ class _cart_info_screenState extends State<cart_info_screen> {
                       const Text(
                         'Recipient',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                            fontWeight: FontWeight.w500, fontSize: 20),
                       ),
                       const SizedBox(height: 8),
                       Container(
@@ -238,29 +237,36 @@ class _cart_info_screenState extends State<cart_info_screen> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8)),
                             color: const Color(0xFFFFFFFF),
-                            border: Border.all(width: 1)),
+                            border:
+                                Border.all(width: 1, color: Color(0xFFDADADA))),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                                 child: Container(
-                              color: Colors.red,
+                              decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
                             )),
-                            Container(
-                              padding: const EdgeInsets.only(
-                                  bottom: 8, top: 8, left: 10, right: 10),
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.add, color: Color(0xFF953282)),
-                                  SizedBox(width: 20),
-                                  Text(
-                                    'Add recipient details',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  )
-                                ],
+                            InkWell(
+                              onTap: () async {
+                                showRecipient(context);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                    bottom: 8, top: 8, left: 10, right: 10),
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.add, color: Color(0xFF953282)),
+                                    SizedBox(width: 20),
+                                    Text(
+                                      'Add recipient details',
+                                      style: TextStyle(fontSize: 16),
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],
@@ -364,7 +370,7 @@ class _cart_info_screenState extends State<cart_info_screen> {
               decoration: const BoxDecoration(
                   color: Colors.white,
                   border: Border(
-                      top: BorderSide(width: 1, color: Color(0xFFB2B2B2)))),
+                      top: BorderSide(width: 1, color: Color(0xFFDADADA)))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -397,6 +403,17 @@ class _cart_info_screenState extends State<cart_info_screen> {
           ),
         ],
       ),
+    );
+  }
+
+  showRecipient(BuildContext context) async {
+    final cityName = await showModalBottomSheet<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Text('data'),
+        );
+      },
     );
   }
 }

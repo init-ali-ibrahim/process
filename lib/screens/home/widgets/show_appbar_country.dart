@@ -1,83 +1,122 @@
-import 'package:flutter/material.dart';
-
-void show_appbar_country(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(18), topLeft: Radius.circular(18))),
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const Text(
-              'To where your next cake?',
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 4),
-            Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.ac_unit_rounded,
-                            size: 40,
-                          ),
-                          Text('Алматы')
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.ac_unit_rounded,
-                            size: 40,
-                          ),
-                          Text('Астана')
-                        ],
-                      ),
-                    ),
-
-
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.ac_unit_rounded,
-                            size: 40,
-                          ),
-                          Text('Шымкенn')
-                        ],
-                      ),
-                    )
-                  ],
-                )),
-          ],
-        ),
-      );
-    },
-  );
-}
+// import 'package:flutter/material.dart';
+//
+// var countCity = "";
+//
+// showAppbarCountry(BuildContext context) async {
+//   final cityName = await showModalBottomSheet<int>(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return Container(
+//         padding: const EdgeInsets.all(20),
+//         height: 300,
+//         width: MediaQuery
+//             .of(context)
+//             .size
+//             .width,
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           children: [
+//             Text(
+//               'Выберите город доставки',
+//               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+//             ),
+//             SizedBox(height: 20),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 InkWell(
+//                   onTap: () {
+//                     Navigator.pop(context, 0);
+//                   },
+//                   child: Container(
+//                       padding: const EdgeInsets.all(20),
+//                       decoration: const BoxDecoration(
+//                           color: Color(0xFFEED4E5),
+//                           borderRadius: BorderRadius.all(Radius.circular(20))),
+//                       child: Container(
+//                         width: 80,
+//                         child: const Column(
+//                           children: [
+//                             Image(
+//                               image: AssetImage('assets/almaty-logo.png'),
+//                               width: 50,
+//                             ),
+//                             Text(
+//                               'Алматы',
+//                               textAlign: TextAlign.center,
+//                               style: TextStyle(
+//                                   color: Color(0xFFA02F7F),
+//                                   fontWeight: FontWeight.bold),
+//                             )
+//                           ],
+//                         ),
+//                       )),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     Navigator.pop(context, 1);
+//                   },
+//                   child: Container(
+//                       padding: const EdgeInsets.all(20),
+//                       decoration: const BoxDecoration(
+//                           borderRadius: BorderRadius.all(Radius.circular(20))),
+//                       child: Container(
+//                         width: 80,
+//                         child: const Column(
+//                           children: [
+//                             Image(
+//                                 image: AssetImage('assets/astana-logo.png'),
+//                                 width: 50),
+//                             Text(
+//                               'Астана',
+//                               textAlign: TextAlign.center,
+//                               style: TextStyle(
+//                                   color: Colors.black,
+//                                   fontWeight: FontWeight.w500),
+//                             )
+//                           ],
+//                         ),
+//                       )),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     Navigator.pop(context, 2);
+//                   },
+//                   child: Container(
+//                       padding: const EdgeInsets.all(20),
+//                       decoration: const BoxDecoration(
+//                           borderRadius: BorderRadius.all(Radius.circular(20))),
+//                       child: Container(
+//                         width: 80,
+//                         child: const Column(
+//                           children: [
+//                             Image(
+//                                 image: AssetImage('assets/shymkent-logo.png'),
+//                                 width: 50),
+//                             Text(
+//                               'Шымкент',
+//                               textAlign: TextAlign.center,
+//                               style: TextStyle(
+//                                   color: Colors.black,
+//                                   fontWeight: FontWeight.w500),
+//                             )
+//                           ],
+//                         ),
+//                       )),
+//                 )
+//               ],
+//             )
+//           ],
+//         ),
+//       );
+//     },
+//   );
+//
+//   if (cityName != null) {
+//     setState(() {
+//       countCity = cityName as String;
+//     });
+//   }
+// }

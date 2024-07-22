@@ -1,10 +1,7 @@
 import "package:flutter/material.dart";
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:process/screens/home/bloc/home_bloc.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_widget.dart';
 import 'package:process/screens/home/widgets/home_banner_widget.dart';
-import 'package:process/screens/home/widgets/show_appbar_country.dart';
 
 class home_screen extends StatefulWidget {
   const home_screen({super.key});
@@ -14,17 +11,9 @@ class home_screen extends StatefulWidget {
 }
 
 class _home_screenState extends State<home_screen> {
-  final _homeChangeCityEvent = HomeBloc();
+  Color colorDarkPink = const Color(0xFFA02F7F);
 
-  // _homeChangeCityEvent.add(homeChangeCityEvent)
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    _homeChangeCityEvent.add(homeChangeCityEvent());
-    super.initState();
-  }
-
+  String countCity = 'Алматы';
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +31,19 @@ class _home_screenState extends State<home_screen> {
             ),
             Row(
               children: [
-                const Icon(Icons.co_present),
-                const SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () => show_appbar_country(context),
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  child: const Text(
-                      'Riyadh',
-                      style: TextStyle(fontSize: 18, color: Color(0xFF953282)),
-                    )
-                  ),
+                SizedBox(
+                    width: MediaQuery.of(context).size.width - 310,
+                    child: InkWell(
+                      onTap: () async {
+                        showAppbarCountry(context);
+                      },
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      child: Text(
+                        "${countCity}",
+                        style: TextStyle(color: colorDarkPink, fontSize: 20),
+                      ),
+                    )),
                 const Icon(
                   Icons.arrow_drop_down_outlined,
                   color: Color(0xFF953282),
@@ -63,7 +52,9 @@ class _home_screenState extends State<home_screen> {
             )
           ],
         ),
-        leading: const Icon(Icons.account_tree_sharp),
+        leading: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Image.asset('assets/iconDelivery.png')),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60.0),
           child: Container(
@@ -103,19 +94,33 @@ class _home_screenState extends State<home_screen> {
         children: [
           const home_banner_widget(),
           home_horizontal_item_title_widget(
-            title: 'Birthday Collection',
+            title: 'Birthday Collectiown',
             icon: Icons.access_time_filled,
           ),
           Container(
-            height: 190,
-            decoration: const BoxDecoration(),
+            height: 200,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
                 home_horizontal_item_widget(
                     title: 'Cake 9',
                     cash: '300',
-                    img: 'assets/1.png',
+                    img: 'assets/00.png',
+                    type: 'vanill'),
+                home_horizontal_item_widget(
+                    title: 'Cake 8',
+                    cash: '299',
+                    img: 'assets/ww.png',
+                    type: 'chokolate'),
+                home_horizontal_item_widget(
+                    title: 'Cake 7',
+                    cash: '400',
+                    img: 'assets/3.png',
+                    type: 'vanill'),
+                home_horizontal_item_widget(
+                    title: 'Cake 9',
+                    cash: '300',
+                    img: 'assets/00.png',
                     type: 'vanill'),
                 home_horizontal_item_widget(
                     title: 'Cake 8',
@@ -127,9 +132,6 @@ class _home_screenState extends State<home_screen> {
                     cash: '400',
                     img: 'assets/3.png',
                     type: 'vanill'),
-                const SizedBox(
-                  width: 20,
-                )
               ],
             ),
           ),
@@ -138,7 +140,7 @@ class _home_screenState extends State<home_screen> {
             icon: Icons.ac_unit_rounded,
           ),
           Container(
-            height: 190,
+            height: 200,
             decoration: const BoxDecoration(),
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -158,10 +160,21 @@ class _home_screenState extends State<home_screen> {
                     cash: '205',
                     img: 'assets/6.png',
                     type: 'chokolate'),
-                const SizedBox(
-                  width: 20,
-                  height: 400,
-                )
+                home_horizontal_item_widget(
+                    title: 'Cake 9',
+                    cash: '300',
+                    img: 'assets/00.png',
+                    type: 'vanill'),
+                home_horizontal_item_widget(
+                    title: 'Cake 8',
+                    cash: '299',
+                    img: 'assets/2.png',
+                    type: 'chokolate'),
+                home_horizontal_item_widget(
+                    title: 'Cake 7',
+                    cash: '400',
+                    img: 'assets/3.png',
+                    type: 'vanill'),
               ],
             ),
           ),
@@ -170,7 +183,7 @@ class _home_screenState extends State<home_screen> {
             icon: Icons.abc_sharp,
           ),
           Container(
-            height: 190,
+            height: 200,
             decoration: const BoxDecoration(),
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -190,108 +203,293 @@ class _home_screenState extends State<home_screen> {
                     cash: '350',
                     img: 'assets/9.png',
                     type: 'vanill'),
-                const SizedBox(
-                  width: 20,
-                  height: 400,
-                )
+                home_horizontal_item_widget(
+                    title: 'Cake 9',
+                    cash: '300',
+                    img: 'assets/00.png',
+                    type: 'vanill'),
+                home_horizontal_item_widget(
+                    title: 'Cake 8',
+                    cash: '299',
+                    img: 'assets/2.png',
+                    type: 'chokolate'),
+                home_horizontal_item_widget(
+                    title: 'Cake 7',
+                    cash: '400',
+                    img: 'assets/3.png',
+                    type: 'vanill'),
               ],
             ),
           ),
           const SizedBox(
             height: 40,
           ),
-
-          ElevatedButton(
-            onPressed: () {
-              context.read<HomeBloc>().add(homeChangeCityEvent());
-            },
-            child: Text('Загрузить магазин'),
-          ),
         ],
       )),
     );
   }
-}
 
+  showAppbarCountry(BuildContext context) async {
+    final cityName = await showModalBottomSheet<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: 300,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Выберите город доставки',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // InkWell(
+                  //   highlightColor: Colors.transparent,
+                  //   splashColor: Colors.transparent,
+                  //   onTap: () {
+                  //     Navigator.pop(context, 'Алматы');
+                  //   },
+                  //   child: Container(
+                  //       padding: const EdgeInsets.all(20),
+                  //       decoration: const BoxDecoration(
+                  //           color: Color(0xFFEED4E5),
+                  //           borderRadius:
+                  //               BorderRadius.all(Radius.circular(20))),
+                  //       child: Container(
+                  //         width: 80,
+                  //         child: const Column(
+                  //           children: [
+                  //             Image(
+                  //               image: AssetImage('assets/almaty-logo.png'),
+                  //               width: 50,
+                  //             ),
+                  //             Text(
+                  //               'Алматы',
+                  //               textAlign: TextAlign.center,
+                  //               style: TextStyle(
+                  //                   color: Color(0xFFA02F7F),
+                  //                   fontWeight: FontWeight.bold),
+                  //             )
+                  //           ],
+                  //         ),
+                  //       )),
+                  // ),
 
-Future<void> show_appbar_country(BuildContext context) async {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(18), topLeft: Radius.circular(18))),
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const Text(
-              'To where your next cake?',
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 4),
-            Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.ac_unit_rounded,
-                            size: 40,
-                          ),
-                          Text('Алматы')
-                        ],
-                      ),
+                  if (countCity == 'Алматы') ...[
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        Navigator.pop(context, 'Алматы');
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                              color: Color(0xFFEED4E5),
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(20))),
+                          child: Container(
+                            width: 80,
+                            child: const Column(
+                              children: [
+                                Image(
+                                  image: AssetImage('assets/almaty-logo.png'),
+                                  width: 50,
+                                ),
+                                Text(
+                                  'Алматы',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color(0xFFA02F7F),
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          )),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.ac_unit_rounded,
-                            size: 40,
-                          ),
-                          Text('Астана')
-                        ],
-                      ),
+                  ] else ... [
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        Navigator.pop(context, 'Алматы');
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(20))),
+                          child: Container(
+                            width: 80,
+                            child: const Column(
+                              children: [
+                                Image(
+                                    image: AssetImage('assets/almaty-logo.png'),
+                                    width: 50),
+                                Text(
+                                  'Алматы',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            ),
+                          )),
                     ),
-
-
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.ac_unit_rounded,
-                            size: 40,
-                          ),
-                          Text('Шымкент')
-                        ],
-                      ),
-                    )
                   ],
-                )),
-          ],
-        ),
-      );
-    },
-  );
+
+
+                  if (countCity == 'Астана') ...[
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        Navigator.pop(context, 'Астана');
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                              color: Color(0xFFEED4E5),
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(20))),
+                          child: Container(
+                            width: 80,
+                            child: const Column(
+                              children: [
+                                Image(
+                                  image: AssetImage('assets/astana-logo.png'),
+                                  width: 50,
+                                ),
+                                Text(
+                                  'Астана',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color(0xFFA02F7F),
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
+                  ] else ... [
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        Navigator.pop(context, 'Астана');
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: Container(
+                          width: 80,
+                          child: const Column(
+                            children: [
+                              Image(
+                                image: AssetImage('assets/astana-logo.png'),
+                                width: 50,
+                              ),
+                              Text(
+                                'Астана',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  if (countCity == 'Шымкент') ...[
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        Navigator.pop(context, 'Шымкент');
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                              color: Color(0xFFEED4E5),
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(20))),
+                          child: Container(
+                            width: 80,
+                            child: const Column(
+                              children: [
+                                Image(
+                                  image: AssetImage('assets/shymkent-logo.png'),
+                                  width: 50,
+                                ),
+                                Text(
+                                  'Шымкент',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color(0xFFA02F7F),
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
+                  ] else ... [
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        Navigator.pop(context, 'Шымкент');
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(20))),
+                          child: Container(
+                            width: 80,
+                            child: const Column(
+                              children: [
+                                Image(
+                                    image: AssetImage('assets/shymkent-logo.png'),
+                                    width: 50),
+                                Text(
+                                  'Шымкент',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
+                  ],
+
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+
+    if (cityName != null) {
+      setState(() {
+        countCity = cityName;
+      });
+    }
+  }
 }

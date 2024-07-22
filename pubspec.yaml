@@ -15,6 +15,15 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_image: ^4.1.11
   flutter_bloc: ^8.1.6
+  cloud_firestore: ^5.1.0
+  firebase_storage: ^12.1.1
+  firebase_database: ^11.0.3
+  firebase_core: ^3.2.0
+  firebase_auth: ^5.1.2
+  firebase_messaging: ^15.0.3
+  gif_view: ^0.4.4
+  firebase_app_check: ^0.3.0+3
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +40,4 @@ flutter:
   - assets/fill/
   - assets/taste/
   - assets/color/
+  - assets/cakes/

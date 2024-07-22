@@ -8,6 +8,9 @@ class cart_screen extends StatefulWidget {
 }
 
 class _cart_screenState extends State<cart_screen> {
+
+  Color colorDarkPink = Color(0xFFA02F7F);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

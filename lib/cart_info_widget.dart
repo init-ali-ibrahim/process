@@ -20,28 +20,28 @@ class _cart_info_widgetState extends State<cart_info_widget> {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(width: 1)
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          border: Border.all(width: 1, color: Color(0xFFDADADA))
         ),
-        margin: const EdgeInsets.only(right: 20),
+        margin: const EdgeInsets.only(left: 10),
         width: 120,
+        height: MediaQuery.of(context).size.height,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
               child: Image(
-              image: AssetImage(widget.img),
-            )),
+                image: AssetImage(widget.img),
+              ),
+            ),
             Container(
               width: 180,
               decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(4),
-                      bottomLeft: Radius.circular(4))),
-              padding: const EdgeInsets.only(
-                  right: 10, top: 10, left: 10, bottom: 10),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

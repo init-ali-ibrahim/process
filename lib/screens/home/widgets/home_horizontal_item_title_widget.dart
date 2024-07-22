@@ -17,7 +17,7 @@ class _home_horizontal_item_title_widgetState
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 20, top: 20, left: 20),
+      margin: const EdgeInsets.only(right: 12, top: 20, left: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -26,19 +26,35 @@ class _home_horizontal_item_title_widgetState
             child: Row(children: [
               Icon(
                 widget.icon,
-                // Icons.access_time_filled,
-                size: 24,
+                size: 22,
+                color: const Color(0xFFA02F7F),
               ),
               const SizedBox(
                 width: 12,
               ),
               Text(
                 widget.title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ]),
           ),
-          TextButton(onPressed: () => Navigator.pushNamed(context, '/see_all_item'), child: const Text('See all'))
+          InkWell(
+              onTap: () => Navigator.pushNamed(context, '/see_all_item'),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              child: const Text(
+                'See all',
+                style: TextStyle(fontSize: 14, color: Color(0xFFA02F7F)),
+              ))
+
+          // TextButton(
+          //     onPressed: () => Navigator.pushNamed(context, '/see_all_item'),
+          //     style: TextButton.styleFrom(),
+          //     child: const Text(
+          //       'See all',
+          //       style: TextStyle(fontSize: 14),
+          //     ))
         ],
       ),
     );

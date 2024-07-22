@@ -5,5 +5,3 @@ sealed class HomeEvent {}
 
 class homeChangeCityEvent extends HomeEvent {}
 
-
-
