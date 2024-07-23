@@ -226,7 +226,7 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
   }
 
   double _calculateTotalPrice(Shape shape, Flavor flavor, Colour colour) {
-    return shapePrices[shape]! + flavorPrices[flavor]! + colorPrices[colour]!;
+    return shapePrices[shape]! + flavorPrices[flavor]! + colourPrices[colour]!;
   }
 
   void _onShapeSelected(ShapeSelected event, Emitter<CakeCustomizationState> emit) {
@@ -276,7 +276,7 @@ const Map<Flavor, double> flavorPrices = {
   Flavor.Nutella: 5.0,
 };
 
-const Map<Colour, double> colorPrices = {
+const Map<Colour, double> colourPrices = {
   Colour.Red: 0.0,
   Colour.Yellow: 1.0,
   Colour.Blue: 1.5,
@@ -345,7 +345,7 @@ class CakeCustomizationScreen extends StatelessWidget {
 
   Widget _buildShapeSelection(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: 90,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: Shape.values.length,
@@ -353,9 +353,18 @@ class CakeCustomizationScreen extends StatelessWidget {
           final shape = Shape.values[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
-              child: Text(shape.toString().split('.').last),
+            // child: ElevatedButton(
+            //   onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
+            //   child: Text(shape.toString().split('.').last),
+            // ),
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
+                  child: Text(shape.toString().split('.').last),
+                ),
+                Text('\$${shapePrices[shape]!.toStringAsFixed(2)}'),
+              ],
             ),
           );
         },
@@ -365,7 +374,7 @@ class CakeCustomizationScreen extends StatelessWidget {
 
   Widget _buildFlavorSelection(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: 90,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: Flavor.values.length,
@@ -373,9 +382,14 @@ class CakeCustomizationScreen extends StatelessWidget {
           final flavor = Flavor.values[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () => context.read<CakeCustomizationBloc>().add(FlavorSelected(flavor)),
-              child: Text(flavor.toString().split('.').last),
+            child: Column( // Wrap ElevatedButton in a Column
+              children: [
+                ElevatedButton(
+                  onPressed: () => context.read<CakeCustomizationBloc>().add(FlavorSelected(flavor)),
+                  child: Text(flavor.toString().split('.').last),
+                ),
+                Text('\$${flavorPrices[flavor]!.toStringAsFixed(2)}'),
+              ],
             ),
           );
         },
@@ -385,7 +399,7 @@ class CakeCustomizationScreen extends StatelessWidget {
 
   Widget _buildColourSelection(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: 90,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: Colour.values.length,
@@ -393,9 +407,14 @@ class CakeCustomizationScreen extends StatelessWidget {
           final colour = Colour.values[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () => context.read<CakeCustomizationBloc>().add(ColourSelected(colour)),
-              child: Text(colour.toString().split('.').last),
+            child: Column( // Wrap ElevatedButton in a Column
+              children: [
+                ElevatedButton(
+                  onPressed: () => context.read<CakeCustomizationBloc>().add(ColourSelected(colour)),
+                  child: Text(colour.toString().split('.').last),
+                ),
+                Text('\$${colourPrices[colour]!.toStringAsFixed(2)}'),
+              ],
             ),
           );
         },
