@@ -127,7 +127,6 @@
 //   }
 // }
 
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -185,31 +184,16 @@ class CakeCustomizationState extends Equatable {
   final bool isLoadingImage;
   final double totalPrice;
 
-  const CakeCustomizationState({
-    required this.shape,
-    required this.flavor,
-    required this.colour,
-    required this.imagePath,
-    required this.totalPrice,
-    required this.isLoadingImage
-  });
+  const CakeCustomizationState({required this.shape, required this.flavor, required this.colour, required this.imagePath, required this.totalPrice, required this.isLoadingImage});
 
-  CakeCustomizationState copyWith({
-    Shape? shape,
-    Flavor? flavor,
-    Colour? colour,
-    String? imagePath,
-    double? totalPrice,
-    bool? isLoadingImage
-  }) {
+  CakeCustomizationState copyWith({Shape? shape, Flavor? flavor, Colour? colour, String? imagePath, double? totalPrice, bool? isLoadingImage}) {
     return CakeCustomizationState(
-      shape: shape ?? this.shape,
-      flavor: flavor ?? this.flavor,
-      colour: colour ?? this.colour,
-      imagePath: imagePath ?? this.imagePath,
-      totalPrice: totalPrice ?? this.totalPrice,
-      isLoadingImage: isLoadingImage ?? this.isLoadingImage
-    );
+        shape: shape ?? this.shape,
+        flavor: flavor ?? this.flavor,
+        colour: colour ?? this.colour,
+        imagePath: imagePath ?? this.imagePath,
+        totalPrice: totalPrice ?? this.totalPrice,
+        isLoadingImage: isLoadingImage ?? this.isLoadingImage);
   }
 
   @override
@@ -237,74 +221,43 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
   }
 
   void _onShapeSelected(ShapeSelected event, Emitter<CakeCustomizationState> emit) {
-    emit(state.copyWith(
-      shape: event.shape,
-      imagePath: null,
-      isLoadingImage: true,
-      totalPrice: _calculateTotalPrice(event.shape, state.flavor, state.colour)
-    ));
-
+    emit(state.copyWith(shape: event.shape, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(event.shape, state.flavor, state.colour)));
     _getImagePath(event.shape, state.flavor, state.colour).then((imagePath) {
       emit(state.copyWith(
         imagePath: imagePath,
         isLoadingImage: false,
       ));
-    }).catchError((error) {
-
-    });
+    }).catchError((error) {});
   }
 
   void _onFlavorSelected(FlavorSelected event, Emitter<CakeCustomizationState> emit) {
-    emit(state.copyWith(
-      flavor: event.flavor,
-      imagePath: null,
-      isLoadingImage: true,
-      totalPrice: _calculateTotalPrice(state.shape, event.flavor, state.colour)
-    ));
-
+    emit(state.copyWith(flavor: event.flavor, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, event.flavor, state.colour)));
     _getImagePath(state.shape, event.flavor, state.colour).then((imagePath) {
       emit(state.copyWith(
         imagePath: imagePath,
         isLoadingImage: false,
       ));
-    }).catchError((error) {
-
-    });
+    }).catchError((error) {});
   }
 
   void _onColourSelected(ColourSelected event, Emitter<CakeCustomizationState> emit) {
-    emit(state.copyWith(
-      colour: event.colour,
-      imagePath: null,
-      isLoadingImage: true,
-      totalPrice: _calculateTotalPrice(state.shape, state.flavor, event.colour)
-    ));
-
+    emit(state.copyWith(colour: event.colour, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, state.flavor, event.colour)));
     _getImagePath(state.shape, state.flavor, event.colour).then((imagePath) {
       emit(state.copyWith(
         imagePath: imagePath,
         isLoadingImage: false,
       ));
-    }).catchError((error) {
-
-    });
+    }).catchError((error) {});
   }
 
   Future<String> _getImagePath(Shape shape, Flavor flavor, Colour colour) {
     String shapeString = shape.toString().split('.').last.toLowerCase();
     String flavorString = flavor.toString().split('.').last.toLowerCase();
     String colourString = colour.toString().split('.').last.toLowerCase();
-
-    Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child('cakes/$shapeString\_$flavorString\_$colourString.png');
-
-    Future<String> downloadURL = ref.getDownloadURL() ;
-
-    // return 'assets/cakes/$shapeString\_$flavorString\_$colourString.png';
+    Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('cakes/$shapeString\_$flavorString\_$colourString.png');
+    Future<String> downloadURL = ref.getDownloadURL();
     return downloadURL;
   }
-
 }
 
 // Total Price
@@ -314,14 +267,12 @@ const Map<Shape, double> shapePrices = {
   Shape.StandardCake: 30.0,
   Shape.HeartCake: 25.0,
 };
-
 const Map<Flavor, double> flavorPrices = {
   Flavor.Vanilla: 2.0,
   Flavor.ChocoCrunch: 3.5,
   Flavor.RedVelvet: 4.0,
   Flavor.Nutella: 5.0,
 };
-
 const Map<Colour, double> colourPrices = {
   Colour.Red: 0.0,
   Colour.Yellow: 1.0,
@@ -330,19 +281,41 @@ const Map<Colour, double> colourPrices = {
 };
 
 // UI
-class CakeCustomizationScreen extends StatelessWidget {
+class CakeCustomizationScreen extends StatefulWidget {
+  @override
+  State<CakeCustomizationScreen> createState() => _CakeCustomizationScreenState();
+}
+
+class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
+
+  // String? imageUrl;
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _loadImage();
+  // }
+  //
+  // Future<void> _loadImage() async {
+  //   try {
+  //     // Используем gs:// ссылку для получения URL
+  //     String downloadURL = await FirebaseStorage.instance
+  //         .refFromURL('gs://pushnotification-744c7.appspot.com/ministandard_vanilla_yellow.png')
+  //         .getDownloadURL();
+  //     setState(() {
+  //       imageUrl = downloadURL;
+  //     });
+  //   } catch (e) {
+  //     print("Error: $e");
+  //   }
+  // }
 
   Future<String> _getImagePath(Shape shape, Flavor flavor, Colour colour) async {
     String shapeString = shape.toString().split('.').last.toLowerCase();
     String flavorString = flavor.toString().split('.').last.toLowerCase();
     String colorString = colour.toString().split('.').last.toLowerCase();
-
-    Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child('cakes/$shapeString\_$flavorString\_$colorString.png');
-
+    Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('cakes/$shapeString\_$flavorString\_$colorString.png');
     Future<String> downloadURL = ref.getDownloadURL();
-
     return downloadURL;
   }
 
@@ -357,76 +330,57 @@ class CakeCustomizationScreen extends StatelessWidget {
         ),
         body: BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(
           builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Image.network(
-                  //   state.imagePath,
-                  //   height: 200,
-                  //   errorBuilder: (context, error, stackTrace) =>
-                  //       Text('Error loading image'), // Handle errors gracefully
-                  // ),
+            return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      FutureBuilder<String>(
+                        future: _getImagePath(state.shape, state.flavor, state.colour),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.data.toString()}');
+                          } else if (snapshot.hasData) {
+                            return Image.network(snapshot.data!, height: 200);
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      Text('shape:', style: TextStyle(fontSize: 18)),
+                      _buildShapeSelection(context),
+                      SizedBox(height: 20),
+                      Text('flavor:', style: TextStyle(fontSize: 18)),
+                      _buildFlavorSelection(context),
+                      SizedBox(height: 20),
+                      Text('color:', style: TextStyle(fontSize: 18)),
+                      _buildColourSelection(context),
+                      SizedBox(height: 20),
+                      Text('${state.imagePath}'),
+                      Text(
+                        'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
 
-                  FutureBuilder<String>(
-                    future: _getImagePath(state.shape, state.flavor, state.colour),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        print("${snapshot.data}");
-                        return Text('Error loading image');
-                      } else if (snapshot.hasData) {
-                        return Image.network(snapshot.data!, height: 200);
-                      } else {
-                        return SizedBox.shrink();
-                      }
-                    },
+
+                      // Center(
+                      //   child: imageUrl == null
+                      //       ? CircularProgressIndicator()
+                      //       : Image.network(imageUrl!),
+                      // ),
+                    ],
                   ),
-
-                  // Image.asset(state.imagePath, height: 200, width: MediaQuery.of(context).size.width,),
-
-                  SizedBox(height: 20),
-                  Text('shape:', style: TextStyle(fontSize: 18)),
-                  _buildShapeSelection(context),
-
-                  SizedBox(height: 20),
-                  Text('flavor:', style: TextStyle(fontSize: 18)),
-                  _buildFlavorSelection(context),
-
-                  SizedBox(height: 20),
-                  Text('color:', style: TextStyle(fontSize: 18)),
-                  _buildColourSelection(context),
-
-                  SizedBox(height: 20),
-
-                  Text('${state.imagePath}'),
-                  Text(
-                    'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  // Add color selection section later
-                ],
-              ),
+                )
             );
           },
         ),
       ),
     );
   }
-
-    // Widget _buildShapeSelection(BuildContext context) {
-    //   return Row(
-    //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //     children: Shape.values.map((shape) {
-    //       return ElevatedButton(
-    //         onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
-    //         child: Text(shape.toString().split('.').last),
-    //       );
-    //     }).toList(),
-    //   );
-    // }
 
   Widget _buildShapeSelection(BuildContext context) {
     return SizedBox(
@@ -438,10 +392,6 @@ class CakeCustomizationScreen extends StatelessWidget {
           final shape = Shape.values[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            // child: ElevatedButton(
-            //   onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
-            //   child: Text(shape.toString().split('.').last),
-            // ),
             child: Column(
               children: [
                 ElevatedButton(
@@ -467,7 +417,8 @@ class CakeCustomizationScreen extends StatelessWidget {
           final flavor = Flavor.values[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column( // Wrap ElevatedButton in a Column
+            child: Column(
+              // Wrap ElevatedButton in a Column
               children: [
                 ElevatedButton(
                   onPressed: () => context.read<CakeCustomizationBloc>().add(FlavorSelected(flavor)),
@@ -492,7 +443,8 @@ class CakeCustomizationScreen extends StatelessWidget {
           final colour = Colour.values[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column( // Wrap ElevatedButton in a Column
+            child: Column(
+              // Wrap ElevatedButton in a Column
               children: [
                 ElevatedButton(
                   onPressed: () => context.read<CakeCustomizationBloc>().add(ColourSelected(colour)),
