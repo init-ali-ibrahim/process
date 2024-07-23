@@ -132,6 +132,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// Event
 abstract class CakeCustomizationEvent extends Equatable {
   const CakeCustomizationEvent();
 
@@ -157,70 +158,93 @@ class FlavorSelected extends CakeCustomizationEvent {
   List<Object> get props => [flavor];
 }
 
+class ColourSelected extends CakeCustomizationEvent {
+  final Colour colour;
+
+  const ColourSelected(this.colour);
+
+  @override
+  List<Object> get props => [colour];
+}
+
+// State
 enum Shape { MiniStandard, MiniHeart, StandardCake, HeartCake }
+
 enum Flavor { Vanilla, ChocoCrunch, RedVelvet, Nutella }
+
+enum Colour { Red, Blue, Yellow, Green }
 
 class CakeCustomizationState extends Equatable {
   final Shape shape;
   final Flavor flavor;
+  final Colour colour;
   final String imagePath;
-  // (Add color and toppings later)
 
   const CakeCustomizationState({
     required this.shape,
     required this.flavor,
+    required this.colour,
     required this.imagePath,
-    // ...
   });
 
   CakeCustomizationState copyWith({
     Shape? shape,
     Flavor? flavor,
+    Colour? colour,
     String? imagePath,
-    // ...
   }) {
     return CakeCustomizationState(
       shape: shape ?? this.shape,
       flavor: flavor ?? this.flavor,
+      colour: colour ?? this.colour,
       imagePath: imagePath ?? this.imagePath,
-      // ...
     );
   }
 
   @override
-  List<Object> get props => [shape, flavor, imagePath]; // ...
+  List<Object> get props => [shape, flavor, colour, imagePath];
 }
 
+// Bloc
 class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizationState> {
-  CakeCustomizationBloc() : super(CakeCustomizationState(
-    shape: Shape.MiniStandard,
-    flavor: Flavor.Vanilla,
-    imagePath: 'assets/cakes/mini_standard_vanilla.png', // Initial image
-  )) {
+  CakeCustomizationBloc()
+      : super(CakeCustomizationState(
+          shape: Shape.MiniStandard,
+          flavor: Flavor.Vanilla,
+          colour: Colour.Red,
+          imagePath: 'assets/cakes/ministandard_vanilla.png',
+        )) {
     on<ShapeSelected>(_onShapeSelected);
     on<FlavorSelected>(_onFlavorSelected);
-    // ... (Add onColorSelected later)
+    on<ColourSelected>(_onColourSelected);
   }
 
   void _onShapeSelected(ShapeSelected event, Emitter<CakeCustomizationState> emit) {
     emit(state.copyWith(
       shape: event.shape,
-      imagePath: _getImagePath(event.shape, state.flavor),
+      imagePath: _getImagePath(event.shape, state.flavor, state.colour),
     ));
   }
 
   void _onFlavorSelected(FlavorSelected event, Emitter<CakeCustomizationState> emit) {
     emit(state.copyWith(
       flavor: event.flavor,
-      imagePath: _getImagePath(state.shape, event.flavor),
+      imagePath: _getImagePath(state.shape, event.flavor, state.colour),
     ));
   }
 
-  // Helper function to get image path
-  String _getImagePath(Shape shape, Flavor flavor) {
+  void _onColourSelected(ColourSelected event, Emitter<CakeCustomizationState> emit) {
+    emit(state.copyWith(
+      colour: event.colour,
+      imagePath: _getImagePath(state.shape, state.flavor, event.colour),
+    ));
+  }
+
+  String _getImagePath(Shape shape, Flavor flavor, Colour colour) {
     String shapeString = shape.toString().split('.').last.toLowerCase();
     String flavorString = flavor.toString().split('.').last.toLowerCase();
-    return 'assets/cakes/$shapeString\_$flavorString.png';
+    String colourString = colour.toString().split('.').last.toLowerCase();
+    return 'assets/cakes/$shapeString\_$flavorString\_$colourString.png';
   }
 }
 
@@ -231,7 +255,8 @@ class CakeCustomizationScreen extends StatelessWidget {
       create: (context) => CakeCustomizationBloc(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Customize Your Cake'),
+          title: Text('Cake'),
+          actions: [Text('data'), SizedBox(width: 20)],
         ),
         body: BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(
           builder: (context, state) {
@@ -240,13 +265,22 @@ class CakeCustomizationScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image.asset(state.imagePath, height: 200),
+                  Image.asset(state.imagePath, height: 200, width: MediaQuery.of(context).size.width,),
+
                   SizedBox(height: 20),
-                  Text('Choose a shape:', style: TextStyle(fontSize: 18)),
+                  Text('shape:', style: TextStyle(fontSize: 18)),
                   _buildShapeSelection(context),
+
                   SizedBox(height: 20),
-                  Text('Choose a flavor:', style: TextStyle(fontSize: 18)),
+                  Text('flavor:', style: TextStyle(fontSize: 18)),
                   _buildFlavorSelection(context),
+
+                  SizedBox(height: 20),
+                  Text('flavor:', style: TextStyle(fontSize: 18)),
+                  _buildColourSelection(context),
+
+                  SizedBox(height: 20),
+                  Text('${state.imagePath}')
                   // Add color selection section later
                 ],
               ),
@@ -257,27 +291,75 @@ class CakeCustomizationScreen extends StatelessWidget {
     );
   }
 
+  // Widget _buildShapeSelection(BuildContext context) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //     children: Shape.values.map((shape) {
+  //       return ElevatedButton(
+  //         onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
+  //         child: Text(shape.toString().split('.').last),
+  //       );
+  //     }).toList(),
+  //   );
+  // }
+
   Widget _buildShapeSelection(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: Shape.values.map((shape) {
-        return ElevatedButton(
-          onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
-          child: Text(shape.toString().split('.').last),
-        );
-      }).toList(),
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: Shape.values.length,
+        itemBuilder: (context, index) {
+          final shape = Shape.values[index];
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
+              child: Text(shape.toString().split('.').last),
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildFlavorSelection(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: Flavor.values.map((flavor) {
-        return ElevatedButton(
-          onPressed: () => context.read<CakeCustomizationBloc>().add(FlavorSelected(flavor)),
-          child: Text(flavor.toString().split('.').last),
-        );
-      }).toList(),
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: Flavor.values.length,
+        itemBuilder: (context, index) {
+          final flavor = Flavor.values[index];
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () => context.read<CakeCustomizationBloc>().add(FlavorSelected(flavor)),
+              child: Text(flavor.toString().split('.').last),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildColourSelection(BuildContext context) {
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: Colour.values.length,
+        itemBuilder: (context, index) {
+          final colour = Colour.values[index];
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () => context.read<CakeCustomizationBloc>().add(ColourSelected(colour)),
+              child: Text(colour.toString().split('.').last),
+            ),
+          );
+        },
+      ),
     );
   }
 }
