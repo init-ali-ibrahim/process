@@ -291,17 +291,17 @@ class CakeCustomizationScreen extends StatelessWidget {
     );
   }
 
-  // Widget _buildShapeSelection(BuildContext context) {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //     children: Shape.values.map((shape) {
-  //       return ElevatedButton(
-  //         onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
-  //         child: Text(shape.toString().split('.').last),
-  //       );
-  //     }).toList(),
-  //   );
-  // }
+    // Widget _buildShapeSelection(BuildContext context) {
+    //   return Row(
+    //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //     children: Shape.values.map((shape) {
+    //       return ElevatedButton(
+    //         onPressed: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
+    //         child: Text(shape.toString().split('.').last),
+    //       );
+    //     }).toList(),
+    //   );
+    // }
 
   Widget _buildShapeSelection(BuildContext context) {
     return SizedBox(
