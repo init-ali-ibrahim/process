@@ -180,11 +180,14 @@ class CakeCustomizationState extends Equatable {
   final Colour colour;
   final String imagePath;
 
+  final double totalPrice;
+
   const CakeCustomizationState({
     required this.shape,
     required this.flavor,
     required this.colour,
     required this.imagePath,
+    required this.totalPrice,
   });
 
   CakeCustomizationState copyWith({
@@ -192,17 +195,19 @@ class CakeCustomizationState extends Equatable {
     Flavor? flavor,
     Colour? colour,
     String? imagePath,
+    double? totalPrice,
   }) {
     return CakeCustomizationState(
       shape: shape ?? this.shape,
       flavor: flavor ?? this.flavor,
       colour: colour ?? this.colour,
       imagePath: imagePath ?? this.imagePath,
+      totalPrice: totalPrice ?? this.totalPrice,
     );
   }
 
   @override
-  List<Object> get props => [shape, flavor, colour, imagePath];
+  List<Object> get props => [shape, flavor, colour, imagePath, totalPrice];
 }
 
 // Bloc
@@ -213,16 +218,22 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
           flavor: Flavor.Vanilla,
           colour: Colour.Red,
           imagePath: 'assets/cakes/ministandard_vanilla.png',
+          totalPrice: 0
         )) {
     on<ShapeSelected>(_onShapeSelected);
     on<FlavorSelected>(_onFlavorSelected);
     on<ColourSelected>(_onColourSelected);
   }
 
+  double _calculateTotalPrice(Shape shape, Flavor flavor, Colour colour) {
+    return shapePrices[shape]! + flavorPrices[flavor]! + colorPrices[colour]!;
+  }
+
   void _onShapeSelected(ShapeSelected event, Emitter<CakeCustomizationState> emit) {
     emit(state.copyWith(
       shape: event.shape,
       imagePath: _getImagePath(event.shape, state.flavor, state.colour),
+      totalPrice: _calculateTotalPrice(event.shape, state.flavor, state.colour)
     ));
   }
 
@@ -230,6 +241,7 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
     emit(state.copyWith(
       flavor: event.flavor,
       imagePath: _getImagePath(state.shape, event.flavor, state.colour),
+      totalPrice: _calculateTotalPrice(state.shape, event.flavor, state.colour)
     ));
   }
 
@@ -237,6 +249,7 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
     emit(state.copyWith(
       colour: event.colour,
       imagePath: _getImagePath(state.shape, state.flavor, event.colour),
+      totalPrice: _calculateTotalPrice(state.shape, state.flavor, event.colour)
     ));
   }
 
@@ -248,6 +261,29 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
   }
 }
 
+// Total Price
+const Map<Shape, double> shapePrices = {
+  Shape.MiniStandard: 20.0,
+  Shape.MiniHeart: 10.0,
+  Shape.StandardCake: 30.0,
+  Shape.HeartCake: 25.0,
+};
+
+const Map<Flavor, double> flavorPrices = {
+  Flavor.Vanilla: 2.0,
+  Flavor.ChocoCrunch: 3.5,
+  Flavor.RedVelvet: 4.0,
+  Flavor.Nutella: 5.0,
+};
+
+const Map<Colour, double> colorPrices = {
+  Colour.Red: 0.0,
+  Colour.Yellow: 1.0,
+  Colour.Blue: 1.5,
+  Colour.Green: 1.5,
+};
+
+// UI
 class CakeCustomizationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -280,7 +316,11 @@ class CakeCustomizationScreen extends StatelessWidget {
                   _buildColourSelection(context),
 
                   SizedBox(height: 20),
-                  Text('${state.imagePath}')
+                  Text('${state.imagePath}'),
+                  Text(
+                    'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   // Add color selection section later
                 ],
               ),
