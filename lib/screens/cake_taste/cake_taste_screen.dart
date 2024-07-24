@@ -9,10 +9,10 @@ class cake_taste_screen extends StatefulWidget {
 
 class _cake_taste_screenState extends State<cake_taste_screen> {
   final List<String> _images = [
-    'assets/taste/1.png',
-    'assets/taste/2.png',
-    'assets/taste/3.png',
-    'assets/taste/4.png'
+    'assets/taste/miniheart.png',
+    'assets/taste/blue.png',
+    'assets/taste/yellow.png',
+    'assets/taste/ministandard.png'
   ];
 
   int _currentIndex = 0;
@@ -48,7 +48,7 @@ class _cake_taste_screenState extends State<cake_taste_screen> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: const Column(
                     children: [
-                      Image(image: AssetImage('assets/taste/1.png')),
+                      Image(image: AssetImage('assets/taste/miniheart.png')),
                       Text('taste1')
                     ],
                   ),
@@ -66,7 +66,7 @@ class _cake_taste_screenState extends State<cake_taste_screen> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: const Column(
                     children: [
-                      Image(image: AssetImage('assets/taste/2.png')),
+                      Image(image: AssetImage('assets/taste/blue.png')),
                       Text('taste2')
                     ],
                   ),
@@ -90,7 +90,7 @@ class _cake_taste_screenState extends State<cake_taste_screen> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: const Column(
                     children: [
-                      Image(image: AssetImage('assets/taste/3.png')),
+                      Image(image: AssetImage('assets/taste/yellow.png')),
                       Text('taste3')
                     ],
                   ),
@@ -108,7 +108,7 @@ class _cake_taste_screenState extends State<cake_taste_screen> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: const Column(
                     children: [
-                      Image(image: AssetImage('assets/taste/4.png')),
+                      Image(image: AssetImage('assets/taste/ministandard.png')),
                       Text('taste4')
                     ],
                   ),

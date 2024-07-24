@@ -25,11 +25,13 @@ void main() async {
   //   androidProvider: AndroidProvider.debug,
   //   webRecaptchaSiteKey: 'your-recaptcha-site-key',
   // );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final colorPrimary = Color(0xFF953282);
 
   @override
   Widget build(BuildContext context) {
@@ -42,27 +44,27 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Process',
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
               useMaterial3: true,
-              appBarTheme: const AppBarTheme(
+              appBarTheme: AppBarTheme(
                 iconTheme: IconThemeData(
-                  color: Color(0xFF953282),
+                  color: colorPrimary,
                 ),
                 actionsIconTheme: IconThemeData(
-                  color: Color(0xFF953282),
+                  color: colorPrimary,
                 ),
               ),
             ),
             routes: {
+              '/': (context) => navbar(
+                initialPageIndex: 0,
+              ),
+
               // '/': (context) => const cart_info_screen(),
               '/see_all_item': (context) => const see_all_item(),
               '/cake_create': (context) => cake_create(),
 
               // '/': (context) => ProfileScreen2(),
-
-              '/': (context) => navbar(
-                    initialPageIndex: 0,
-                  ),
 
               '/profile': (context) => const profile_screen(),
 

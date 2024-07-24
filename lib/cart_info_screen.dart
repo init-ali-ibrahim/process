@@ -55,7 +55,7 @@ class _cart_info_screenState extends State<cart_info_screen> {
                     children: [
                       Row(
                         children: [
-                          const Image(image: AssetImage('assets/1.png')),
+                          const Image(image: AssetImage('assets/miniheart.png')),
                           const SizedBox(width: 20),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,32 +144,32 @@ class _cart_info_screenState extends State<cart_info_screen> {
                       cart_info_widget(
                         title: 'Cake 9',
                         cash: '300',
-                        img: 'assets/1.png',
+                        img: 'assets/miniheart.png',
                       ),
                       cart_info_widget(
                         title: 'Cake 8',
                         cash: '299',
-                        img: 'assets/2.png',
+                        img: 'assets/blue.png',
                       ),
                       cart_info_widget(
                         title: 'Cake 7',
                         cash: '400',
-                        img: 'assets/3.png',
+                        img: 'assets/yellow.png',
                       ),
                       cart_info_widget(
                         title: 'Cake 7',
                         cash: '400',
-                        img: 'assets/3.png',
+                        img: 'assets/yellow.png',
                       ),
                       cart_info_widget(
                         title: 'Cake 7',
                         cash: '400',
-                        img: 'assets/3.png',
+                        img: 'assets/yellow.png',
                       ),
                       cart_info_widget(
                         title: 'Cake 7',
                         cash: '400',
-                        img: 'assets/3.png',
+                        img: 'assets/yellow.png',
                       ),
                       SizedBox(width: 10),
                     ],

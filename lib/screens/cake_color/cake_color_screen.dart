@@ -9,24 +9,24 @@ class cake_color_screen extends StatefulWidget {
 
 class _cake_color_screenState extends State<cake_color_screen> {
   final List<String> _fillImages = [
-    'assets/fill/1.png',
-    'assets/fill/2.png',
-    'assets/fill/3.png',
-    'assets/fill/4.png'
+    'assets/fill/miniheart.png',
+    'assets/fill/blue.png',
+    'assets/fill/yellow.png',
+    'assets/fill/ministandard.png'
   ];
 
   final List<String> _tasteImages = [
-    'assets/taste/1.png',
-    'assets/taste/2.png',
-    'assets/taste/3.png',
-    'assets/taste/4.png',
+    'assets/taste/miniheart.png',
+    'assets/taste/blue.png',
+    'assets/taste/yellow.png',
+    'assets/taste/ministandard.png',
   ];
 
   final List<String> _colorImages = [
-    'assets/color/1.png',
-    'assets/color/2.png',
-    'assets/color/3.png',
-    'assets/color/4.png',
+    'assets/color/miniheart.png',
+    'assets/color/blue.png',
+    'assets/color/yellow.png',
+    'assets/color/ministandard.png',
   ];
 
   int _currentFillIndex = 0;

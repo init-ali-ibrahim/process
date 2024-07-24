@@ -180,36 +180,60 @@ class CakeCustomizationState extends Equatable {
   final Shape shape;
   final Flavor flavor;
   final Colour colour;
+
   final String imagePath;
   final bool isLoadingImage;
+
   final double totalPrice;
 
-  const CakeCustomizationState({required this.shape, required this.flavor, required this.colour, required this.imagePath, required this.totalPrice, required this.isLoadingImage});
+  final String shapeImagePath;
+  final String flavorImagePath;
+  final String colourImagePath;
 
-  CakeCustomizationState copyWith({Shape? shape, Flavor? flavor, Colour? colour, String? imagePath, double? totalPrice, bool? isLoadingImage}) {
+  const CakeCustomizationState({
+    required this.shape,
+    required this.flavor,
+    required this.colour,
+    required this.imagePath,
+    required this.totalPrice,
+    required this.isLoadingImage,
+    required this.shapeImagePath,
+    required this.flavorImagePath,
+    required this.colourImagePath,
+  });
+
+  CakeCustomizationState copyWith(
+      {Shape? shape, Flavor? flavor, Colour? colour, String? imagePath, double? totalPrice, bool? isLoadingImage, String? shapeImagePath, String? flavorImagePath, String? colourImagePath}) {
     return CakeCustomizationState(
-        shape: shape ?? this.shape,
-        flavor: flavor ?? this.flavor,
-        colour: colour ?? this.colour,
-        imagePath: imagePath ?? this.imagePath,
-        totalPrice: totalPrice ?? this.totalPrice,
-        isLoadingImage: isLoadingImage ?? this.isLoadingImage);
+      shape: shape ?? this.shape,
+      flavor: flavor ?? this.flavor,
+      colour: colour ?? this.colour,
+      imagePath: imagePath ?? this.imagePath,
+      totalPrice: totalPrice ?? this.totalPrice,
+      isLoadingImage: isLoadingImage ?? this.isLoadingImage,
+      shapeImagePath: shapeImagePath ?? this.shapeImagePath,
+      flavorImagePath: flavorImagePath ?? this.flavorImagePath,
+      colourImagePath: colourImagePath ?? this.colourImagePath,
+    );
   }
 
   @override
-  List<Object> get props => [shape, flavor, colour, imagePath, totalPrice, isLoadingImage];
+  List<Object> get props => [shape, flavor, colour, imagePath, totalPrice, isLoadingImage, shapeImagePath, flavorImagePath, colourImagePath];
 }
 
 // Bloc
 class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizationState> {
   CakeCustomizationBloc()
-      : super(CakeCustomizationState(
+      : super(const CakeCustomizationState(
           shape: Shape.MiniStandard,
           flavor: Flavor.Vanilla,
           colour: Colour.Red,
           imagePath: 'assets/cakes/ministandard_vanilla.png',
           totalPrice: 0,
           isLoadingImage: true,
+          shapeImagePath: '',
+          flavorImagePath: '',
+          colourImagePath: '',
         )) {
     on<ShapeSelected>(_onShapeSelected);
     on<FlavorSelected>(_onFlavorSelected);
@@ -258,6 +282,8 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
     Future<String> downloadURL = ref.getDownloadURL();
     return downloadURL;
   }
+
+
 }
 
 // Total Price
@@ -280,6 +306,25 @@ const Map<Colour, double> colourPrices = {
   Colour.Green: 1.5,
 };
 
+const Map<Shape, String> shapeImg = {
+  Shape.MiniStandard: 'assets/fill/ministandard.png',
+  Shape.MiniHeart: 'assets/fill/miniheart.png',
+  Shape.StandardCake: 'assets/fill/standardcake.png',
+  Shape.HeartCake: 'assets/fill/heartcake.png',
+};
+const Map<Flavor, String> flavorImg = {
+  Flavor.Vanilla: 'assets/taste/vanilla.png',
+  Flavor.ChocoCrunch: 'assets/taste/chococrunch.png',
+  Flavor.RedVelvet: 'assets/taste/redvelvet.png',
+  Flavor.Nutella: 'assets/taste/nutella.png',
+};
+const Map<Colour, String> colourImg = {
+  Colour.Red: 'assets/color/red.png',
+  Colour.Yellow: 'assets/color/yellow.png',
+  Colour.Blue: 'assets/color/blue.png',
+  Colour.Green: 'assets/color/green.png',
+};
+
 // UI
 class CakeCustomizationScreen extends StatefulWidget {
   @override
@@ -287,7 +332,6 @@ class CakeCustomizationScreen extends StatefulWidget {
 }
 
 class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
-
   // String? imageUrl;
   //
   // @override
@@ -325,57 +369,64 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
       create: (context) => CakeCustomizationBloc(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Cake'),
-          actions: [Text('data'), SizedBox(width: 20)],
+          title: const Text('Кастомизация'),
+          actions: [
+            BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(builder: (context, state) {
+              return Text(
+                'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
+                style: const TextStyle(fontSize: 16),
+              );
+            }),
+            const SizedBox(width: 20)
+          ],
         ),
         body: BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(
           builder: (context, state) {
             return SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      FutureBuilder<String>(
-                        future: _getImagePath(state.shape, state.flavor, state.colour),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('${snapshot.data.toString()}');
-                          } else if (snapshot.hasData) {
-                            return Image.network(snapshot.data!, height: 200);
-                          } else {
-                            return SizedBox.shrink();
-                          }
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      Text('shape:', style: TextStyle(fontSize: 18)),
-                      _buildShapeSelection(context),
-                      SizedBox(height: 20),
-                      Text('flavor:', style: TextStyle(fontSize: 18)),
-                      _buildFlavorSelection(context),
-                      SizedBox(height: 20),
-                      Text('color:', style: TextStyle(fontSize: 18)),
-                      _buildColourSelection(context),
-                      SizedBox(height: 20),
-                      Text('${state.imagePath}'),
-                      Text(
-                        'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-
-
-                      // Center(
-                      //   child: imageUrl == null
-                      //       ? CircularProgressIndicator()
-                      //       : Image.network(imageUrl!),
-                      // ),
-                    ],
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  FutureBuilder<String>(
+                    future: _getImagePath(state.shape, state.flavor, state.colour),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.data.toString()}');
+                      } else if (snapshot.hasData) {
+                        return Image.network(snapshot.data!, height: 200);
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
                   ),
-                )
-            );
+                  const SizedBox(height: 20),
+                  const Text('shape:', style: TextStyle(fontSize: 18)),
+                  _buildShapeSelection(context),
+                  const SizedBox(height: 20),
+                  const Text('flavor:', style: TextStyle(fontSize: 18)),
+                  _buildFlavorSelection(context),
+                  const SizedBox(height: 20),
+                  const Text('color:', style: TextStyle(fontSize: 18)),
+                  _buildColourSelection(context),
+                  const SizedBox(height: 20),
+                  // Text('${state.imagePath}'),
+                  Text('data'),
+                  // Text(
+                  //   'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
+                  //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  // ),
+
+                  // Center(
+                  //   child: imageUrl == null
+                  //       ? CircularProgressIndicator()
+                  //       : Image.network(imageUrl!),
+                  // ),
+                ],
+              ),
+            ));
           },
         ),
       ),
@@ -384,7 +435,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
 
   Widget _buildShapeSelection(BuildContext context) {
     return SizedBox(
-      height: 90,
+      height: 140,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: Shape.values.length,
@@ -399,6 +450,8 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                   child: Text(shape.toString().split('.').last),
                 ),
                 Text('\$${shapePrices[shape]!.toStringAsFixed(2)}'),
+                Text('${shapeImg[shape]}'),
+                Image.asset('${shapeImg[shape]}', height: 30),
               ],
             ),
           );
@@ -409,7 +462,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
 
   Widget _buildFlavorSelection(BuildContext context) {
     return SizedBox(
-      height: 90,
+      height: 140,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: Flavor.values.length,
@@ -418,13 +471,14 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              // Wrap ElevatedButton in a Column
               children: [
                 ElevatedButton(
                   onPressed: () => context.read<CakeCustomizationBloc>().add(FlavorSelected(flavor)),
                   child: Text(flavor.toString().split('.').last),
                 ),
                 Text('\$${flavorPrices[flavor]!.toStringAsFixed(2)}'),
+                Text('${flavorImg[flavor]}'),
+                Image.asset('${flavorImg[flavor]}', height: 30),
               ],
             ),
           );
@@ -435,7 +489,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
 
   Widget _buildColourSelection(BuildContext context) {
     return SizedBox(
-      height: 90,
+      height: 140,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: Colour.values.length,
@@ -444,13 +498,14 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              // Wrap ElevatedButton in a Column
               children: [
                 ElevatedButton(
                   onPressed: () => context.read<CakeCustomizationBloc>().add(ColourSelected(colour)),
                   child: Text(colour.toString().split('.').last),
                 ),
                 Text('\$${colourPrices[colour]!.toStringAsFixed(2)}'),
+                Text('${colourImg[colour]}'),
+                Image.asset('${colourImg[colour]}', height: 30),
               ],
             ),
           );

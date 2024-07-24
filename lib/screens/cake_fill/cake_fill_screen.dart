@@ -9,10 +9,10 @@ class cake_fill_screen extends StatefulWidget {
 
 class _cake_fill_screenState extends State<cake_fill_screen> {
   final List<String> _images = [
-    'assets/fill/1.png',
-    'assets/fill/2.png',
-    'assets/fill/3.png',
-    'assets/fill/4.png'
+    'assets/fill/miniheart.png',
+    'assets/fill/blue.png',
+    'assets/fill/yellow.png',
+    'assets/fill/ministandard.png'
   ];
 
   int _currentIndex = 0;
@@ -48,7 +48,7 @@ class _cake_fill_screenState extends State<cake_fill_screen> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: const Column(
                     children: [
-                      Image(image: AssetImage('assets/fill/1.png')),
+                      Image(image: AssetImage('assets/fill/miniheart.png')),
                       Text('Fill1')
                     ],
                   ),
@@ -66,7 +66,7 @@ class _cake_fill_screenState extends State<cake_fill_screen> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: const Column(
                     children: [
-                      Image(image: AssetImage('assets/fill/2.png')),
+                      Image(image: AssetImage('assets/fill/blue.png')),
                       Text('Fill2')
                     ],
                   ),
@@ -90,7 +90,7 @@ class _cake_fill_screenState extends State<cake_fill_screen> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: const Column(
                     children: [
-                      Image(image: AssetImage('assets/fill/3.png')),
+                      Image(image: AssetImage('assets/fill/yellow.png')),
                       Text('Fill3')
                     ],
                   ),
@@ -108,7 +108,7 @@ class _cake_fill_screenState extends State<cake_fill_screen> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: const Column(
                     children: [
-                      Image(image: AssetImage('assets/fill/4.png')),
+                      Image(image: AssetImage('assets/fill/ministandard.png')),
                       Text('Fill4')
                     ],
                   ),

@@ -115,7 +115,7 @@ class _home_screenState extends State<home_screen> {
                 home_horizontal_item_widget(
                     title: 'Cake 7',
                     cash: '400',
-                    img: 'assets/3.png',
+                    img: 'assets/yellow.png',
                     type: 'vanill'),
                 home_horizontal_item_widget(
                     title: 'Cake 9',
@@ -125,12 +125,12 @@ class _home_screenState extends State<home_screen> {
                 home_horizontal_item_widget(
                     title: 'Cake 8',
                     cash: '299',
-                    img: 'assets/2.png',
+                    img: 'assets/blue.png',
                     type: 'chokolate'),
                 home_horizontal_item_widget(
                     title: 'Cake 7',
                     cash: '400',
-                    img: 'assets/3.png',
+                    img: 'assets/yellow.png',
                     type: 'vanill'),
               ],
             ),
@@ -148,7 +148,7 @@ class _home_screenState extends State<home_screen> {
                 home_horizontal_item_widget(
                     title: 'Cake 6',
                     cash: '400',
-                    img: 'assets/4.png',
+                    img: 'assets/ministandard.png',
                     type: 'chokolate'),
                 home_horizontal_item_widget(
                     title: 'Cake 5',
@@ -168,12 +168,12 @@ class _home_screenState extends State<home_screen> {
                 home_horizontal_item_widget(
                     title: 'Cake 8',
                     cash: '299',
-                    img: 'assets/2.png',
+                    img: 'assets/blue.png',
                     type: 'chokolate'),
                 home_horizontal_item_widget(
                     title: 'Cake 7',
                     cash: '400',
-                    img: 'assets/3.png',
+                    img: 'assets/yellow.png',
                     type: 'vanill'),
               ],
             ),
@@ -211,12 +211,12 @@ class _home_screenState extends State<home_screen> {
                 home_horizontal_item_widget(
                     title: 'Cake 8',
                     cash: '299',
-                    img: 'assets/2.png',
+                    img: 'assets/blue.png',
                     type: 'chokolate'),
                 home_horizontal_item_widget(
                     title: 'Cake 7',
                     cash: '400',
-                    img: 'assets/3.png',
+                    img: 'assets/yellow.png',
                     type: 'vanill'),
               ],
             ),
