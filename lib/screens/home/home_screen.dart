@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:process/color.dart';
+import 'package:process/screens/home/widgets/home_customize_widget.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_widget.dart';
 import 'package:process/screens/home/widgets/home_banner_widget.dart';
@@ -158,6 +159,10 @@ class _home_screenState extends State<home_screen> {
               ],
             ),
           ),
+          const SizedBox(
+            height: 40,
+          ),
+          home_customize_widget(title: 'Cake 2', cash: '500', img: 'assets/7.png', type: 'chokolate'),
           const SizedBox(
             height: 40,
           ),

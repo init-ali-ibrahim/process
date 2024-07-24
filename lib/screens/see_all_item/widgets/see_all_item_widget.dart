@@ -24,7 +24,7 @@ class _see_all_item_widgetState
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/water');
+        // Navigator.pushNamed(context, '/water');
       },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,

@@ -7,6 +7,7 @@ import 'package:process/SignUpScreen.dart';
 import 'package:process/LogInScreen.dart';
 import 'package:process/profile_screen.dart';
 import 'package:process/screens/cake_create.dart';
+import 'package:process/screens/cake_template.dart';
 import 'package:process/screens/home/bloc/home_bloc.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/profile/profile_screen.dart';
@@ -61,8 +62,8 @@ class MyApp extends StatelessWidget {
                 initialPageIndex: 0,
               ),
               '/cake_create': (context) => CakeCustomizationScreen(),
-
               '/see_all_item': (context) => const see_all_item(),
+              '/cake_template': (context) => DoneCustomizationScreen(),
 
 
 
