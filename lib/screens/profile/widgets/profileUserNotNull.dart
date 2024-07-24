@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:process/color.dart';
 
 class profileUserNotNull_widget extends StatefulWidget {
   const profileUserNotNull_widget({super.key});
@@ -40,7 +41,7 @@ class _profileUserNotNull_widgetState extends State<profileUserNotNull_widget> {
             }
           },
           style: TextButton.styleFrom(
-            backgroundColor: const Color(0xFFA02F7F),
+            backgroundColor: colorLight,
             minimumSize: Size(MediaQuery.of(context).size.width - 120, 10),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(6))),

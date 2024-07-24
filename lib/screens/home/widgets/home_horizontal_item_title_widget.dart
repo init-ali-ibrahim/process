@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:process/color.dart';
 
 class home_horizontal_item_title_widget extends StatefulWidget {
   home_horizontal_item_title_widget(
@@ -27,7 +28,7 @@ class _home_horizontal_item_title_widgetState
               Icon(
                 widget.icon,
                 size: 22,
-                color: const Color(0xFFA02F7F),
+                color: colorDark,
               ),
               const SizedBox(
                 width: 12,
@@ -45,16 +46,8 @@ class _home_horizontal_item_title_widgetState
               highlightColor: Colors.transparent,
               child: const Text(
                 'See all',
-                style: TextStyle(fontSize: 14, color: Color(0xFFA02F7F)),
+                style: TextStyle(fontSize: 14, color: colorDark),
               ))
-
-          // TextButton(
-          //     onPressed: () => Navigator.pushNamed(context, '/see_all_item'),
-          //     style: TextButton.styleFrom(),
-          //     child: const Text(
-          //       'See all',
-          //       style: TextStyle(fontSize: 14),
-          //     ))
         ],
       ),
     );

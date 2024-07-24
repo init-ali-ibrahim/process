@@ -15,6 +15,8 @@ class _profile_screenState extends State<profile_screen> {
 
   late User? user = _fire.currentUser;
 
+  var colorIcon = Color(0xFF915F5F);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,40 +38,35 @@ class _profile_screenState extends State<profile_screen> {
                   color: Colors.grey,
                 ),
               ),
-
               Center(
-                child: user != null
-                    ? const profileUserNotNull_widget()
-                    : const profileUserNull_widget(),
+                child: user != null ? const profileUserNotNull_widget() : const profileUserNull_widget(),
               ),
-
               const SizedBox(height: 30),
               Container(
                 width: MediaQuery.of(context).size.width - 20,
                 height: 172,
-                decoration: BoxDecoration(
-                    border:
-                        Border.all(width: 1, color: const Color(0xFFE5E5E5)),
-                    borderRadius: const BorderRadius.all(Radius.circular(6))),
+                decoration: BoxDecoration(border: Border.all(width: 1, color: const Color(0xFFE5E5E5)), borderRadius: const BorderRadius.all(Radius.circular(6))),
                 child: Column(
                   children: [
                     Expanded(
                       child: ListView(children: <Widget>[
                         ListTile(
-                          leading: const Icon(Icons.headphones),
+                          leading: Icon(
+                            Icons.headphones,
+                            color: colorIcon,
+                          ),
                           onTap: () {
                             const snackBar = SnackBar(
-                              content: Text('Кнопка нажата (Lolas Carse)'),
+                              content: Text('Кноsпка нажата (Lsola Carse)'),
                               duration: Duration(seconds: 2),
                             );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           },
                           title: const Text('Lolas Care'),
-                          trailing: const Icon(
+                          trailing: Icon(
                             Icons.arrow_forward_ios,
                             size: 16,
-                            color: Colors.grey,
+                            color: colorIcon,
                           ),
                           tileColor: Colors.white,
                         ),
@@ -78,20 +75,19 @@ class _profile_screenState extends State<profile_screen> {
                           color: Color(0xFFE5E5E5),
                         ),
                         ListTile(
-                          leading: const Icon(Icons.countertops),
+                          leading: Icon(Icons.countertops, color: colorIcon),
                           onTap: () {
                             const snackBar = SnackBar(
                               content: Text('Кнопка нажата (Riyadh)'),
                               duration: Duration(seconds: 2),
                             );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           },
                           title: const Text('Riyadh'),
-                          trailing: const Icon(
+                          trailing: Icon(
                             Icons.arrow_forward_ios,
                             size: 16,
-                            color: Colors.grey,
+                            color: colorIcon,
                           ),
                           tileColor: Colors.white,
                         ),
@@ -100,20 +96,22 @@ class _profile_screenState extends State<profile_screen> {
                           color: Color(0xFFE5E5E5),
                         ),
                         ListTile(
-                          leading: const Icon(Icons.edit_attributes),
+                          leading: Icon(
+                            Icons.edit_attributes,
+                            color: colorIcon,
+                          ),
                           onTap: () {
                             const snackBar = SnackBar(
                               content: Text('Кнопка нажата (English)'),
                               duration: Duration(seconds: 2),
                             );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           },
                           title: const Text('English'),
-                          trailing: const Icon(
+                          trailing: Icon(
                             Icons.arrow_forward_ios,
                             size: 16,
-                            color: Colors.grey,
+                            color: colorIcon,
                           ),
                           tileColor: Colors.white,
                         ),
@@ -122,39 +120,6 @@ class _profile_screenState extends State<profile_screen> {
                   ],
                 ),
               ),
-              // const SizedBox(height: 30),
-              // Container(
-              //   width: MediaQuery.of(context).size.width - 20,
-              //   height: 59,
-              //   decoration: BoxDecoration(
-              //       border: Border.all(width: 1, color: const Color(0xFFE5E5E5)),
-              //       borderRadius: const BorderRadius.all(Radius.circular(10))),
-              //   child: Column(
-              //     children: [
-              //       Expanded(
-              //         child: ListView(children: <Widget>[
-              //           ListTile(
-              //             leading: const Icon(Icons.sd_storage),
-              //             onTap: () {
-              //               const snackBar = SnackBar(
-              //                 content: Text('Кнопка нажата (Storage)'),
-              //                 duration: Duration(seconds: 2),
-              //               );
-              //               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              //             },
-              //             title: const Text('Storage'),
-              //             trailing: const Icon(
-              //               Icons.arrow_forward_ios,
-              //               size: 16,
-              //               color: Colors.grey,
-              //             ),
-              //             tileColor: Colors.white,
-              //           ),
-              //         ]),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               const SizedBox(height: 30),
               const Center(
                 child: Text(

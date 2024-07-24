@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:process/NotificationPage.dart';
 import 'package:process/cart_info_screen.dart';
-
-// import 'package:process/item_screen.dart';
 import 'package:process/screens/profile/profile_screen.dart';
 import 'package:process/screens/home/home_screen.dart';
 import 'package:process/screens/cart/cart_screen.dart';
+import 'package:process/color.dart';
 
 class navbar extends StatefulWidget {
   navbar({required this.initialPageIndex});
@@ -19,17 +18,15 @@ class navbar extends StatefulWidget {
 class _navbar extends State<navbar> {
   late int pageIndex;
 
-
   final pages = [
-
     const home_screen(),
-    CakeCustomizationScreen(),
-    // const cart_screen(),
+    const cart_screen(),
+    const profile_screen(),
+    // CakeCustomizationScreen(),
     // ItemScreen(),
     // NotificationPage(),
     // const testJson(),
     // const cart_info_screen(),
-    const profile_screen(),
   ];
 
   @override
@@ -68,15 +65,15 @@ class _navbar extends State<navbar> {
                       });
                     },
                     child: Container(
-                      padding:
-                          const EdgeInsets.only(right: 20, left: 20, top: 5),
+                      width: 65,
+                      padding: const EdgeInsets.only(top: 5),
                       child: Column(
                         children: [
                           () {
                             if (pageIndex == 0) {
                               return const Icon(
                                 Icons.home_outlined,
-                                color: Color(0xFF731957),
+                                color: colorPrimary,
                                 size: 25,
                               );
                             } else {
@@ -96,9 +93,7 @@ class _navbar extends State<navbar> {
                               }
                             }(),
                             style: TextStyle(
-                              color: pageIndex == 0
-                                  ? const Color(0xFF731957)
-                                  : Colors.black54,
+                              color: pageIndex == 0 ? colorPrimary : Colors.black54,
                               fontSize: 10,
                             ),
                           ),
@@ -112,15 +107,15 @@ class _navbar extends State<navbar> {
                       });
                     },
                     child: Container(
-                      padding:
-                          const EdgeInsets.only(right: 20, left: 20, top: 5),
+                      width: 65,
+                      padding: const EdgeInsets.only(top: 5),
                       child: Column(
                         children: [
                           () {
                             if (pageIndex == 1) {
                               return const Icon(
                                 Icons.shopping_basket_outlined,
-                                color: Color(0xFF731957),
+                                color: colorPrimary,
                                 size: 25,
                               );
                             } else {
@@ -140,9 +135,7 @@ class _navbar extends State<navbar> {
                               }
                             }(),
                             style: TextStyle(
-                              color: pageIndex == 1
-                                  ? const Color(0xFF731957)
-                                  : Colors.black54,
+                              color: pageIndex == 1 ? colorPrimary : Colors.black54,
                               fontSize: 10,
                             ),
                           ),
@@ -156,15 +149,15 @@ class _navbar extends State<navbar> {
                       });
                     },
                     child: Container(
-                      padding:
-                          const EdgeInsets.only(right: 20, left: 20, top: 5),
+                      width: 65,
+                      padding: const EdgeInsets.only(top: 5),
                       child: Column(
                         children: [
                           () {
                             if (pageIndex == 2) {
                               return const Icon(
                                 Icons.person_2_outlined,
-                                color: Color(0xFF731957),
+                                color: colorPrimary,
                                 size: 25,
                               );
                             } else {
@@ -184,9 +177,7 @@ class _navbar extends State<navbar> {
                               }
                             }(),
                             style: TextStyle(
-                              color: pageIndex == 2
-                                  ? const Color(0xFF731957)
-                                  : Colors.black54,
+                              color: pageIndex == 2 ? colorPrimary : Colors.black54,
                               fontSize: 10,
                             ),
                           ),

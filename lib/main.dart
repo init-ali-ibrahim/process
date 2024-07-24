@@ -12,6 +12,7 @@ import 'package:process/screens/navbar.dart';
 import 'package:process/screens/profile/profile_screen.dart';
 import 'package:process/screens/see_all_item/see_all_item_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'color.dart';
 import 'firebase_options.dart';
 
 
@@ -31,7 +32,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final colorPrimary = Color(0xFF953282);
+  // final colorPrimary = Color(0xFF953282);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
               useMaterial3: true,
-              appBarTheme: AppBarTheme(
+              appBarTheme: const AppBarTheme(
                 iconTheme: IconThemeData(
                   color: colorPrimary,
                 ),
@@ -59,20 +60,22 @@ class MyApp extends StatelessWidget {
               '/': (context) => navbar(
                 initialPageIndex: 0,
               ),
+              '/cake_create': (context) => CakeCustomizationScreen(),
 
-              // '/': (context) => const cart_info_screen(),
               '/see_all_item': (context) => const see_all_item(),
-              '/cake_create': (context) => cake_create(),
 
-              // '/': (context) => ProfileScreen2(),
+
+
 
               '/profile': (context) => const profile_screen(),
-
               '/profile2': (context) => ProfileScreen2(),
-
               '/signUp': (context) => SignUpScreen(),
               '/logIn': (context) => const LogInScreen(),
-              // '/NotificationPage': (context) => NotificationPage()
+
+              // '/': (context) => const cart_info_screen(),
+              // '/': (context) => ProfileScreen2(),
+              // '/NotificationPage': (context) => NotificationPage(),
+
             }));
   }
 }

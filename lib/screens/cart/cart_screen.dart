@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:process/color.dart';
 
 class cart_screen extends StatefulWidget {
   const cart_screen({super.key});
@@ -8,8 +9,6 @@ class cart_screen extends StatefulWidget {
 }
 
 class _cart_screenState extends State<cart_screen> {
-
-  Color colorDarkPink = Color(0xFFA02F7F);
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +35,7 @@ class _cart_screenState extends State<cart_screen> {
             const SizedBox(
               height: 40,
             ),
-            const Center(
-                child: Text('Your Cart is Emptyy',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
+            const Center(child: Text('Your Cart is Emptyy', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
             const SizedBox(
               height: 10,
             ),
@@ -53,13 +49,12 @@ class _cart_screenState extends State<cart_screen> {
             ),
             TextButton(
               onPressed: () {
-                  Navigator.pushNamed(context, '/cake_create');
+                Navigator.pushNamed(context, '/cake_create');
               },
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFFA02F7F),
+                backgroundColor: colorLight,
                 minimumSize: Size(MediaQuery.of(context).size.width - 120, 10),
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(6))),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
               ),
               child: const Text(
                 'Мake your cake',
