@@ -1,16 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:process/color.dart';
+import 'package:process/screens/cake_template.dart';
 
 class home_customize_widget extends StatefulWidget {
-  home_customize_widget({super.key, required this.title, required this.img, required this.cash, required this.type});
+  home_customize_widget(
+      {super.key, required this.title, required this.img, required this.cash, required this.type, required this.Shape, required this.Flavor, required this.Colour});
 
   final String title;
   final String img;
   final String cash;
   final String type;
 
+  final String Shape;
+  final String Flavor;
+  final String Colour;
+
   @override
   State<home_customize_widget> createState() => _home_customize_widgetState();
+}
+
+class CakeTemplateArguments {
+  final Shape shape;
+  final Flavor flavor;
+  final Colour colour;
+
+  CakeTemplateArguments({
+    required this.shape,
+    required this.flavor,
+    required this.colour,
+  });
 }
 
 class _home_customize_widgetState extends State<home_customize_widget> {
@@ -18,7 +36,7 @@ class _home_customize_widgetState extends State<home_customize_widget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/cake_template');
+        Navigator.pushNamed(context, '/cake_template', arguments: CakeTemplateArguments(shape: Shape.MiniStandard, flavor: Flavor.Nutella, colour: Colour.Blue));
       },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -49,13 +67,7 @@ class _home_customize_widgetState extends State<home_customize_widget> {
             Container(
               decoration: const BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 8,
-                        offset: Offset(1, 0),
-                        spreadRadius: 1,
-                        color: Color(0xFFE3E3E3))
-                  ],
+                  boxShadow: [BoxShadow(blurRadius: 8, offset: Offset(1, 0), spreadRadius: 1, color: Color(0xFFE3E3E3))],
                   borderRadius: BorderRadius.only(bottomRight: Radius.circular(4), bottomLeft: Radius.circular(4))),
               padding: const EdgeInsets.only(right: 10, top: 10, left: 10, bottom: 10),
               child: Column(

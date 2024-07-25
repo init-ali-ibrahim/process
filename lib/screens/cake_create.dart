@@ -122,8 +122,8 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
           CakeCustomizationState(
             shape: Shape.MiniStandard,
             flavor: Flavor.Vanilla,
-            colour: Colour.Red,
-            imagePath: 'assets/cakes/ministandard_vanilla.png',
+            colour: Colour.Yellow,
+            imagePath: '',
             totalPrice: _calculateInitialTotalPrice(),
             isLoadingImage: true,
             shapeImagePath: '',

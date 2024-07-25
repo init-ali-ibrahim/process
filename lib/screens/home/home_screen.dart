@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:process/color.dart';
+import 'package:process/screens/cake_template.dart';
 import 'package:process/screens/home/widgets/home_customize_widget.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_widget.dart';
@@ -10,6 +11,18 @@ class home_screen extends StatefulWidget {
 
   @override
   State<home_screen> createState() => _home_screenState();
+}
+
+class CakeTemplateArguments {
+  final Shape shape;
+  final Flavor flavor;
+  final Colour colour;
+
+  CakeTemplateArguments({
+    required this.shape,
+    required this.flavor,
+    required this.colour,
+  });
 }
 
 class _home_screenState extends State<home_screen> {
@@ -162,7 +175,7 @@ class _home_screenState extends State<home_screen> {
           const SizedBox(
             height: 40,
           ),
-          home_customize_widget(title: 'Cake 2', cash: '500', img: 'assets/7.png', type: 'chokolate'),
+          home_customize_widget(title: 'sss', cash: '500', img: 'assets/7.png', type: 'chokolate', Colour: 'lxo', Flavor: 'lox', Shape: 'sa',),
           const SizedBox(
             height: 40,
           ),
