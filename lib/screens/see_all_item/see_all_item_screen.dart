@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:process/color.dart';
+import 'package:process/screens/cake_template.dart';
+import 'package:process/screens/home/widgets/home_customize_widget.dart';
 import 'package:process/screens/see_all_item/widgets/see_all_item_widget.dart';
 
 class see_all_item extends StatefulWidget {
@@ -30,7 +32,7 @@ class _see_all_itemState extends State<see_all_item> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              child: GridView.builder(
+              child: GridView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -39,14 +41,17 @@ class _see_all_itemState extends State<see_all_item> {
                   mainAxisSpacing: 8.0,
                   childAspectRatio: 0.92,
                 ),
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return CakeCard(
+                children: [
+                  CakeCard(
                     name: 'Cake Name',
-                    flavor: 'Vanilla',
+                    img: 'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/cakes%2Fminiheart_redvelvet_red.png?alt=media',
+                    type: 'vanil',
                     price: '20 BHD',
-                  );
-                },
+                    shape: Shape.MiniHeart,
+                    flavor: Flavor.RedVelvet,
+                    colour: Colour.Red,
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 60),
@@ -58,21 +63,36 @@ class _see_all_itemState extends State<see_all_item> {
 }
 
 class CakeCard extends StatelessWidget {
-  final String name;
-  final String flavor;
-  final String price;
+  CakeCard({super.key, required this.name, required this.price, required this.shape, required this.flavor, required this.colour, required this.img, required this.type});
 
-  CakeCard({
-    required this.name,
-    required this.flavor,
-    required this.price,
-  });
+  final String name;
+  final String price;
+  final String img;
+  final String type;
+
+  Shape shape;
+  Flavor flavor;
+  Colour colour;
+
+  // CakeCard({
+  //   required this.name,
+  //   required this.flavor,
+  //   required this.price,
+  //   required this.shape,
+  //   required this.flavor,
+  //   required this.colour,
+  // });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext  context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/cake_create');
+        Navigator.pushNamed(context, '/cake_template',
+            arguments: CakeTemplateArguments(
+              shape: shape,
+              colour: colour,
+              flavor: flavor,
+            ));
       },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -93,11 +113,11 @@ class CakeCard extends StatelessWidget {
                     boxShadow: [BoxShadow(blurRadius: 8, offset: Offset(1, 1), spreadRadius: 1, color: Color(0xFFE3E3E3))],
                   ),
                 ),
-                const Positioned(
+                Positioned(
                   bottom: 5,
                   left: 20,
                   right: 20,
-                  child: Image(image: AssetImage('assets/ww.png')),
+                  child: Image(image: NetworkImage(img)),
                 ),
               ],
             ),
@@ -111,20 +131,20 @@ class CakeCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'widget.title',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Text(
+                    name,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  const Text(
-                    'vanilla',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                  Text(
+                    type,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '20 ₸',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: colorLight),
+                      Text(
+                        price,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: colorLight),
                       ),
                       Container(
                           decoration: const BoxDecoration(color: colorLight, borderRadius: BorderRadius.all(Radius.circular(4))),
@@ -143,3 +163,15 @@ class CakeCard extends StatelessWidget {
     );
   }
 }
+//
+// class CakeTemplateArguments {
+//   final Shape shape;
+//   final Flavor flavor;
+//   final Colour colour;
+//
+//   CakeTemplateArguments({
+//     required this.shape,
+//     required this.flavor,
+//     required this.colour,
+//   });
+// }

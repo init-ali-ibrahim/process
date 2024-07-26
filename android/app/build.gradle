@@ -53,6 +53,9 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+//        manifestPlaceholders = [playIntegrityApiKey:"AIzaSyCIKnkB2ZrzjOcH_vVj5Bt1rCLfGjmSbiI"]
+
     }
 
     buildTypes {

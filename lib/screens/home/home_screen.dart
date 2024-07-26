@@ -13,18 +13,6 @@ class home_screen extends StatefulWidget {
   State<home_screen> createState() => _home_screenState();
 }
 
-class CakeTemplateArguments {
-  final Shape shape;
-  final Flavor flavor;
-  final Colour colour;
-
-  CakeTemplateArguments({
-    required this.shape,
-    required this.flavor,
-    required this.colour,
-  });
-}
-
 class _home_screenState extends State<home_screen> {
   String countCity = 'Алматы';
 
@@ -51,7 +39,7 @@ class _home_screenState extends State<home_screen> {
                 Row(
                   children: [
                     SizedBox(
-                        width: MediaQuery.of(context).size.width - 310,
+                        width: 110,
                         child: InkWell(
                           onTap: () async {
                             showAppbarCountry(context);
@@ -127,10 +115,10 @@ class _home_screenState extends State<home_screen> {
               children: [
                 home_horizontal_item_widget(title: 'Cake 9', cash: '300', img: 'assets/00.png', type: 'vanill'),
                 home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/ww.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/yellow.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/00.png', type: 'vanill'),
                 home_horizontal_item_widget(title: 'Cake 9', cash: '300', img: 'assets/00.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/blue.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/yellow.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/00.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/00.png', type: 'vanill'),
               ],
             ),
           ),
@@ -144,12 +132,12 @@ class _home_screenState extends State<home_screen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                home_horizontal_item_widget(title: 'Cake 6', cash: '400', img: 'assets/ministandard.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Cake 6', cash: '400', img: 'assets/00.png', type: 'chokolate'),
                 home_horizontal_item_widget(title: 'Cake 5', cash: '200', img: 'assets/5.png', type: 'vanill'),
                 home_horizontal_item_widget(title: 'Cake 1', cash: '205', img: 'assets/6.png', type: 'chokolate'),
                 home_horizontal_item_widget(title: 'Cake 9', cash: '300', img: 'assets/00.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/blue.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/yellow.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/00.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/00.png', type: 'vanill'),
               ],
             ),
           ),
@@ -167,15 +155,15 @@ class _home_screenState extends State<home_screen> {
                 home_horizontal_item_widget(title: 'Cake 3', cash: '450', img: 'assets/8.png', type: 'chokolate'),
                 home_horizontal_item_widget(title: 'Cake 4', cash: '350', img: 'assets/9.png', type: 'vanill'),
                 home_horizontal_item_widget(title: 'Cake 9', cash: '300', img: 'assets/00.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/blue.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/yellow.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/00.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/00.png', type: 'vanill'),
               ],
             ),
           ),
           const SizedBox(
             height: 40,
           ),
-          home_customize_widget(title: 'sss', cash: '500', img: 'assets/7.png', type: 'chokolate', Colour: 'lxo', Flavor: 'lox', Shape: 'sa',),
+          home_customize_widget(title: 'sss', cash: '500', img: 'assets/7.png', type: 'chokolate', colour: Colour.Yellow, flavor: Flavor.ChocoCrunch, shape: Shape.HeartDone,),
           const SizedBox(
             height: 40,
           ),
@@ -189,6 +177,9 @@ class _home_screenState extends State<home_screen> {
       context: context,
       builder: (BuildContext context) {
         return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
           padding: const EdgeInsets.all(20),
           height: 300,
           width: MediaQuery.of(context).size.width,
@@ -214,7 +205,7 @@ class _home_screenState extends State<home_screen> {
                       },
                       child: Container(
                           padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(color: Color(0xFFEED4D4), borderRadius: BorderRadius.circular(20)),
+                          decoration: BoxDecoration(color: const Color(0xFFE3D8D8), borderRadius: BorderRadius.circular(20)),
                           child: Container(
                             width: 80,
                             child: const Column(
@@ -266,7 +257,7 @@ class _home_screenState extends State<home_screen> {
                       },
                       child: Container(
                           padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(color: Color(0xFFEED4D4), borderRadius: BorderRadius.circular(20)),
+                          decoration: BoxDecoration(color: const Color(0xFFE3D8D8), borderRadius: BorderRadius.circular(20)),
                           child: Container(
                             width: 80,
                             child: const Column(
@@ -327,7 +318,7 @@ class _home_screenState extends State<home_screen> {
                       },
                       child: Container(
                           padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(color: Color(0xFFEED4D4), borderRadius: BorderRadius.circular(20)),
+                          decoration: BoxDecoration(color: const Color(0xFFE3D8D8), borderRadius: BorderRadius.circular(20)),
                           child: Container(
                             width: 80,
                             child: const Column(

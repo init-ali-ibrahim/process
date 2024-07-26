@@ -20,7 +20,7 @@ class _navbar extends State<navbar> {
 
   final pages = [
     const home_screen(),
-    const cart_screen(),
+    cart_screen(),
     const profile_screen(),
     // CakeCustomizationScreen(),
     // ItemScreen(),

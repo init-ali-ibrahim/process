@@ -2,41 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:process/color.dart';
 import 'package:process/screens/cake_template.dart';
 
-class home_customize_widget extends StatefulWidget {
+
+class home_customize_widget extends StatelessWidget {
   home_customize_widget(
-      {super.key, required this.title, required this.img, required this.cash, required this.type, required this.Shape, required this.Flavor, required this.Colour});
+      {super.key, required this.title, required this.img, required this.cash, required this.type, required this.shape, required this.flavor, required this.colour});
 
   final String title;
   final String img;
   final String cash;
   final String type;
 
-  final String Shape;
-  final String Flavor;
-  final String Colour;
+  Shape shape;
+  Flavor flavor;
+  Colour colour;
 
-  @override
-  State<home_customize_widget> createState() => _home_customize_widgetState();
-}
-
-class CakeTemplateArguments {
-  final Shape shape;
-  final Flavor flavor;
-  final Colour colour;
-
-  CakeTemplateArguments({
-    required this.shape,
-    required this.flavor,
-    required this.colour,
-  });
-}
-
-class _home_customize_widgetState extends State<home_customize_widget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/cake_template', arguments: CakeTemplateArguments(shape: Shape.MiniStandard, flavor: Flavor.Nutella, colour: Colour.Blue));
+        Navigator.pushNamed(context, '/cake_template', arguments: CakeTemplateArguments(shape: shape, flavor: flavor, colour: colour));
       },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -60,7 +44,7 @@ class _home_customize_widgetState extends State<home_customize_widget> {
                   bottom: 8,
                   left: 15,
                   right: 15,
-                  child: Image(image: AssetImage(widget.img)),
+                  child: Image(image: AssetImage(img)),
                 ),
               ],
             ),
@@ -75,18 +59,18 @@ class _home_customize_widgetState extends State<home_customize_widget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.title,
+                    title,
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    widget.type,
+                    type,
                     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${widget.cash} ₸',
+                        '$cash ₸',
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorLight),
                       ),
                       Container(
@@ -105,4 +89,16 @@ class _home_customize_widgetState extends State<home_customize_widget> {
       ),
     );
   }
+}
+
+class CakeTemplateArguments {
+  final Shape shape;
+  final Flavor flavor;
+  final Colour colour;
+
+  CakeTemplateArguments({
+    required this.shape,
+    required this.flavor,
+    required this.colour,
+  });
 }

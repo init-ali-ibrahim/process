@@ -252,28 +252,6 @@ class CakeCustomizationScreen extends StatefulWidget {
 }
 
 class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
-  // String? imageUrl;
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadImage();
-  // }
-  //
-  // Future<void> _loadImage() async {
-  //   try {
-  //     // Используем gs:// ссылку для получения URL
-  //     String downloadURL = await FirebaseStorage.instance
-  //         .refFromURL('gs://pushnotification-744c7.appspot.com/ministandard_vanilla_yellow.png')
-  //         .getDownloadURL();
-  //     setState(() {
-  //       imageUrl = downloadURL;
-  //     });
-  //   } catch (e) {
-  //     print("Error: $e");
-  //   }
-  // }
-
   Future<String> _getImagePath(Shape shape, Flavor flavor, Colour colour) async {
     String shapeString = shape.toString().split('.').last.toLowerCase();
     String flavorString = flavor.toString().split('.').last.toLowerCase();
@@ -347,17 +325,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                   _buildColourSelection(context),
                   const SizedBox(height: 20),
                   // Text('${state.imagePath}'),
-                  const Text('dawta'),
-                  // Text(
-                  //   'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
-                  //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  // ),
-
-                  // Center(
-                  //   child: imageUrl == null
-                  //       ? CircularProgressIndicator()
-                  //       : Image.network(imageUrl!),
-                  // ),
+                  // const Text('dawta')
                 ],
               ),
             );

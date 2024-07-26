@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -354,80 +356,171 @@ class _SignUpScreen extends State<SignUpScreen> {
   //   );
   // }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _smsCodeController = TextEditingController();
-  String? _verificationId;
 
-  void _verifyPhoneNumber() async {
-    await _auth.verifyPhoneNumber(
-      phoneNumber: _phoneController.text,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await _auth.signInWithCredential(credential);
-        Navigator.pushReplacementNamed(context, '/profile');
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Verification failed: ${e.message}')));
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        setState(() {
-          _verificationId = verificationId;
-        });
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        setState(() {
-          _verificationId = verificationId;
-        });
-      },
-    );
+  // ----
+
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final TextEditingController _phoneController = TextEditingController();
+  // final TextEditingController _smsCodeController = TextEditingController();
+  // String? _verificationId;
+  //
+  // void _verifyPhoneNumber() async {
+  //   await _auth.verifyPhoneNumber(
+  //     phoneNumber: _phoneController.text,
+  //     verificationCompleted: (PhoneAuthCredential credential) async {
+  //       await _auth.signInWithCredential(credential);
+  //       Navigator.pushReplacementNamed(context, '/profile');
+  //     },
+  //     verificationFailed: (FirebaseAuthException e) {
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Verification failed: ${e.message}')));
+  //     },
+  //     codeSent: (String verificationId, int? resendToken) {
+  //       setState(() {
+  //         _verificationId = verificationId;
+  //       });
+  //     },
+  //     codeAutoRetrievalTimeout: (String verificationId) {
+  //       setState(() {
+  //         _verificationId = verificationId;
+  //       });
+  //     },
+  //   );
+  // }
+  //
+  // void _signInWithSMSCode() async {
+  //   if (_verificationId != null) {
+  //     try {
+  //       PhoneAuthCredential credential = PhoneAuthProvider.credential(
+  //         verificationId: _verificationId!,
+  //         smsCode: _smsCodeController.text,
+  //       );
+  //       await _auth.signInWithCredential(credential);
+  //       Navigator.pushReplacementNamed(context, '/profile2');
+  //     } catch (e) {
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid code')));
+  //     }
+  //   }
+  // }
+  //
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: Text('Login'),
+  //     ),
+  //     body: Padding(
+  //       padding: EdgeInsets.all(16.0),
+  //       child: Column(
+  //         children: [
+  //           TextField(
+  //             controller: _phoneController,
+  //             decoration: InputDecoration(labelText: 'Phone Number'),
+  //             keyboardType: TextInputType.phone,
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: _verifyPhoneNumber,
+  //             child: Text('Verify Phone Number'),
+  //           ),
+  //           TextField(
+  //             controller: _smsCodeController,
+  //             decoration: InputDecoration(labelText: 'SMS Code'),
+  //             keyboardType: TextInputType.number,
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: _signInWithSMSCode,
+  //             child: Text('Sign In'),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String _phoneNumber = '';
+  String _verificationId = '';
+  String _smsCode = '';
+
+  Future<void> _verifyPhoneNumber() async {
+    if (_phoneNumber.isEmpty) {
+      // Обработка пустого номера
+      return;
+    }
+
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: _phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await _auth.signInWithCredential(credential);
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print(e.message);
+          // Обработка ошибки
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          setState(() {
+            _verificationId = verificationId;
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+    } catch (e) {
+      print(e.toString());
+      // Обработка ошибки
+    }
   }
 
-  void _signInWithSMSCode() async {
-    if (_verificationId != null) {
-      try {
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: _verificationId!,
-          smsCode: _smsCodeController.text,
-        );
-        await _auth.signInWithCredential(credential);
-        Navigator.pushReplacementNamed(context, '/profile2');
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid code')));
-      }
+  Future<void> _signInWithPhoneNumber() async {
+    try {
+      final AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: _smsCode,
+      );
+      await _auth.signInWithCredential(credential);
+      // Успешная регистрация
+    } catch (e) {
+      print(e.toString());
+      // Обработка ошибки
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
+      appBar: AppBar(title: Text('Регистрация')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(labelText: 'Phone Number'),
-              keyboardType: TextInputType.phone,
+            IntlPhoneField(
+              decoration: InputDecoration(labelText: 'Номер телефона'),
+              initialCountryCode: 'KZ',
+              onChanged: (phone) => setState(() => _phoneNumber = phone.completeNumber),
             ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: _verifyPhoneNumber,
-              child: Text('Verify Phone Number'),
+              child: Text('Отправить код'),
             ),
+            SizedBox(height: 20),
             TextField(
-              controller: _smsCodeController,
-              decoration: InputDecoration(labelText: 'SMS Code'),
               keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Код из SMS'),
+              onChanged: (value) => setState(() => _smsCode = value),
             ),
+            SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _signInWithSMSCode,
-              child: Text('Sign In'),
+              onPressed: _signInWithPhoneNumber,
+              child: Text('Подтвердить'),
             ),
           ],
         ),
       ),
     );
   }
+
+
+
 }

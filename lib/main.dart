@@ -2,12 +2,14 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:play_integrity_flutter/play_integrity_flutter.dart';
 import 'package:process/NotificationPage.dart';
 import 'package:process/SignUpScreen.dart';
 import 'package:process/LogInScreen.dart';
 import 'package:process/profile_screen.dart';
 import 'package:process/screens/cake_create.dart';
 import 'package:process/screens/cake_template.dart';
+import 'package:process/screens/cart/cart_screen.dart';
 import 'package:process/screens/home/bloc/home_bloc.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/profile/profile_screen.dart';
@@ -25,15 +27,17 @@ void main() async {
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   // await FirebaseAppCheck.instance.activate(
   //   androidProvider: AndroidProvider.debug,
-  //   webRecaptchaSiteKey: 'your-recaptcha-site-key',
   // );
+
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.playIntegrity,
+  );
+  // playIntegrity(playIntegrity)
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-
-  // final colorPrimary = Color(0xFF953282);
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +45,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => HomeBloc()),
           BlocProvider(create: (context) => CakeCustomizationBloc()),
+          BlocProvider(create: (context) => CartBloc()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -61,10 +66,15 @@ class MyApp extends StatelessWidget {
               '/': (context) => navbar(
                 initialPageIndex: 0,
               ),
-              '/cake_create': (context) => CakeCustomizationScreen(),
-              '/see_all_item': (context) => const see_all_item(),
-              '/cake_template': (context) => DoneCustomizationScreen(),
 
+              '/cart_screen': (context) => navbar(
+                initialPageIndex: 1,
+              ),
+
+
+              '/cake_create': (context) => CakeCustomizationScreen(),
+              '/cake_template': (context) => DoneCustomizationScreen(),
+              '/see_all_item': (context) => const see_all_item(),
 
 
 
