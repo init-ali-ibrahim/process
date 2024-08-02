@@ -24,8 +24,7 @@ class _profile_screenState extends State<profile_screen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFFF9F9F9),
           title: const Text(
-            'Profile',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            'Профиль',
           ),
         ),
         body: SingleChildScrollView(
@@ -43,7 +42,10 @@ class _profile_screenState extends State<profile_screen> {
               ),
               const SizedBox(height: 30),
               Container(
-                width: MediaQuery.of(context).size.width - 20,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 20,
                 height: 172,
                 decoration: BoxDecoration(border: Border.all(width: 1, color: const Color(0xFFE5E5E5)), borderRadius: const BorderRadius.all(Radius.circular(6))),
                 child: Column(
@@ -51,39 +53,11 @@ class _profile_screenState extends State<profile_screen> {
                     Expanded(
                       child: ListView(children: <Widget>[
                         ListTile(
-                          leading: Icon(
-                            Icons.headphones,
-                            color: colorIcon,
-                          ),
-                          onTap: () {
-                            const snackBar = SnackBar(
-                              content: Text('Кноsпка нажата (Lsola Carse)'),
-                              duration: Duration(seconds: 2),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          },
-                          title: const Text('Lolas Care'),
-                          trailing: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                            color: colorIcon,
-                          ),
-                          tileColor: Colors.white,
-                        ),
-                        const Divider(
-                          height: 1,
-                          color: Color(0xFFE5E5E5),
-                        ),
-                        ListTile(
                           leading: Icon(Icons.countertops, color: colorIcon),
                           onTap: () {
-                            const snackBar = SnackBar(
-                              content: Text('Кнопка нажата (Riyadh)'),
-                              duration: Duration(seconds: 2),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                           },
-                          title: const Text('Riyadh'),
+                          title: const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Город'), Text('Алматы', style: TextStyle(fontSize: 12),) ],),
                           trailing: Icon(
                             Icons.arrow_forward_ios,
                             size: 16,
@@ -101,13 +75,10 @@ class _profile_screenState extends State<profile_screen> {
                             color: colorIcon,
                           ),
                           onTap: () {
-                            const snackBar = SnackBar(
-                              content: Text('Кнопка нажата (English)'),
-                              duration: Duration(seconds: 2),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            // Navigator.pushNamed(context, '/noCart');
                           },
-                          title: const Text('English'),
+                          // title: const Text('Язык'),
+                          title: const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Язык'), Text('Русский', style: TextStyle(fontSize: 12),) ],),
                           trailing: Icon(
                             Icons.arrow_forward_ios,
                             size: 16,
@@ -115,6 +86,27 @@ class _profile_screenState extends State<profile_screen> {
                           ),
                           tileColor: Colors.white,
                         ),
+                        const Divider(
+                          height: 1,
+                          color: Color(0xFFE5E5E5),
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.headphones,
+                            color: colorIcon,
+                          ),
+                          onTap: () {
+
+                          },
+                          title: const Text('Поддержка'),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: colorIcon,
+                          ),
+                          tileColor: Colors.white,
+                        ),
+
                       ]),
                     ),
                   ],
@@ -123,10 +115,17 @@ class _profile_screenState extends State<profile_screen> {
               const SizedBox(height: 30),
               const Center(
                 child: Text(
-                  '@Lola - 2024',
+                  '@Samal Cakes - 2024',
                   style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
-              )
+              ),
+              const SizedBox(height: 30),
+              
+              // InkWell(
+              //   onTap: (){},
+              //   child: Image.asset('assets/iconDelivery.png'),
+              // )
+              
             ],
           ),
         ));

@@ -4,8 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:process/screens/cake_template.dart';
 
-
-
 // models/product.dart
 class Product {
   final String id;
@@ -21,8 +19,6 @@ class Product {
   });
 }
 
-
-
 // models/cart_item.dart
 class CartItem {
   final Product product;
@@ -35,8 +31,6 @@ class CartItem {
 
   double get totalPrice => product.price * quantity;
 }
-
-
 
 // bloc/cart_event.dart
 abstract class CartEvent extends Equatable {
@@ -85,8 +79,6 @@ class RemoveProductFromCart extends CartEvent {
 
 class ClearCart extends CartEvent {}
 
-
-
 // bloc/cart_state.dart
 class CartState extends Equatable {
   final List<CartItem> items;
@@ -100,8 +92,6 @@ class CartState extends Equatable {
   @override
   List<Object> get props => [items, totalPrice];
 }
-
-
 
 // bloc/cart_bloc.dart
 // class CartBloc extends Bloc<CartEvent, CartState> {
@@ -159,8 +149,7 @@ class CartState extends Equatable {
 // }
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc()
-      : super(CartState(items: [], totalPrice: 0.0)) {
+  CartBloc() : super(CartState(items: [], totalPrice: 0.0)) {
     on<AddProductToCart>(_onAddProductToCart);
     on<RemoveProductFromCart>(_onRemoveProductFromCart);
     on<ClearCart>(_onClearCart);
@@ -171,7 +160,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final state = this.state;
     List<CartItem> updatedItems = List.from(state.items);
     CartItem? existingItem = updatedItems.firstWhere(
-          (item) => item.product.id == event.product.id,
+      (item) => item.product.id == event.product.id,
       orElse: () => CartItem(product: event.product, quantity: 0),
     );
 
@@ -192,7 +181,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final state = this.state;
     List<CartItem> updatedItems = List.from(state.items);
     CartItem? existingItem = updatedItems.firstWhere(
-          (item) => item.product.id == event.product.id,
+      (item) => item.product.id == event.product.id,
       orElse: () => CartItem(product: event.product, quantity: 0),
     );
 
@@ -222,7 +211,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
 
     CartItem? existingItem = updatedItems.firstWhere(
-          (item) => item.product.id == cakeProduct.id,
+      (item) => item.product.id == cakeProduct.id,
       orElse: () => CartItem(product: cakeProduct, quantity: 0),
     );
 
@@ -237,8 +226,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 }
 
-
-
 // UI
 class cart_screen extends StatelessWidget {
   final List<Product> products = [
@@ -246,6 +233,8 @@ class cart_screen extends StatelessWidget {
     Product(id: '2', name: 'Cake 2', price: 30.0, imageUrl: 'assets/00.png'),
   ];
 
+
+  bool isChecked = false;
   // @override
   // Widget build(BuildContext context) {
   //   return Scaffold(
@@ -309,7 +298,10 @@ class cart_screen extends StatelessWidget {
         backgroundColor: const Color(0xFFF9F9F9),
         appBar: AppBar(
           backgroundColor: const Color(0xFFF9F9F9),
-          title: const Text('Cart', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+          title: const Text(
+            'Cart',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          ),
           actions: [
             IconButton(
               icon: const Icon(Icons.clear),
@@ -332,10 +324,9 @@ class cart_screen extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      // color: const Color(0xFFD99D9B),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1, color: colorPrimary)
-                    ),
+                        // color: const Color(0xFFD99D9B),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(width: 1, color: colorPrimary)),
                     child: Column(
                       children: [
                         Image.asset(product.imageUrl, width: 70, height: 70),
@@ -349,18 +340,16 @@ class cart_screen extends StatelessWidget {
                         ),
                       ],
                     ),
-                      // leading: Image.asset(product.imageUrl, width: 50, height: 50),
-                      // title: Text(product.name),
-                      // subtitle: Text('\$${product.price}'),
-                      // trailing: IconButton(
-                      //   icon: Icon(Icons.add_shopping_cart),
-                      //   onPressed: () {
-                      //     context.read<CartBloc>().add(AddProductToCart(product));
-                      //   },
-                      // ),
+                    // leading: Image.asset(product.imageUrl, width: 50, height: 50),
+                    // title: Text(product.name),
+                    // subtitle: Text('\$${product.price}'),
+                    // trailing: IconButton(
+                    //   icon: Icon(Icons.add_shopping_cart),
+                    //   onPressed: () {
+                    //     context.read<CartBloc>().add(AddProductToCart(product));
+                    //   },
+                    // ),
                   );
-
-
 
                   // ListTile(
                   //   leading: Image.asset(product.imageUrl, width: 50, height: 50),
@@ -378,14 +367,16 @@ class cart_screen extends StatelessWidget {
             ),
             BlocBuilder<CartBloc, CartState>(
               builder: (context, state) {
-                return Expanded(
+                return SizedBox(
+                  height: 100,
                   child: Column(
                     children: [
                       Text(
                         'tootal: \$${state.totalPrice}',
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      Expanded(
+                      SizedBox(
+                        height: 50,
                         child: ListView.builder(
                           itemCount: state.items.length,
                           itemBuilder: (context, index) {
@@ -420,6 +411,34 @@ class cart_screen extends StatelessWidget {
                 );
               },
             ),
+
+
+            // SizedBox(
+            //   height: 40,
+            // ),
+            // Container(
+            //   width: 200,
+            //   height: 50,
+            //   decoration: BoxDecoration(
+            //       color: Colors.red.withOpacity(0.2),
+            //       borderRadius: BorderRadius.only(
+            //         topLeft: Radius.elliptical(10, 50),
+            //         topRight: Radius.elliptical(10, 50),
+            //         bottomRight: Radius.elliptical(10, 50),
+            //         bottomLeft: Radius.elliptical(10, 50),
+            //       )),
+            //   child: InkWell(
+            //       borderRadius: BorderRadius.only(
+            //         topLeft: Radius.elliptical(10, 50),
+            //         topRight: Radius.elliptical(10, 50),
+            //         bottomRight: Radius.elliptical(10, 50),
+            //         bottomLeft: Radius.elliptical(10, 50),
+            //       ),
+            //       onTap: () {},
+            //       child: Container(
+            //         color: Colors.blue.withOpacity(0.2),
+            //       )),
+            // )
           ],
         ),
       ),

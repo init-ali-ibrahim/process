@@ -41,7 +41,7 @@ class _cart_info_screenState extends State<cart_info_screen> {
             child: Column(
               children: [
                 Container(
-                  height: 90,
+                  height: 300,
                   padding: const EdgeInsets.all(10),
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   decoration: BoxDecoration(

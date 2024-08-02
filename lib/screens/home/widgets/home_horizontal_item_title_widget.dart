@@ -45,7 +45,7 @@ class _home_horizontal_item_title_widgetState
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               child: const Text(
-                'See all',
+                'Посмотреть все',
                 style: TextStyle(fontSize: 14, color: colorDark),
               ))
         ],

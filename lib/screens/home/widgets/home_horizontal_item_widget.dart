@@ -64,7 +64,7 @@ class _home_horizontal_item_widgetState extends State<home_horizontal_item_widge
                 children: [
                   Text(
                     widget.title,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     widget.type,

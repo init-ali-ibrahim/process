@@ -33,7 +33,7 @@ class _home_screenState extends State<home_screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Deliver to Recipient in',
+                  'Доставить cake',
                   style: TextStyle(fontSize: 14),
                 ),
                 Row(
@@ -89,7 +89,7 @@ class _home_screenState extends State<home_screen> {
                 const Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: 'What accasion are you having?',
+                      hintText: 'Какой cake ищем',
                       border: InputBorder.none,
                       hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                     ),
@@ -105,7 +105,7 @@ class _home_screenState extends State<home_screen> {
         children: [
           const home_banner_widget(),
           home_horizontal_item_title_widget(
-            title: 'Birthday Collectiown',
+            title: 'Ванильные',
             icon: Icons.access_time_filled,
           ),
           Container(
@@ -113,17 +113,17 @@ class _home_screenState extends State<home_screen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                home_horizontal_item_widget(title: 'Cake 9', cash: '300', img: 'assets/00.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/ww.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/00.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 9', cash: '300', img: 'assets/00.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/00.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/00.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Ванильные 1', cash: '100', img: 'assets/5.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Ванильные 2', cash: '200', img: 'assets/5.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Ванильные 3', cash: '300', img: 'assets/5.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Ванильные 4', cash: '400', img: 'assets/5.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Ванильные 5', cash: '500', img: 'assets/5.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Ванильные 6', cash: '600', img: 'assets/5.png', type: 'vanill'),
               ],
             ),
           ),
           home_horizontal_item_title_widget(
-            title: 'Football Collection',
+            title: 'Шоколадные',
             icon: Icons.ac_unit_rounded,
           ),
           Container(
@@ -132,17 +132,17 @@ class _home_screenState extends State<home_screen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                home_horizontal_item_widget(title: 'Cake 6', cash: '400', img: 'assets/00.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 5', cash: '200', img: 'assets/5.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 1', cash: '205', img: 'assets/6.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 9', cash: '300', img: 'assets/00.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/00.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/00.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Шоколадные 1', cash: '100', img: 'assets/00.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Шоколадные 2', cash: '200', img: 'assets/00.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Шоколадные 3', cash: '300', img: 'assets/00.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Шоколадные 4', cash: '400', img: 'assets/00.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Шоколадные 5', cash: '500', img: 'assets/00.png', type: 'chokolate'),
+                home_horizontal_item_widget(title: 'Шоколадные 6', cash: '600', img: 'assets/00.png', type: 'chokolate'),
               ],
             ),
           ),
           home_horizontal_item_title_widget(
-            title: 'Cartoon Collection',
+            title: 'Нателла',
             icon: Icons.abc_sharp,
           ),
           Container(
@@ -151,19 +151,19 @@ class _home_screenState extends State<home_screen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                home_horizontal_item_widget(title: 'Cake 2', cash: '500', img: 'assets/7.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 3', cash: '450', img: 'assets/8.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 4', cash: '350', img: 'assets/9.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 9', cash: '300', img: 'assets/00.png', type: 'vanill'),
-                home_horizontal_item_widget(title: 'Cake 8', cash: '299', img: 'assets/00.png', type: 'chokolate'),
-                home_horizontal_item_widget(title: 'Cake 7', cash: '400', img: 'assets/00.png', type: 'vanill'),
+                home_horizontal_item_widget(title: 'Нателла 1', cash: '100', img: 'assets/7.png', type: 'nutella'),
+                home_horizontal_item_widget(title: 'Нателла 2', cash: '200', img: 'assets/7.png', type: 'nutella'),
+                home_horizontal_item_widget(title: 'Нателла 3', cash: '300', img: 'assets/7.png', type: 'nutella'),
+                home_horizontal_item_widget(title: 'Нателла 4', cash: '400', img: 'assets/7.png', type: 'nutella'),
+                home_horizontal_item_widget(title: 'Нателла 5', cash: '500', img: 'assets/7.png', type: 'nutella'),
+                home_horizontal_item_widget(title: 'Нателла 6', cash: '600', img: 'assets/7.png', type: 'nutella'),
               ],
             ),
           ),
           const SizedBox(
             height: 40,
           ),
-          home_customize_widget(title: 'sss', cash: '500', img: 'assets/7.png', type: 'chokolate', colour: Colour.Yellow, flavor: Flavor.ChocoCrunch, shape: Shape.HeartDone,),
+          home_customize_widget(title: 'cake', cash: '500', img: 'assets/7.png', type: 'chokolate', colour: Colour.Yellow, flavor: Flavor.Vanilla, shape: Shape.MiniStandard,),
           const SizedBox(
             height: 40,
           ),

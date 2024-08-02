@@ -9,7 +9,8 @@ import 'package:process/LogInScreen.dart';
 import 'package:process/profile_screen.dart';
 import 'package:process/screens/cake_create.dart';
 import 'package:process/screens/cake_template.dart';
-import 'package:process/screens/cart/cart_screen.dart';
+// import 'package:process/screens/cart/cart_screen.dart';
+import 'package:process/screens/cartTest.dart';
 import 'package:process/screens/home/bloc/home_bloc.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/profile/profile_screen.dart';
@@ -17,6 +18,7 @@ import 'package:process/screens/see_all_item/see_all_item_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'color.dart';
 import 'firebase_options.dart';
+import 'screens/testItem.dart';
 
 
 void main() async {
@@ -24,6 +26,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   // await FirebaseAppCheck.instance.activate(
   //   androidProvider: AndroidProvider.debug,
@@ -45,6 +48,8 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => HomeBloc()),
           BlocProvider(create: (context) => CakeCustomizationBloc()),
+          // BlocProvider(create: (context) => CartBloc()),
+
           BlocProvider(create: (context) => CartBloc()),
         ],
         child: MaterialApp(
@@ -82,6 +87,11 @@ class MyApp extends StatelessWidget {
               '/profile2': (context) => ProfileScreen2(),
               '/signUp': (context) => SignUpScreen(),
               '/logIn': (context) => const LogInScreen(),
+
+
+              '/noCart': (context) => ProductListScreen(),
+
+              '/Testitem': (context) => const Testitem(),
 
               // '/': (context) => const cart_info_screen(),
               // '/': (context) => ProfileScreen2(),

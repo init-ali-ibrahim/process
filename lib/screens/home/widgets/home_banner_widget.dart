@@ -76,12 +76,12 @@ class _home_banner_widgetState extends State<home_banner_widget> {
                   children: [
                     SizedBox(height: 20),
                     Text(
-                      'Make your own cake!',
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: Colors.black87),
+                      'Можно сделать свой cake!',
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.black87),
                     ),
                     Text(
-                      'No one can do it better than you',
-                      style: TextStyle(color: Color(0xFF953232), fontWeight: FontWeight.w500),
+                      'Никто не может это сделать лучше вас',
+                      style: TextStyle(color: Color(0xFF953232), fontSize: 12, fontWeight: FontWeight.w500),
                     )
                   ],
                 )

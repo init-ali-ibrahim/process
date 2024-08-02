@@ -27,6 +27,7 @@ dependencies:
   intl_phone_field: ^3.2.0
   play_integrity_flutter: ^0.0.1
   flutter_launcher_icons: ^0.13.1
+  transitioned_indexed_stack: ^1.0.2
 
 dev_dependencies:
   flutter_test:

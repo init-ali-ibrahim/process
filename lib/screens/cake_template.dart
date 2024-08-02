@@ -4,8 +4,12 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:process/screens/cart/cart_screen.dart';
+
+// import 'package:process/screens/cart/cart_screen.dart';
 import 'package:process/screens/home/widgets/home_customize_widget.dart';
+import 'package:process/screens/navbar.dart';
+
+import 'cartTest.dart';
 
 // Event
 abstract class DoneCustomizationEvent extends Equatable {
@@ -277,12 +281,12 @@ class DoneCustomizationScreen extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Test', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
+          title: const Text('Customize'),
           actions: [
             BlocBuilder<DoneCustomizationBloc, DoneCustomizationState>(builder: (context, state) {
               return Text(
-                'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
-                style: const TextStyle(fontSize: 16),
+                'Цена: \₸${state.totalPrice.toStringAsFixed(2)}',
+                style: const TextStyle(fontSize: 14),
               );
             }),
             const SizedBox(width: 20)
@@ -290,6 +294,8 @@ class DoneCustomizationScreen extends StatelessWidget {
         ),
         body: BlocBuilder<DoneCustomizationBloc, DoneCustomizationState>(
           builder: (context, state) {
+            var urlToCart;
+
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -315,6 +321,9 @@ class DoneCustomizationScreen extends StatelessWidget {
                           child: Text('${snapshot.data.toString()}'),
                         );
                       } else if (snapshot.hasData) {
+
+                        urlToCart = snapshot.data;
+
                         return Image.network(snapshot.data!, height: 200);
                       } else {
                         return const SizedBox.shrink();
@@ -337,16 +346,38 @@ class DoneCustomizationScreen extends StatelessWidget {
 
                   ElevatedButton(
                     onPressed: () {
-                      BlocProvider.of<CartBloc>(context).add(AddCakeToCart(
-                        shape: state.shape,
-                        flavor: state.flavor,
-                        colour: state.colour,
-                        price: state.totalPrice,
-                        imageUrl: state.imagePath,
-                      ));
-                      Navigator.pushNamed(context, '/cart_screen');
+                      // BlocProvider.of<CartBloc>(context).add(AddCakeToCart(
+                      //   shape: state.shape,
+                      //   flavor: state.flavor,
+                      //   colour: state.colour,
+                      //   price: state.totalPrice,
+                      //   imageUrl: state.imagePath,
+                      // ));
+
+                      // final List<Product> _products = [
+                      //   Product('nomer 1', 10.0, Flavor.RedVelvet, Colour.Red, Shape.HeartDone),
+                      //   // Product('nomer 2', 20.0),
+                      //   // Product('nomer 3', 30.0),
+                      // ];
+
+                      var lox = Product('${state.shape}  + $urlToCart' , state.totalPrice, state.flavor.toString(), state.colour, state.shape);
+
+                      context.read<CartBloc>().add(AddProduct(lox));
+
+                      Navigator.of(context).push(
+                        // MaterialPageRoute(builder: (_) => ProductListScreen()),
+                        MaterialPageRoute(builder: (_) => navbar(
+                          initialPageIndex: 1,
+                        ),),
+                      );
+
+                      // Navigator.pushNamed(context, '/Testitem', arguments: {
+                      //   'flavor': state.flavor,
+                      //   'colour': state.colour,
+                      //   'shape': state.shape,
+                      // },);
                     },
-                    child: const Text('Add to Cart'),
+                    child: const Text('Добавить в корзину'),
                   ),
                   const SizedBox(height: 60),
                   // Text('${state.imagePath}'),
@@ -386,7 +417,7 @@ class DoneCustomizationScreen extends StatelessWidget {
                       '${shapeName[shape]}',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text('\$${shapePrices[shape]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
+                    Text('\₸${shapePrices[shape]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
                     // Text('${shapeImg[shape]}'),
                   ],
                 ),
@@ -423,7 +454,7 @@ class DoneCustomizationScreen extends StatelessWidget {
                       '${flavorName[flavor]}',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text('\$${flavorPrices[flavor]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
+                    Text('\₸${flavorPrices[flavor]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
                   ],
                 ),
               ));
@@ -459,7 +490,7 @@ class DoneCustomizationScreen extends StatelessWidget {
                       '${colourName[colour]}',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text('\$${colourPrices[colour]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
+                    Text('\₸${colourPrices[colour]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
                   ],
                 ),
               ));
@@ -468,3 +499,15 @@ class DoneCustomizationScreen extends StatelessWidget {
     );
   }
 }
+
+// class CakeCreateTemplateArguments {
+//   final Shape shape;
+//   final Flavor flavor;
+//   final Colour colour;
+//
+//   CakeCreateTemplateArguments({
+//     required this.shape,
+//     required this.flavor,
+//     required this.colour,
+//   });
+// }

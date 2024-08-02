@@ -17,7 +17,7 @@ class _see_all_itemState extends State<see_all_item> {
     return Scaffold(
       appBar: AppBar(
         title: const Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Text('Fast delevery'),
+          Text('Cake'),
           SizedBox(width: 10),
           Icon(
             Icons.connected_tv_sharp,
@@ -43,10 +43,28 @@ class _see_all_itemState extends State<see_all_item> {
                 ),
                 children: [
                   CakeCard(
-                    name: 'Cake Name',
+                    name: 'Cake 1',
+                    img: 'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/cakes%2Fminiheart_redvelvet_red.png?alt=media',
+                    type: 'chokolite',
+                    price: '100 ₸',
+                    shape: Shape.MiniHeart,
+                    flavor: Flavor.RedVelvet,
+                    colour: Colour.Red,
+                  ),
+                  CakeCard(
+                    name: 'Cake 2',
+                    img: 'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/cakes%2Fminiheart_redvelvet_red.png?alt=media',
+                    type: 'nutella',
+                    price: '200 ₸',
+                    shape: Shape.MiniHeart,
+                    flavor: Flavor.RedVelvet,
+                    colour: Colour.Red,
+                  ),
+                  CakeCard(
+                    name: 'Cake 3',
                     img: 'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/cakes%2Fminiheart_redvelvet_red.png?alt=media',
                     type: 'vanil',
-                    price: '20 BHD',
+                    price: '300 ₸',
                     shape: Shape.MiniHeart,
                     flavor: Flavor.RedVelvet,
                     colour: Colour.Red,
@@ -164,14 +182,14 @@ class CakeCard extends StatelessWidget {
   }
 }
 //
-// class CakeTemplateArguments {
-//   final Shape shape;
-//   final Flavor flavor;
-//   final Colour colour;
-//
-//   CakeTemplateArguments({
-//     required this.shape,
-//     required this.flavor,
-//     required this.colour,
-//   });
-// }
+class CakeTemplateArguments {
+  final Shape shape;
+  final Flavor flavor;
+  final Colour colour;
+
+  CakeTemplateArguments({
+    required this.shape,
+    required this.flavor,
+    required this.colour,
+  });
+}

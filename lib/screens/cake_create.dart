@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:process/screens/cartTest.dart';
 
 // Event
 abstract class CakeCustomizationEvent extends Equatable {
@@ -253,9 +254,21 @@ class CakeCustomizationScreen extends StatefulWidget {
 
 class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
   Future<String> _getImagePath(Shape shape, Flavor flavor, Colour colour) async {
-    String shapeString = shape.toString().split('.').last.toLowerCase();
-    String flavorString = flavor.toString().split('.').last.toLowerCase();
-    String colorString = colour.toString().split('.').last.toLowerCase();
+    String shapeString = shape
+        .toString()
+        .split('.')
+        .last
+        .toLowerCase();
+    String flavorString = flavor
+        .toString()
+        .split('.')
+        .last
+        .toLowerCase();
+    String colorString = colour
+        .toString()
+        .split('.')
+        .last
+        .toLowerCase();
     Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('cakes/$shapeString\_$flavorString\_$colorString.png');
     Future<String> downloadURL = ref.getDownloadURL();
     return downloadURL;
@@ -290,7 +303,10 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container(
                           height: 200,
-                          width: MediaQuery.of(context).size.width,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
                           child: Container(
                             height: 40,
                             width: 40,
@@ -350,7 +366,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                 padding: const EdgeInsets.all(8.0),
                 margin: const EdgeInsets.all(8),
                 decoration:
-                    BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
+                BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
                 child: Column(
                   children: [
                     Image.asset(
@@ -387,7 +403,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                 padding: const EdgeInsets.all(8.0),
                 margin: const EdgeInsets.all(8),
                 decoration:
-                    BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
+                BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
                 child: Column(
                   children: [
                     Image.asset(
@@ -423,7 +439,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                 padding: const EdgeInsets.all(8.0),
                 margin: const EdgeInsets.all(8),
                 decoration:
-                    BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
+                BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
                 child: Column(
                   children: [
                     Image.asset(
@@ -443,31 +459,4 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
       ),
     );
   }
-
-// Widget _buildColourSelection(BuildContext context) {
-//   return SizedBox(
-//     height: 140,
-//     child: ListView.builder(
-//       scrollDirection: Axis.horizontal,
-//       itemCount: Colour.values.length,
-//       itemBuilder: (context, index) {
-//         final colour = Colour.values[index];
-//         return Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: Column(
-//             children: [
-//               ElevatedButton(
-//                 onPressed: () => context.read<CakeCustomizationBloc>().add(ColourSelected(colour)),
-//                 child: Text(colour.toString().split('.').last),
-//               ),
-//               Text('\$${colourPrices[colour]!.toStringAsFixed(2)}'),
-//               // Text('${colourImg[colour]}'),
-//               Image.asset('${colourImg[colour]}', height: 30),
-//             ],
-//           ),
-//         );
-//       },
-//     ),
-//   );
-// }
 }

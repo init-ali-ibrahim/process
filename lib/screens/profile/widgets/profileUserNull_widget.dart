@@ -23,7 +23,7 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                 borderRadius: BorderRadius.all(Radius.circular(6))),
           ),
           child: const Text(
-            'Login',
+            'Войти',
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
