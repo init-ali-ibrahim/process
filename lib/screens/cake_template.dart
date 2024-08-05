@@ -360,15 +360,20 @@ class DoneCustomizationScreen extends StatelessWidget {
                       //   // Product('nomer 3', 30.0),
                       // ];
 
-                      var lox = Product('${state.shape}  + $urlToCart' , state.totalPrice, state.flavor.toString(), state.colour, state.shape);
+                      var lox = Product('${state.shape}' , state.totalPrice, state.flavor.toString(), state.colour, state.shape, urlToCart);
 
                       context.read<CartBloc>().add(AddProduct(lox));
 
-                      Navigator.of(context).push(
-                        // MaterialPageRoute(builder: (_) => ProductListScreen()),
-                        MaterialPageRoute(builder: (_) => navbar(
-                          initialPageIndex: 1,
-                        ),),
+                      // Navigator.of(context).push(
+                      //   // MaterialPageRoute(builder: (_) => ProductListScreen()),
+                      //   MaterialPageRoute(builder: (_) => navbar(
+                      //     initialPageIndex: 1,
+                      //   ),),
+                      // );
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => navbar(initialPageIndex: 1)),
+                            (Route<dynamic> route) => false,
                       );
 
                       // Navigator.pushNamed(context, '/Testitem', arguments: {

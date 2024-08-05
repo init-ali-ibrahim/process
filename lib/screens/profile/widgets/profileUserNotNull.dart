@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:process/color.dart';
+import 'package:process/viewCart.dart';
 
 class profileUserNotNull_widget extends StatefulWidget {
   const profileUserNotNull_widget({super.key});
@@ -49,6 +50,47 @@ class _profileUserNotNull_widgetState extends State<profileUserNotNull_widget> {
           child: const Text(
             'Выйти',
             style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 20),
+          width: MediaQuery
+              .of(context)
+              .size
+              .width - 20,
+          height: 58,
+          decoration: BoxDecoration(border: Border.all(width: 1, color: const Color(0xFFE5E5E5)), borderRadius: const BorderRadius.all(Radius.circular(6))),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.cake,),
+                    onTap: () {
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewCartDataScreen(user: user),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Пользователь не найден.')),
+                        );
+                      }
+                    },
+                    title: const Text('Ваши cake'),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    ),
+                    tileColor: Colors.white,
+                  ),
+                ]),
+              ),
+            ],
           ),
         ),
       ],

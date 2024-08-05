@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:process/color.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/profile/profile_screen.dart';
 
@@ -51,7 +52,8 @@ class _LogInScreenState extends State<LogInScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(200),
         child: AppBar(
-          backgroundColor: Color(0xFF772067),
+          backgroundColor: colorDark,
+          // backgroundColor: Color(0xFF772067),
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -66,7 +68,7 @@ class _LogInScreenState extends State<LogInScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Login',
+                  'Войдите',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 42,
@@ -77,7 +79,7 @@ class _LogInScreenState extends State<LogInScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Please enter your email to continue',
+                  'Пожалуйста, введите свой адрес электронной почты, чтобы продолжить',
                   style: TextStyle(
                     color: Color(0xFFE0E0E0),
                     fontSize: 16,
@@ -99,7 +101,7 @@ class _LogInScreenState extends State<LogInScreen> {
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: 'Почта',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -112,7 +114,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 controller: _passwordController,
                 obscureText: _obscureText,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Пароль',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -136,7 +138,8 @@ class _LogInScreenState extends State<LogInScreen> {
                   onPressed: () {},
                   child: const Text(
                     'Забыли пароль?',
-                    style: TextStyle(color: Color(0xFF953282)),
+                    // style: TextStyle(color: Color(0xFF953282)),
+                    style: TextStyle(color: colorLight),
                   ),
                 ),
               ),
@@ -145,7 +148,8 @@ class _LogInScreenState extends State<LogInScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF953282),
+                    // backgroundColor: Color(0xFF953282),
+                    backgroundColor: colorPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -153,7 +157,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   ),
                   onPressed: _logIn,
                   child: const Text(
-                    'Login',
+                    'Войти',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
@@ -167,7 +171,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text('Or войти через'),
+                    child: Text('или войти через'),
                   ),
                   Expanded(
                     child: Divider(thickness: 1.0),
@@ -211,9 +215,10 @@ class _LogInScreenState extends State<LogInScreen> {
                     GestureDetector(
                       onTap: () {Navigator.pushNamed(context, '/signUp');},
                       child: const Text(
-                        'Register',
+                        'Зарегистрируйтесь',
                         style: TextStyle(
-                          color: Color(0xFF953282),
+                          // color: Color(0xFF953282),
+                          color: colorPrimary,
                         ),
                       ),
                     )

@@ -76,6 +76,10 @@ class MyApp extends StatelessWidget {
                 initialPageIndex: 1,
               ),
 
+              '/profile': (context) => navbar(
+                initialPageIndex: 2,
+              ),
+
 
               '/cake_create': (context) => CakeCustomizationScreen(),
               '/cake_template': (context) => DoneCustomizationScreen(),
@@ -83,15 +87,15 @@ class MyApp extends StatelessWidget {
 
 
 
-              '/profile': (context) => const profile_screen(),
-              '/profile2': (context) => ProfileScreen2(),
+              // '/profile': (context) => const profile_screen(),
+              // '/profile2': (context) => ProfileScreen2(),
               '/signUp': (context) => SignUpScreen(),
               '/logIn': (context) => const LogInScreen(),
 
 
               '/noCart': (context) => ProductListScreen(),
 
-              '/Testitem': (context) => const Testitem(),
+              // '/Testitem': (context) => const Testitem(),
 
               // '/': (context) => const cart_info_screen(),
               // '/': (context) => ProfileScreen2(),
