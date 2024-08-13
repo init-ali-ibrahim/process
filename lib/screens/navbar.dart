@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:process/cart_info_screen.dart';
+
+// import 'package:process/cart_info_screen.dart';
 import 'package:process/screens/cartTest.dart';
 import 'package:process/screens/profile/profile_screen.dart';
 import 'package:process/screens/home/home_screen.dart';
-import 'package:process/screens/cart/cart_screen.dart';
+
+// import 'package:process/screens/cart/cart_screen.dart';
 import 'package:process/color.dart';
 
 class navbar extends StatefulWidget {
@@ -27,19 +29,17 @@ class _navbar extends State<navbar> {
     // const cart_info_screen(),
   ];
 
-
   @override
   void initState() {
     super.initState();
     pageIndex = widget.initialPageIndex;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 250),
         transitionBuilder: (child, animation) {
           return FadeTransition(
             opacity: animation,
@@ -52,7 +52,7 @@ class _navbar extends State<navbar> {
           children: pages,
         ),
       ),
-      bottomNavigationBar: buildNavBar(context),
+      bottomNavigationBar: SafeArea(child: buildNavBar(context)),
     );
   }
 
@@ -74,6 +74,19 @@ class _navbar extends State<navbar> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    // InkWell(
+                    //   child: Container(
+                    //     height: 59,
+                    //     width: 90,
+                    //     padding: EdgeInsets.all(10),
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.all(Radius.elliptical(180, 90)),
+                    //       color: Colors.red
+                    //     ),
+                    //     child: Text('dara'),
+                    //   ),
+                    // ),
+
                     CustomTextButton(
                       pageIndex: pageIndex,
                       buttonIndex: 0,
@@ -158,7 +171,7 @@ class CustomTextButton extends StatelessWidget {
       child: Column(
         children: [
           AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 250),
             child: Icon(
               icon,
               color: iconColor,

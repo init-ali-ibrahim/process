@@ -6,18 +6,21 @@ import 'package:play_integrity_flutter/play_integrity_flutter.dart';
 import 'package:process/NotificationPage.dart';
 import 'package:process/SignUpScreen.dart';
 import 'package:process/LogInScreen.dart';
+import 'package:process/editProfile_screen.dart';
 import 'package:process/profile_screen.dart';
 import 'package:process/screens/cake_create.dart';
 import 'package:process/screens/cake_template.dart';
 // import 'package:process/screens/cart/cart_screen.dart';
 import 'package:process/screens/cartTest.dart';
 import 'package:process/screens/home/bloc/home_bloc.dart';
+import 'package:process/screens/item_info.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/profile/profile_screen.dart';
 import 'package:process/screens/see_all_item/see_all_item_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'color.dart';
 import 'firebase_options.dart';
+import 'screens/httpTest.dart';
 import 'screens/testItem.dart';
 
 
@@ -26,11 +29,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  // await FirebaseAppCheck.instance.activate(
-  //   androidProvider: AndroidProvider.debug,
-  // );
 
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
@@ -56,6 +54,24 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Process',
             theme: ThemeData(
+              textTheme: TextTheme(
+                displayLarge: Theme.of(context).textTheme.displayLarge?.copyWith(letterSpacing: -0.2),
+                displayMedium: Theme.of(context).textTheme.displayMedium?.copyWith(letterSpacing: -0.2),
+                displaySmall: Theme.of(context).textTheme.displaySmall?.copyWith(letterSpacing: -0.2),
+                headlineLarge: Theme.of(context).textTheme.headlineLarge?.copyWith(letterSpacing: -0.2),
+                headlineMedium: Theme.of(context).textTheme.headlineMedium?.copyWith(letterSpacing: -0.2),
+                headlineSmall: Theme.of(context).textTheme.headlineSmall?.copyWith(letterSpacing: -0.2),
+                titleLarge: Theme.of(context).textTheme.titleLarge?.copyWith(letterSpacing: -0.2),
+                titleMedium: Theme.of(context).textTheme.titleMedium?.copyWith(letterSpacing: -0.2),
+                titleSmall: Theme.of(context).textTheme.titleSmall?.copyWith(letterSpacing: -0.2),
+                bodyLarge: Theme.of(context).textTheme.bodyLarge?.copyWith(letterSpacing: -0.2),
+                bodyMedium: Theme.of(context).textTheme.bodyMedium?.copyWith(letterSpacing: -0.2),
+                bodySmall: Theme.of(context).textTheme.bodySmall?.copyWith(letterSpacing: -0.2),
+                labelLarge: Theme.of(context).textTheme.labelLarge?.copyWith(letterSpacing: -0.2),
+                labelMedium: Theme.of(context).textTheme.labelMedium?.copyWith(letterSpacing: -0.2),
+                labelSmall: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: -0.2),
+              ),
+              fontFamily: 'OpenSans',
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
               useMaterial3: true,
               appBarTheme: const AppBarTheme(
@@ -80,8 +96,13 @@ class MyApp extends StatelessWidget {
                 initialPageIndex: 2,
               ),
 
+              '/my-profile': (context) => const profileEdit(),
+
+              '/httpTest': (context) => const httpTest(),
 
               '/cake_create': (context) => CakeCustomizationScreen(),
+              '/item_info': (context) => const itemInfo(),
+
               '/cake_template': (context) => DoneCustomizationScreen(),
               '/see_all_item': (context) => const see_all_item(),
 

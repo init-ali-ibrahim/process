@@ -360,7 +360,7 @@ class DoneCustomizationScreen extends StatelessWidget {
                       //   // Product('nomer 3', 30.0),
                       // ];
 
-                      var lox = Product('${state.shape}' , state.totalPrice, state.flavor.toString(), state.colour, state.shape, urlToCart);
+                      var lox = Product('${state.shape}' , state.totalPrice, state.flavor.toString(), state.colour.toString(), state.shape.toString(), urlToCart);
 
                       context.read<CartBloc>().add(AddProduct(lox));
 

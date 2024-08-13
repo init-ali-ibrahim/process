@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:process/color.dart';
 import 'package:process/screens/navbar.dart';
@@ -46,189 +47,324 @@ class _LogInScreenState extends State<LogInScreen> {
     });
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: PreferredSize(
+  //       preferredSize: const Size.fromHeight(200),
+  //       child: AppBar(
+  //         backgroundColor: colorDark,
+  //         // backgroundColor: Color(0xFF772067),
+  //         elevation: 0,
+  //         leading: IconButton(
+  //           icon: const Icon(Icons.arrow_back, color: Colors.white),
+  //           onPressed: () {
+  //             Navigator.of(context).pop();
+  //           },
+  //         ),
+  //         flexibleSpace: const Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             Padding(
+  //               padding: EdgeInsets.symmetric(horizontal: 16.0),
+  //               child: Text(
+  //                 'Войдите',
+  //                 style: TextStyle(
+  //                   color: Colors.white,
+  //                   fontSize: 42,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //             ),
+  //             Padding(
+  //               padding: EdgeInsets.symmetric(horizontal: 16.0),
+  //               child: Text(
+  //                 'Пожалуйста, введите свой адрес электронной почты, чтобы продолжить',
+  //                 style: TextStyle(
+  //                   color: Color(0xFFE0E0E0),
+  //                   fontSize: 16,
+  //                 ),
+  //               ),
+  //             ),
+  //             SizedBox(height: 20),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //     body: SingleChildScrollView(
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(16.0),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             const SizedBox(height: 40.0),
+  //             TextField(
+  //               controller: _emailController,
+  //               keyboardType: TextInputType.emailAddress,
+  //               decoration: InputDecoration(
+  //                 labelText: 'Почта',
+  //                 border: OutlineInputBorder(
+  //                   borderRadius: BorderRadius.circular(8.0),
+  //                 ),
+  //                 filled: true,
+  //                 fillColor: Color(0x13621455),
+  //               ),
+  //             ),
+  //             const SizedBox(height: 20.0),
+  //             TextField(
+  //               controller: _passwordController,
+  //               obscureText: _obscureText,
+  //               decoration: InputDecoration(
+  //                 labelText: 'Пароль',
+  //                 border: OutlineInputBorder(
+  //                   borderRadius: BorderRadius.circular(8.0),
+  //                 ),
+  //                 filled: true,
+  //                 fillColor: Color(0x13621455),
+  //                 suffixIcon: IconButton(
+  //                   icon: Icon(
+  //                     _obscureText ? Icons.visibility_off : Icons.visibility,
+  //                     // Icons.visibility_off
+  //                   ),
+  //                   onPressed:
+  //                       // () => widget
+  //                       _togglePasswordVisibility,
+  //                 ),
+  //               ),
+  //             ),
+  //             const SizedBox(height: 10.0),
+  //             Align(
+  //               alignment: Alignment.centerRight,
+  //               child: TextButton(
+  //                 onPressed: () {},
+  //                 child: const Text(
+  //                   'Забыли пароль?',
+  //                   // style: TextStyle(color: Color(0xFF953282)),
+  //                   style: TextStyle(color: colorLight),
+  //                 ),
+  //               ),
+  //             ),
+  //             const SizedBox(height: 20.0),
+  //             SizedBox(
+  //               width: double.infinity,
+  //               child: ElevatedButton(
+  //                 style: ElevatedButton.styleFrom(
+  //                   // backgroundColor: Color(0xFF953282),
+  //                   backgroundColor: colorPrimary,
+  //                   padding: const EdgeInsets.symmetric(vertical: 15.0),
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(8.0),
+  //                   ),
+  //                 ),
+  //                 onPressed: _logIn,
+  //                 child: const Text(
+  //                   'Войти',
+  //                   style: TextStyle(color: Colors.white, fontSize: 16),
+  //                 ),
+  //               ),
+  //             ),
+  //             const SizedBox(height: 20.0),
+  //
+  //             const Row(
+  //               children: <Widget>[
+  //                 Expanded(
+  //                   child: Divider(thickness: 1.0),
+  //                 ),
+  //                 Padding(
+  //                   padding: EdgeInsets.symmetric(horizontal: 10.0),
+  //                   child: Text('или войти через'),
+  //                 ),
+  //                 Expanded(
+  //                   child: Divider(thickness: 1.0),
+  //                 ),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 20.0),
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //               children: <Widget>[
+  //                 ElevatedButton.icon(
+  //                   style: ElevatedButton.styleFrom(
+  //                     foregroundColor: Colors.black,
+  //                     backgroundColor: Colors.white,
+  //                     padding: const EdgeInsets.symmetric(
+  //                         horizontal: 20.0, vertical: 10.0),
+  //                     shape: RoundedRectangleBorder(
+  //                       borderRadius: BorderRadius.circular(8.0),
+  //                       side: const BorderSide(color: Colors.grey),
+  //                     ),
+  //                   ),
+  //                   onPressed: () {},
+  //                   icon: Image.asset(
+  //                     'assets/google.png',
+  //                     height: 24.0,
+  //                   ),
+  //                   label: const Text('Google'),
+  //                 ),
+  //               ],
+  //             ),
+  //
+  //             const SizedBox(height: 20.0),
+  //             Center(
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: [
+  //                   const Text(
+  //                     'Еще нет аккаунта? ',
+  //                   ),
+  //                   GestureDetector(
+  //                     onTap: () {Navigator.pushNamed(context, '/signUp');},
+  //                     child: const Text(
+  //                       'Зарегистрируйтесь',
+  //                       style: TextStyle(
+  //                         // color: Color(0xFF953282),
+  //                         color: colorPrimary,
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(200),
-        child: AppBar(
-          backgroundColor: colorDark,
-          // backgroundColor: Color(0xFF772067),
+        backgroundColor: bgColor,
+        appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
-          flexibleSpace: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  'Войдите',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  'Пожалуйста, введите свой адрес электронной почты, чтобы продолжить',
-                  style: TextStyle(
-                    color: Color(0xFFE0E0E0),
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
-          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 40.0),
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Почта',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  filled: true,
-                  fillColor: Color(0x13621455),
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscureText,
-                decoration: InputDecoration(
-                  labelText: 'Пароль',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  filled: true,
-                  fillColor: Color(0x13621455),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                      // Icons.visibility_off
-                    ),
-                    onPressed:
-                        // () => widget
-                        _togglePasswordVisibility,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Забыли пароль?',
-                    // style: TextStyle(color: Color(0xFF953282)),
-                    style: TextStyle(color: colorLight),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    // backgroundColor: Color(0xFF953282),
-                    backgroundColor: colorPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  onPressed: _logIn,
-                  child: const Text(
-                    'Войти',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20.0),
-
-              const Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Divider(thickness: 1.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text('или войти через'),
-                  ),
-                  Expanded(
-                    child: Divider(thickness: 1.0),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 10.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        side: const BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/google.png',
-                      height: 24.0,
-                    ),
-                    label: const Text('Google'),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20.0),
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+        body: SingleChildScrollView(
+            child: Container(
+                height: MediaQuery.of(context).size.height - 90,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Еще нет аккаунта? ',
-                    ),
-                    GestureDetector(
-                      onTap: () {Navigator.pushNamed(context, '/signUp');},
-                      child: const Text(
-                        'Зарегистрируйтесь',
-                        style: TextStyle(
-                          // color: Color(0xFF953282),
-                          color: colorPrimary,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        const Row(
+                          children: [
+                            Icon(Icons.cake, color: Colors.red, size: 40),
+                            SizedBox(width: 10),
+                            Text(
+                              'Войти',
+                              style: TextStyle(fontSize: 24),
+                            ),
+                          ],
                         ),
-                      ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Введите почту и пароль',
+                          style: TextStyle(fontSize: 14, color: Colors.black54),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: 'Введите почту',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _passwordController,
+                          obscureText: _obscureText,
+                          decoration: InputDecoration(
+                            labelText: 'Пароль',
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureText ? Icons.visibility_off : Icons.visibility,
+                              ),
+                              onPressed: _togglePasswordVisibility,
+                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        GestureDetector(child: Text('Забыли пароль?', style: TextStyle(color: Colors.red),)),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              const TextSpan(text: 'Нажимая Далее, вы принимаете условия ', style: TextStyle(color: Colors.black54)),
+                              TextSpan(
+                                text: 'Политики конфиденциальности',
+                                style: const TextStyle(color: Colors.red),
+                                recognizer: TapGestureRecognizer()..onTap = () {},
+                              ),
+                              const TextSpan(text: ' и ', style: TextStyle(color: Colors.black54)),
+                              TextSpan(
+                                text: 'Пользовательского соглашения',
+                                style: const TextStyle(color: Colors.red),
+                                recognizer: TapGestureRecognizer()..onTap = () {},
+                              ),
+                              const TextSpan(text: ' и даете согласие на обработку персональных данных', style: TextStyle(color: Colors.black54)),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            _logIn();
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                              minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                          child: const Text(
+                            'Далее',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              const TextSpan(text: 'Нет аккаунта? ', style: TextStyle(color: Colors.black54)),
+                              TextSpan(
+                                text: 'Зарегистрироваться',
+                                style: const TextStyle(color: Colors.red),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.pushNamed(context, '/logIn');
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                     )
                   ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+                ))));
   }
 }

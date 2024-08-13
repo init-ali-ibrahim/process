@@ -18,68 +18,59 @@ class _home_horizontal_item_widgetState extends State<home_horizontal_item_widge
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/cake_create');
+        Navigator.pushNamed(context, '/item_info', arguments: {
+          'title': widget.title,
+          'img': widget.img,
+          'cash': widget.cash,
+          'type': widget.type,
+        });
       },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
         padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
-        width: 160,
+        width: 175,
         child: Column(
           children: [
-            Stack(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 12),
-                  height: 80,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFEEDCDC),
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
-                    boxShadow: [BoxShadow(blurRadius: 8, offset: Offset(1, 0), spreadRadius: 1, color: Color(0xFFE3E3E3))],
-                  ),
-                ),
-                Positioned(
-                  bottom: 8,
-                  left: 15,
-                  right: 15,
-                  child: Image(image: AssetImage(widget.img)),
-                ),
-              ],
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: FadeInImage.assetNetwork(
+                  placeholder: 'assets/loadingItem.jpg',
+                  image: widget.img,
+                  width: 170,
+                  height: 155,
+                  imageErrorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.white,
+                      width: 170,
+                      height: 155,
+                    );
+                  }),
+              // Image.network(widget.img),
             ),
             Container(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 8,
-                        offset: Offset(1, 0),
-                        spreadRadius: 1,
-                        color: Color(0xFFE3E3E3))
-                  ],
-                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(4), bottomLeft: Radius.circular(4))),
-              padding: const EdgeInsets.only(right: 10, top: 10, left: 10, bottom: 10),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.title,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    widget.type,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-                  ),
+                  Padding(
+                      padding: EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black.withOpacity(0.75)),
+                      )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '${widget.cash} ₸',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorLight),
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: colorLight),
                       ),
                       Container(
                           decoration: BoxDecoration(color: colorLight, borderRadius: BorderRadius.circular(4)),
                           child: const Icon(
+                            size: 19,
                             Icons.add,
                             color: Colors.white,
                           ))
