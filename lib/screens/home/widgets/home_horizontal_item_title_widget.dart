@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:process/color.dart';
+import 'package:process/screens/color.dart';
 
-class home_horizontal_item_title_widget extends StatefulWidget {
-  home_horizontal_item_title_widget(
+class HomeHorizontalItemTitleWidget extends StatelessWidget {
+  HomeHorizontalItemTitleWidget(
       {super.key, required this.title, required this.icon});
 
   String title;
   var icon;
 
-  @override
-  State<home_horizontal_item_title_widget> createState() =>
-      _home_horizontal_item_title_widgetState();
-}
-
-class _home_horizontal_item_title_widgetState
-    extends State<home_horizontal_item_title_widget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +19,7 @@ class _home_horizontal_item_title_widgetState
           Container(
             child: Row(children: [
               Icon(
-                widget.icon,
+                icon,
                 size: 22,
                 color: colorDark,
               ),
@@ -34,7 +27,7 @@ class _home_horizontal_item_title_widgetState
                 width: 12,
               ),
               Text(
-                widget.title,
+                title,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:process/color.dart';
+import 'package:process/screens/color.dart';
 
-class profileEdit extends StatefulWidget {
-  const profileEdit({super.key});
+class ProfileEditScreen extends StatefulWidget {
+  const ProfileEditScreen({super.key});
 
   @override
-  State<profileEdit> createState() => _profileEditState();
+  State<ProfileEditScreen> createState() => _ProfileEditScreenState();
 }
 
-class _profileEditState extends State<profileEdit> {
-  final _formKey = GlobalKey<FormState>();
+class _ProfileEditScreenState extends State<ProfileEditScreen> {
   String name = '';
   String surname = '';
   String email = '';
@@ -52,27 +51,8 @@ class _profileEditState extends State<profileEdit> {
             ),
             Container(
               padding: const EdgeInsets.all(16.0),
-              // child: Form(
-              //   key: _formKey,
               child: Column(
                 children: [
-                  // Center(
-                  //   child: Stack(
-                  //     children: [
-                  //       CircleAvatar(
-                  //         radius: 40,
-                  //         backgroundColor: Colors.black,
-                  //         child: IconButton(
-                  //           icon: const Icon(Icons.camera_alt, color: Colors.white),
-                  //           onPressed: () {
-                  //             // Handle change profile picture
-                  //           },
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 20),
                   TextFormField(
                     decoration: const InputDecoration(
                       labelText: 'ИМЯ',
@@ -180,7 +160,7 @@ class _profileEditState extends State<profileEdit> {
                   ),
                   const SizedBox(height: 10),
                   TextButton(
-                    onPressed: (){ },
+                    onPressed: () {},
                     style: TextButton.styleFrom(
                       minimumSize: Size(MediaQuery.of(context).size.width - 20, 50),
                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
@@ -192,7 +172,6 @@ class _profileEditState extends State<profileEdit> {
                   ),
                 ],
               ),
-              // ),
             ),
           ],
         ),

@@ -1,148 +1,26 @@
-// import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:flutter/material.dart';
-//
-// class NotificationPage extends StatefulWidget {
-//   @override
-//   _NotificationPageState createState() => _NotificationPageState();
-// }
-//
-// class _NotificationPageState extends State<NotificationPage> {
-//   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//
-//     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-//       print('Got a message whilst in the foreground!');
-//       print('Message data: ${message.data}');
-//
-//       if (message.notification != null) {
-//         print('Message also contained a notification: ${message.notification}');
-//         showDialog(
-//           context: context,
-//           builder: (context) => AlertDialog(
-//             title: Text(message.notification!.title!),
-//             content: Text(message.notification!.body!),
-//             actions: [
-//               TextButton(
-//                 onPressed: () => Navigator.of(context).pop(),
-//                 child: Text('OK'),
-//               ),
-//             ],
-//           ),
-//         );
-//       }
-//     });
-//
-//     _firebaseMessaging.requestPermission();
-//     _firebaseMessaging.getToken().then((String? token) {
-//       assert(token != null);
-//       print("Firebase Messaging Token: $token");
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('FCM Example'),
-//       ),
-//       body: Center(
-//         child: Text('Listening for notifications...'),
-//       ),
-//     );
-//   }
-//
-// }
-
-// import 'package:flutter/material.dart';
-//
-// class MyHomePage extends StatefulWidget {
-//   @override
-//   _MyHomePageState createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<MyHomePage> {
-//   int _selectedValue = 0;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Modal Bottom Sheet Example')),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text('Selected Value: $_selectedValue'),
-//
-//
-//             ElevatedButton(
-//               onPressed: () async {
-//
-//                 final result = await showModalBottomSheet<int>(
-//                   context: context,
-//                   builder: (BuildContext context) {
-//                     return _BottomSheetContent();
-//                   },
-//                 );
-//
-//                 if (result != null) {
-//                   setState(() {
-//                     _selectedValue = result;
-//                   });
-//                 }
-//               },
-//               child: Text('Show Bottom Sheet'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// class _BottomSheetContent extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 200,
-//       child: Column(
-//         children: [
-//           ListTile(
-//             title: Text('Value 1'),
-//             onTap: () => Navigator.pop(context, 1),
-//           ),
-//           ListTile(
-//             title: Text('Value 2'),
-//             onTap: () => Navigator.pop(context, 2),
-//           ),
-//           ListTile(
-//             title: Text('Value 3'),
-//             onTap: () => Navigator.pop(context, 3),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-//
 // import 'package:bloc/bloc.dart';
 // import 'package:equatable/equatable.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+// import 'package:process/screens/cart/cart_screen_null.dart';
+//
+// // import 'package:process/screens/cart/cart_screen_null.dart';
+// import 'package:process/screens/home/widgets/home_customize_widget.dart';
+// import 'package:process/screens/navbar.dart';
+//
+// import '../cart_screen.dart';
 //
 // // Event
-// abstract class CakeCustomizationEvent extends Equatable {
-//   const CakeCustomizationEvent();
+// abstract class DoneCustomizationEvent extends Equatable {
+//   const DoneCustomizationEvent();
 //
 //   @override
 //   List<Object> get props => [];
 // }
 //
-// class ShapeSelected extends CakeCustomizationEvent {
+// class ShapeSelected extends DoneCustomizationEvent {
 //   final Shape shape;
 //
 //   const ShapeSelected(this.shape);
@@ -151,7 +29,7 @@
 //   List<Object> get props => [shape];
 // }
 //
-// class FlavorSelected extends CakeCustomizationEvent {
+// class FlavorSelected extends DoneCustomizationEvent {
 //   final Flavor flavor;
 //
 //   const FlavorSelected(this.flavor);
@@ -160,7 +38,7 @@
 //   List<Object> get props => [flavor];
 // }
 //
-// class ColourSelected extends CakeCustomizationEvent {
+// class ColourSelected extends DoneCustomizationEvent {
 //   final Colour colour;
 //
 //   const ColourSelected(this.colour);
@@ -170,13 +48,13 @@
 // }
 //
 // // State
-// enum Shape { MiniStandard, MiniHeart, StandardCake, HeartCake }
+// enum Shape { MiniStandard, MiniHeart, StandardDone, HeartDone }
 //
 // enum Flavor { Vanilla, ChocoCrunch, RedVelvet, Nutella }
 //
 // enum Colour { Red, Blue, Yellow, Green }
 //
-// class CakeCustomizationState extends Equatable {
+// class DoneCustomizationState extends Equatable {
 //   final Shape shape;
 //   final Flavor flavor;
 //   final Colour colour;
@@ -194,7 +72,7 @@
 //   final String flavorName;
 //   final String colourName;
 //
-//   const CakeCustomizationState({
+//   const DoneCustomizationState({
 //     required this.shape,
 //     required this.flavor,
 //     required this.colour,
@@ -209,7 +87,7 @@
 //     required this.colourName,
 //   });
 //
-//   CakeCustomizationState copyWith({
+//   DoneCustomizationState copyWith({
 //     Shape? shape,
 //     Flavor? flavor,
 //     Colour? colour,
@@ -223,7 +101,7 @@
 //     String? flavorName,
 //     String? colourName,
 //   }) {
-//     return CakeCustomizationState(
+//     return DoneCustomizationState(
 //       shape: shape ?? this.shape,
 //       flavor: flavor ?? this.flavor,
 //       colour: colour ?? this.colour,
@@ -245,38 +123,45 @@
 // }
 //
 // // Bloc
-// class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizationState> {
-//   CakeCustomizationBloc()
-//       : super(CakeCustomizationState(
-//           shape: Shape.MiniStandard,
-//           flavor: Flavor.Vanilla,
-//           colour: Colour.Red,
-//           imagePath: 'assets/cakes/ministandard_vanilla.png',
-//           totalPrice: _calculateInitialTotalPrice(),
-//           isLoadingImage: true,
-//           shapeImagePath: '',
-//           flavorImagePath: '',
-//           colourImagePath: '',
-//           shapeName: '',
-//           flavorName: '',
-//           colourName: '',
-//         ),){
+// class DoneCustomizationBloc extends Bloc<DoneCustomizationEvent, DoneCustomizationState> {
+//   DoneCustomizationBloc({
+//     required Shape initialShape,
+//     required Flavor initialFlavor,
+//     required Colour initialColour,
+//   }) : super(
+//           DoneCustomizationState(
+//             shape: initialShape,
+//             flavor: initialFlavor,
+//             colour: initialColour,
+//             imagePath: '',
+//             totalPrice: _calculateInitialTotalPrice(initialShape, initialFlavor, initialColour),
+//             isLoadingImage: true,
+//             shapeImagePath: '',
+//             flavorImagePath: '',
+//             colourImagePath: '',
+//             shapeName: '',
+//             flavorName: '',
+//             colourName: '',
+//           ),
+//         ) {
 //     on<ShapeSelected>(_onShapeSelected);
 //     on<FlavorSelected>(_onFlavorSelected);
 //     on<ColourSelected>(_onColourSelected);
 //   }
 //
-//   static double _calculateInitialTotalPrice() {
-//     return shapePrices[Shape.MiniStandard]! +
-//         flavorPrices[Flavor.Vanilla]! +
-//         colourPrices[Colour.Red]!;
+//   // static double _calculateInitialTotalPrice() {
+//   //   return shapePrices[Shape.MiniStandard]! + flavorPrices[Flavor.Vanilla]! + colourPrices[Colour.Red]!;
+//   // }
+//
+//   static double _calculateInitialTotalPrice(Shape shape, Flavor flavor, Colour colour) {
+//     return shapePrices[shape]! + flavorPrices[flavor]! + colourPrices[colour]!;
 //   }
 //
 //   double _calculateTotalPrice(Shape shape, Flavor flavor, Colour colour) {
 //     return shapePrices[shape]! + flavorPrices[flavor]! + colourPrices[colour]!;
 //   }
 //
-//   void _onShapeSelected(ShapeSelected event, Emitter<CakeCustomizationState> emit) {
+//   void _onShapeSelected(ShapeSelected event, Emitter<DoneCustomizationState> emit) {
 //     emit(state.copyWith(shape: event.shape, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(event.shape, state.flavor, state.colour)));
 //     _getImagePath(event.shape, state.flavor, state.colour).then((imagePath) {
 //       emit(state.copyWith(
@@ -286,7 +171,7 @@
 //     }).catchError((error) {});
 //   }
 //
-//   void _onFlavorSelected(FlavorSelected event, Emitter<CakeCustomizationState> emit) {
+//   void _onFlavorSelected(FlavorSelected event, Emitter<DoneCustomizationState> emit) {
 //     emit(state.copyWith(flavor: event.flavor, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, event.flavor, state.colour)));
 //     _getImagePath(state.shape, event.flavor, state.colour).then((imagePath) {
 //       emit(state.copyWith(
@@ -296,7 +181,7 @@
 //     }).catchError((error) {});
 //   }
 //
-//   void _onColourSelected(ColourSelected event, Emitter<CakeCustomizationState> emit) {
+//   void _onColourSelected(ColourSelected event, Emitter<DoneCustomizationState> emit) {
 //     emit(state.copyWith(colour: event.colour, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, state.flavor, event.colour)));
 //     _getImagePath(state.shape, state.flavor, event.colour).then((imagePath) {
 //       emit(state.copyWith(
@@ -320,8 +205,8 @@
 // const Map<Shape, double> shapePrices = {
 //   Shape.MiniStandard: 20.0,
 //   Shape.MiniHeart: 10.0,
-//   Shape.StandardCake: 30.0,
-//   Shape.HeartCake: 25.0,
+//   Shape.StandardDone: 30.0,
+//   Shape.HeartDone: 25.0,
 // };
 // const Map<Flavor, double> flavorPrices = {
 //   Flavor.Vanilla: 2.0,
@@ -339,8 +224,8 @@
 // const Map<Shape, String> shapeImg = {
 //   Shape.MiniStandard: 'assets/fill/ministandard.png',
 //   Shape.MiniHeart: 'assets/fill/miniheart.png',
-//   Shape.StandardCake: 'assets/fill/standardcake.png',
-//   Shape.HeartCake: 'assets/fill/heartcake.png',
+//   Shape.StandardDone: 'assets/fill/standardcake.png',
+//   Shape.HeartDone: 'assets/fill/heartcake.png',
 // };
 // const Map<Flavor, String> flavorImg = {
 //   Flavor.Vanilla: 'assets/taste/vanilla.png',
@@ -358,8 +243,8 @@
 // const Map<Shape, String> shapeName = {
 //   Shape.MiniStandard: 'Мини стандарт',
 //   Shape.MiniHeart: 'Мини сердце',
-//   Shape.StandardCake: 'Стандарт торт',
-//   Shape.HeartCake: 'Стандарт сердце',
+//   Shape.StandardDone: 'Стандарт торт',
+//   Shape.HeartDone: 'Стандарт сердце',
 // };
 // const Map<Flavor, String> flavorName = {
 //   Flavor.Vanilla: 'ваниль',
@@ -375,34 +260,7 @@
 // };
 //
 // // UI
-// class CakeCustomizationScreen extends StatefulWidget {
-//   @override
-//   State<CakeCustomizationScreen> createState() => _CakeCustomizationScreenState();
-// }
-//
-// class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
-//   // String? imageUrl;
-//   //
-//   // @override
-//   // void initState() {
-//   //   super.initState();
-//   //   _loadImage();
-//   // }
-//   //
-//   // Future<void> _loadImage() async {
-//   //   try {
-//   //     // Используем gs:// ссылку для получения URL
-//   //     String downloadURL = await FirebaseStorage.instance
-//   //         .refFromURL('gs://pushnotification-744c7.appspot.com/ministandard_vanilla_yellow.png')
-//   //         .getDownloadURL();
-//   //     setState(() {
-//   //       imageUrl = downloadURL;
-//   //     });
-//   //   } catch (e) {
-//   //     print("Error: $e");
-//   //   }
-//   // }
-//
+// class DoneCustomizationScreen extends StatelessWidget {
 //   Future<String> _getImagePath(Shape shape, Flavor flavor, Colour colour) async {
 //     String shapeString = shape.toString().split('.').last.toLowerCase();
 //     String flavorString = flavor.toString().split('.').last.toLowerCase();
@@ -414,23 +272,31 @@
 //
 //   @override
 //   Widget build(BuildContext context) {
+//     final args = ModalRoute.of(context)!.settings.arguments as CakeTemplateArguments;
+//
 //     return BlocProvider(
-//       create: (context) => CakeCustomizationBloc(),
+//       create: (context) => DoneCustomizationBloc(
+//         initialShape: args.shape,
+//         initialFlavor: args.flavor,
+//         initialColour: args.colour,
+//       ),
 //       child: Scaffold(
 //         appBar: AppBar(
-//           title: const Text('Кастомизация', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
+//           title: const Text('Customize'),
 //           actions: [
-//             BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(builder: (context, state) {
+//             BlocBuilder<DoneCustomizationBloc, DoneCustomizationState>(builder: (context, state) {
 //               return Text(
-//                 'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
-//                 style: const TextStyle(fontSize: 16),
+//                 'Цена: \₸${state.totalPrice.toStringAsFixed(2)}',
+//                 style: const TextStyle(fontSize: 14),
 //               );
 //             }),
 //             const SizedBox(width: 20)
 //           ],
 //         ),
-//         body: BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(
+//         body: BlocBuilder<DoneCustomizationBloc, DoneCustomizationState>(
 //           builder: (context, state) {
+//             var urlToCart;
+//
 //             return SingleChildScrollView(
 //               child: Column(
 //                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -456,6 +322,9 @@
 //                           child: Text('${snapshot.data.toString()}'),
 //                         );
 //                       } else if (snapshot.hasData) {
+//
+//                         urlToCart = snapshot.data;
+//
 //                         return Image.network(snapshot.data!, height: 200);
 //                       } else {
 //                         return const SizedBox.shrink();
@@ -475,18 +344,49 @@
 //                   const Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text('Color:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
 //                   _buildColourSelection(context),
 //                   const SizedBox(height: 20),
-//                   // Text('${state.imagePath}'),
-//                   const Text('dawta'),
-//                   // Text(
-//                   //   'Total Price: \$${state.totalPrice.toStringAsFixed(2)}',
-//                   //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//                   // ),
 //
-//                   // Center(
-//                   //   child: imageUrl == null
-//                   //       ? CircularProgressIndicator()
-//                   //       : Image.network(imageUrl!),
-//                   // ),
+//                   ElevatedButton(
+//                     onPressed: () {
+//                       // BlocProvider.of<CartBloc>(context).add(AddCakeToCart(
+//                       //   shape: state.shape,
+//                       //   flavor: state.flavor,
+//                       //   colour: state.colour,
+//                       //   price: state.totalPrice,
+//                       //   imageUrl: state.imagePath,
+//                       // ));
+//
+//                       // final List<Product> _products = [
+//                       //   Product('nomer 1', 10.0, Flavor.RedVelvet, Colour.Red, Shape.HeartDone),
+//                       //   // Product('nomer 2', 20.0),
+//                       //   // Product('nomer 3', 30.0),
+//                       // ];
+//
+//                       var lox = Product('${state.shape}' , state.totalPrice, state.flavor.toString(), state.colour.toString() as Colour, state.shape.toString() as Shape, urlToCart);
+//
+//                       context.read<CartBloc>().add(AddProduct(lox));
+//
+//                       // Navigator.of(context).push(
+//                       //   // MaterialPageRoute(builder: (_) => ProductListScreen()),
+//                       //   MaterialPageRoute(builder: (_) => navbar(
+//                       //     initialPageIndex: 1,
+//                       //   ),),
+//                       // );
+//
+//                       Navigator.of(context).pushAndRemoveUntil(
+//                         MaterialPageRoute(builder: (context) => navbar(initialPageIndex: 1)),
+//                             (Route<dynamic> route) => false,
+//                       );
+//
+//                       // Navigator.pushNamed(context, '/Testitem', arguments: {
+//                       //   'flavor': state.flavor,
+//                       //   'colour': state.colour,
+//                       //   'shape': state.shape,
+//                       // },);
+//                     },
+//                     child: const Text('Добавить в корзину'),
+//                   ),
+//                   const SizedBox(height: 60),
+//                   // Text('${state.imagePath}'),
 //                 ],
 //               ),
 //             );
@@ -505,7 +405,7 @@
 //         itemBuilder: (context, index) {
 //           final shape = Shape.values[index];
 //           return InkWell(
-//               onTap: () => context.read<CakeCustomizationBloc>().add(ShapeSelected(shape)),
+//               onTap: () => context.read<DoneCustomizationBloc>().add(ShapeSelected(shape)),
 //               customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
 //               child: Container(
 //                 padding: const EdgeInsets.all(8.0),
@@ -523,7 +423,7 @@
 //                       '${shapeName[shape]}',
 //                       style: const TextStyle(fontWeight: FontWeight.bold),
 //                     ),
-//                     Text('\$${shapePrices[shape]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
+//                     Text('\₸${shapePrices[shape]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
 //                     // Text('${shapeImg[shape]}'),
 //                   ],
 //                 ),
@@ -542,13 +442,13 @@
 //         itemBuilder: (context, index) {
 //           final flavor = Flavor.values[index];
 //           return InkWell(
-//               onTap: () => context.read<CakeCustomizationBloc>().add(FlavorSelected(flavor)),
+//               onTap: () => context.read<DoneCustomizationBloc>().add(FlavorSelected(flavor)),
 //               customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
 //               child: Container(
 //                 padding: const EdgeInsets.all(8.0),
 //                 margin: const EdgeInsets.all(8),
 //                 decoration:
-//                 BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
+//                     BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
 //                 child: Column(
 //                   children: [
 //                     Image.asset(
@@ -560,7 +460,7 @@
 //                       '${flavorName[flavor]}',
 //                       style: const TextStyle(fontWeight: FontWeight.bold),
 //                     ),
-//                     Text('\$${flavorPrices[flavor]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
+//                     Text('\₸${flavorPrices[flavor]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
 //                   ],
 //                 ),
 //               ));
@@ -578,13 +478,13 @@
 //         itemBuilder: (context, index) {
 //           final colour = Colour.values[index];
 //           return InkWell(
-//               onTap: () => context.read<CakeCustomizationBloc>().add(ColourSelected(colour)),
+//               onTap: () => context.read<DoneCustomizationBloc>().add(ColourSelected(colour)),
 //               customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
 //               child: Container(
 //                 padding: const EdgeInsets.all(8.0),
 //                 margin: const EdgeInsets.all(8),
 //                 decoration:
-//                 BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
+//                     BoxDecoration(color: const Color(0xA8F1E2E3), borderRadius: BorderRadius.circular(20), border: Border.all(width: 1, color: const Color(0xF4CCADAD))),
 //                 child: Column(
 //                   children: [
 //                     Image.asset(
@@ -596,7 +496,7 @@
 //                       '${colourName[colour]}',
 //                       style: const TextStyle(fontWeight: FontWeight.bold),
 //                     ),
-//                     Text('\$${colourPrices[colour]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
+//                     Text('\₸${colourPrices[colour]!.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xff4f4f4f))),
 //                   ],
 //                 ),
 //               ));
@@ -604,31 +504,16 @@
 //       ),
 //     );
 //   }
-//
-//   // Widget _buildColourSelection(BuildContext context) {
-//   //   return SizedBox(
-//   //     height: 140,
-//   //     child: ListView.builder(
-//   //       scrollDirection: Axis.horizontal,
-//   //       itemCount: Colour.values.length,
-//   //       itemBuilder: (context, index) {
-//   //         final colour = Colour.values[index];
-//   //         return Padding(
-//   //           padding: const EdgeInsets.all(8.0),
-//   //           child: Column(
-//   //             children: [
-//   //               ElevatedButton(
-//   //                 onPressed: () => context.read<CakeCustomizationBloc>().add(ColourSelected(colour)),
-//   //                 child: Text(colour.toString().split('.').last),
-//   //               ),
-//   //               Text('\$${colourPrices[colour]!.toStringAsFixed(2)}'),
-//   //               // Text('${colourImg[colour]}'),
-//   //               Image.asset('${colourImg[colour]}', height: 30),
-//   //             ],
-//   //           ),
-//   //         );
-//   //       },
-//   //     ),
-//   //   );
-//   // }
 // }
+//
+// // class CakeCreateTemplateArguments {
+// //   final Shape shape;
+// //   final Flavor flavor;
+// //   final Colour colour;
+// //
+// //   CakeCreateTemplateArguments({
+// //     required this.shape,
+// //     required this.flavor,
+// //     required this.colour,
+// //   });
+// // }

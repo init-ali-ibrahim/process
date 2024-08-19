@@ -1,9 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:process/color.dart';
+import 'package:process/screens/color.dart';
 import 'package:process/screens/navbar.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -25,7 +23,7 @@ class _SignUpScreen extends State<SignUpScreen> {
       );
 
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => navbar(initialPageIndex: 2)),
+        MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
         (Route<dynamic> route) => false,
       );
     } on FirebaseAuthException catch (e) {
@@ -38,116 +36,6 @@ class _SignUpScreen extends State<SignUpScreen> {
       _obscureText = !_obscureText;
     });
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: PreferredSize(
-  //       preferredSize: const Size.fromHeight(200),
-  //       child: AppBar(
-  //         backgroundColor: colorDark,
-  //         elevation: 0,
-  //         leading: IconButton(
-  //           icon: const Icon(Icons.arrow_back, color: Colors.white),
-  //           onPressed: () {
-  //             Navigator.of(context).pop();
-  //           },
-  //         ),
-  //         flexibleSpace: const Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.end,
-  //           children: [
-  //             Padding(
-  //               padding: EdgeInsets.symmetric(horizontal: 16.0),
-  //               child: Text(
-  //                 'Регистрация',
-  //                 style: TextStyle(
-  //                   color: Colors.white,
-  //                   fontSize: 42,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //               ),
-  //             ),
-  //             Padding(
-  //               padding: EdgeInsets.symmetric(horizontal: 16.0),
-  //               child: Text(
-  //                 'Пожалуйста, создайте аккаунт, чтобы продолжить',
-  //                 style: TextStyle(
-  //                   color: Color(0xFFE0E0E0),
-  //                   fontSize: 16,
-  //                 ),
-  //               ),
-  //             ),
-  //             SizedBox(height: 20),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //     body: SingleChildScrollView(
-  //       child: Padding(
-  //         padding: const EdgeInsets.all(16.0),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             const SizedBox(height: 40.0),
-  //             TextField(
-  //               controller: _emailController,
-  //               decoration: InputDecoration(
-  //                 labelText: 'Почта',
-  //                 border: OutlineInputBorder(
-  //                   borderRadius: BorderRadius.circular(8.0),
-  //                 ),
-  //                 filled: true,
-  //                 fillColor: Color(0x13621455),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 20.0),
-  //             TextField(
-  //               controller: _passwordController,
-  //               obscureText: _obscureText,
-  //               decoration: InputDecoration(
-  //                 labelText: 'Пароль',
-  //                 border: OutlineInputBorder(
-  //                   borderRadius: BorderRadius.circular(8.0),
-  //                 ),
-  //                 filled: true,
-  //                 fillColor: Color(0x13621455),
-  //                 suffixIcon: IconButton(
-  //                   icon: Icon(
-  //                     _obscureText ? Icons.visibility_off : Icons.visibility,
-  //                     // Icons.visibility_off
-  //                   ),
-  //                   onPressed:
-  //                   // () => widget
-  //                   _togglePasswordVisibility,
-  //                 ),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 50.0),
-  //             SizedBox(
-  //               width: double.infinity,
-  //               child: ElevatedButton(
-  //                 style: ElevatedButton.styleFrom(
-  //                   backgroundColor: colorPrimary,
-  //                   padding: const EdgeInsets.symmetric(vertical: 15.0),
-  //                   shape: RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.circular(8.0),
-  //                   ),
-  //                 ),
-  //                 onPressed: _signUp,
-  //                 child: const Text(
-  //                   'Зарегистрироваться',
-  //                   style: TextStyle(color: Colors.white, fontSize: 16),
-  //                 ),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 20.0),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -221,11 +109,6 @@ class _SignUpScreen extends State<SignUpScreen> {
                           controller: _emailController,
                           decoration: InputDecoration(
                             labelText: 'Введите почту',
-                            // inputDecorationTheme: InputDecorationTheme(
-                            //   floatingLabelStyle: TextStyle(color: Colors.blue),
-                            // ),
-                            // labelStyle: TextStyle(color: myFocusNode.hasFocus ? Colors.blue : Colors.black),
-                            // focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                         ),
@@ -235,7 +118,6 @@ class _SignUpScreen extends State<SignUpScreen> {
                           obscureText: _obscureText,
                           decoration: InputDecoration(
                             labelText: 'Пароль',
-                            // labelStyle: TextStyle(color: Colors.red),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscureText ? Icons.visibility_off : Icons.visibility,

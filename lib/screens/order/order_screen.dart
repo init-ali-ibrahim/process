@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ViewCartDataScreen extends StatelessWidget {
+class OrderScreen extends StatelessWidget {
   final User user;
 
-  ViewCartDataScreen({required this.user});
+  OrderScreen({required this.user});
 
   Future<Map<String, dynamic>> fetchCartData() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -17,17 +17,17 @@ class ViewCartDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Просмотр данных'),
+        title: const Text('Просмотр данных'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchCartData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Ошибка: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Нет данных для отображения.'));
+            return const Center(child: Text('Нет данных для отображения.'));
           }
 
           final data = snapshot.data!;
@@ -39,9 +39,9 @@ class ViewCartDataScreen extends StatelessWidget {
             children: [
               Text(
                 'стоимость: $totalPrice',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ...cartData.map((item) {
                 final product = item['product'];
                 final quantity = item['quantity'];

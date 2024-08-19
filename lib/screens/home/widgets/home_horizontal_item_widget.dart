@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:process/color.dart';
+import 'package:process/screens/color.dart';
 
-class home_horizontal_item_widget extends StatefulWidget {
-  home_horizontal_item_widget({super.key, required this.title, required this.img, required this.cash, required this.type});
+class HomeHorizontalItemWidget extends StatefulWidget {
+  HomeHorizontalItemWidget({super.key, required this.title, required this.img, required this.cash, required this.type});
 
   final String title;
   final String img;
@@ -10,10 +10,10 @@ class home_horizontal_item_widget extends StatefulWidget {
   final String type;
 
   @override
-  State<home_horizontal_item_widget> createState() => _home_horizontal_item_widgetState();
+  State<HomeHorizontalItemWidget> createState() => _HomeHorizontalItemWidgetState();
 }
 
-class _home_horizontal_item_widgetState extends State<home_horizontal_item_widget> {
+class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(

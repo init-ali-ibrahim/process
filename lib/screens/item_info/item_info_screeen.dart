@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:process/color.dart';
-import 'package:process/screens/cartTest.dart';
+import 'package:process/screens/cart/cart_screen.dart';
 import 'package:process/screens/navbar.dart';
 
-class itemInfo extends StatefulWidget {
-  const itemInfo({super.key});
+class ItemInfoScreen extends StatefulWidget {
+  const ItemInfoScreen({super.key});
 
   @override
-  State<itemInfo> createState() => _itemInfoState();
+  State<ItemInfoScreen> createState() => _ItemInfoScreenState();
 }
 
-class _itemInfoState extends State<itemInfo> {
+class _ItemInfoScreenState extends State<ItemInfoScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
@@ -46,18 +45,17 @@ class _itemInfoState extends State<itemInfo> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: ElevatedButton(
-
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
               ),
               onPressed: () {
-                var productItem = Product(args['title'], price, 'pies', 'pies', args['type'], args['img']);
+                var productItem = Product(args['title'], price, 'pies', 'pies' as String, args['type'], args['img']);
 
                 context.read<CartBloc>().add(AddProduct(productItem));
 
                 Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => navbar(initialPageIndex: 1)),
-                      (Route<dynamic> route) => false,
+                  MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 1)),
+                  (Route<dynamic> route) => false,
                 );
               },
               child: Text('В корзину за ${args['cash']} ₸', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),

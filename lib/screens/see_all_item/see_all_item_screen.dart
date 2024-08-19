@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:process/color.dart';
-import 'package:process/screens/cake_template.dart';
-import 'package:process/screens/home/widgets/home_customize_widget.dart';
-import 'package:process/screens/see_all_item/widgets/see_all_item_widget.dart';
+import 'package:process/screens/color.dart';
+import 'package:process/screens/cake_create/cake_create_screen.dart';
 
-class see_all_item extends StatefulWidget {
-  const see_all_item({super.key});
+class SeeAllItemScreen extends StatefulWidget {
+  const SeeAllItemScreen({super.key});
 
   @override
-  State<see_all_item> createState() => _see_all_itemState();
+  State<SeeAllItemScreen> createState() => _SeeAllItemScreenState();
 }
 
-class _see_all_itemState extends State<see_all_item> {
+class _SeeAllItemScreenState extends State<SeeAllItemScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +22,6 @@ class _see_all_itemState extends State<see_all_item> {
             color: colorDark,
           ),
         ]),
-        // backgroundColor: Colors.white,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -91,15 +88,6 @@ class CakeCard extends StatelessWidget {
   Shape shape;
   Flavor flavor;
   Colour colour;
-
-  // CakeCard({
-  //   required this.name,
-  //   required this.flavor,
-  //   required this.price,
-  //   required this.shape,
-  //   required this.flavor,
-  //   required this.colour,
-  // });
 
   @override
   Widget build(BuildContext  context) {
@@ -181,7 +169,7 @@ class CakeCard extends StatelessWidget {
     );
   }
 }
-//
+
 class CakeTemplateArguments {
   final Shape shape;
   final Flavor flavor;

@@ -1,6 +1,4 @@
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:process/color.dart';
 
 class profileUserNull_widget extends StatefulWidget {
   const profileUserNull_widget({super.key});

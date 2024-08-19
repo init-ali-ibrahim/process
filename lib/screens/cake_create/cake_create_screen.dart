@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-// import 'package:process/screens/cartTest.dart';
 
 // Event
 abstract class CakeCustomizationEvent extends Equatable {
@@ -585,11 +582,6 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                               _onSelectionChanged('Topping');
                             },
                           ),
-                          // IconButton(
-                          //   onPressed: () => _onSelectionChanged('Shape'),
-                          //   icon: const Icon(Icons.cake),
-                          //   color: currentSelection == 'Shape' ? Colors.purple : Colors.grey,
-                          // ),
                         ],
                       ),
                     ),
@@ -840,15 +832,6 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                       fontSize: 14,
                     ),
                   ),
-
-                  // Colour { money }
-                  // const SizedBox(height: 4),
-                  // Text(
-                  //   '\₸${colourPrices[colour]!.toStringAsFixed(2)}',
-                  //   style: const TextStyle(
-                  //     color: Color(0xff4f4f4f),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -883,9 +866,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                // color: Colors.white.withOpacity(0.9),
                 color: isSelected ? const Color(0xFFF6F6F6).withOpacity(0.9) : Colors.white.withOpacity(0.9),
-
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   width: 1,

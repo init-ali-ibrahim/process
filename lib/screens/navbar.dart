@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-// import 'package:process/cart_info_screen.dart';
-import 'package:process/screens/cartTest.dart';
+import 'package:process/screens/cart/cart_screen.dart';
 import 'package:process/screens/profile/profile_screen.dart';
 import 'package:process/screens/home/home_screen.dart';
+import 'package:process/screens/color.dart';
 
-// import 'package:process/screens/cart/cart_screen.dart';
-import 'package:process/color.dart';
-
-class navbar extends StatefulWidget {
-  navbar({required this.initialPageIndex});
+class Navbar extends StatefulWidget {
+  Navbar({required this.initialPageIndex});
 
   final int initialPageIndex;
 
   @override
-  _navbar createState() => _navbar();
+  _Navbar createState() => _Navbar();
 }
 
-class _navbar extends State<navbar> {
+class _Navbar extends State<Navbar> {
   late int pageIndex;
 
   final pages = [
-    const home_screen(),
+    const HomeScreen(),
     // cart_screen(),
-    ProductListScreen(),
-    const profile_screen(),
-    // const cart_info_screen(),
+    CartScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -74,19 +68,6 @@ class _navbar extends State<navbar> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    // InkWell(
-                    //   child: Container(
-                    //     height: 59,
-                    //     width: 90,
-                    //     padding: EdgeInsets.all(10),
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.all(Radius.elliptical(180, 90)),
-                    //       color: Colors.red
-                    //     ),
-                    //     child: Text('dara'),
-                    //   ),
-                    // ),
-
                     CustomTextButton(
                       pageIndex: pageIndex,
                       buttonIndex: 0,
