@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:process/screens/cake_create/bloc/cake_customization_bloc.dart';
 import 'package:process/screens/color.dart';
 import 'package:process/screens/cake_create/cake_create_screen.dart';
 
@@ -93,12 +94,13 @@ class CakeCard extends StatelessWidget {
   Widget build(BuildContext  context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/cake_template',
-            arguments: CakeTemplateArguments(
-              shape: shape,
-              colour: colour,
-              flavor: flavor,
-            ));
+        Navigator.pushNamed(context, '/cake_create',
+            // arguments: CakeTemplateArguments(
+            //   shape: shape,
+            //   colour: colour,
+            //   flavor: flavor,
+            // )
+        );
       },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -169,15 +171,15 @@ class CakeCard extends StatelessWidget {
     );
   }
 }
-
-class CakeTemplateArguments {
-  final Shape shape;
-  final Flavor flavor;
-  final Colour colour;
-
-  CakeTemplateArguments({
-    required this.shape,
-    required this.flavor,
-    required this.colour,
-  });
-}
+//
+// class CakeTemplateArguments {
+//   final Shape shape;
+//   final Flavor flavor;
+//   final Colour colour;
+//
+//   CakeTemplateArguments({
+//     required this.shape,
+//     required this.flavor,
+//     required this.colour,
+//   });
+// }

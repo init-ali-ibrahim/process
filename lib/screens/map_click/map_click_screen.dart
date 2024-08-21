@@ -20,12 +20,29 @@ class _MapClickScreenState extends State<MapClickScreen> {
   String _selectedStreet = '';
   String _selectedDistrict = '';
 
-  final LatLng _center = const LatLng(43.2567, 76.9286);
+  final LatLng _center = const LatLng(43.220189, 76.876802);
 
   @override
   void initState() {
     super.initState();
     _setMarkerIcon();
+
+    _markers.add(
+      Marker(
+        markerId: const MarkerId('marker_1'),
+        position: const LatLng(43.220189, 76.876802),
+        infoWindow: const InfoWindow(title: 'Интересное место 1'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      ),
+    );
+    _markers.add(
+      Marker(
+        markerId: const MarkerId('marker_2'),
+        position: const LatLng(43.2565, 76.9282),
+        infoWindow: const InfoWindow(title: 'Интересное место 2'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+      ),
+    );
   }
 
   Future<void> _setMarkerIcon() async {
@@ -61,10 +78,12 @@ class _MapClickScreenState extends State<MapClickScreen> {
           GoogleMap(
             initialCameraPosition: CameraPosition(
               target: _center,
-              zoom: 15.0,
+              zoom: 12,
+              tilt: 45,
             ),
             onMapCreated: (controller) {
               _controller = controller;
+
             },
             markers: _markers,
             onCameraMove: (CameraPosition position) {
@@ -84,6 +103,23 @@ class _MapClickScreenState extends State<MapClickScreen> {
           ),
         ],
       ),
+      // floatingActionButton: Column(
+      //   mainAxisAlignment: MainAxisAlignment.end,
+      //   children: [
+      //     FloatingActionButton(
+      //       onPressed: () {
+      //         _controller?.animateCamera(CameraUpdate.newCameraPosition(
+      //           CameraPosition(
+      //             target: LatLng(43.2565, 76.9282),
+      //             zoom: 17.0,
+      //           ),
+      //         ));
+      //       },
+      //       child: Icon(Icons.apartment),
+      //     ),
+      //   ],
+      // ),
+
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await _getAddressFromLatLng(_markers.first.position);

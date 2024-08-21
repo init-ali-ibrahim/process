@@ -33,6 +33,7 @@ dependencies:
   google_maps_flutter: ^2.9.0
   geocoding: ^3.0.0
   translator: ^1.0.0
+  mobile_scanner: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -54,13 +55,14 @@ flutter:
 
   assets:
   - assets/
-  - assets/fill/
-  - assets/taste/
-  - assets/color/
-  - assets/cakes/
-  - assets/main_screen/
-  - assets/main_screen/pies/
-  - assets/topping/
+  - assets/image/
+  - assets/image/fill/
+  - assets/image/taste/
+  - assets/image/color/
+  - assets/image/cakes/
+  - assets/image/main_screen/
+  - assets/image/main_screen/pies/
+  - assets/image/topping/
 
   fonts:
     - family: OpenSans

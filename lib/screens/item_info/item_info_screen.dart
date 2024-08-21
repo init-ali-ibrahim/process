@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/cart/cart_screen.dart';
 import 'package:process/screens/navbar.dart';
 
@@ -49,7 +50,7 @@ class _ItemInfoScreenState extends State<ItemInfoScreen> {
                 minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
               ),
               onPressed: () {
-                var productItem = Product(args['title'], price, 'pies', 'pies' as String, args['type'], args['img']);
+                var productItem = Product(args['title'], price, 'pies', 'pies', args['type'], args['img']);
 
                 context.read<CartBloc>().add(AddProduct(productItem));
 

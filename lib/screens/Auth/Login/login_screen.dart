@@ -28,8 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
         (Route<dynamic> route) => false,
       );
-
-      print('зашли?');
     } on FirebaseAuthException catch (e) {
       print('Error: ${e.message}');
     }
@@ -109,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 10),
                         GestureDetector(
-                            child: Text(
+                            child: const Text(
                           'Забыли пароль?',
                           style: TextStyle(color: Colors.red),
                         )),

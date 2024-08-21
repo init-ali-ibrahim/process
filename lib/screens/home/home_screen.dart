@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: SafeArea(
                   child: Row(
                 children: [
-                  Image.asset('assets/logo.png', width: 90),
+                  Image.asset('assets/image/logo.png', width: 90),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,10 +264,10 @@ class _HomeScreenState extends State<HomeScreen> {
               Wrap(
                 direction: Axis.horizontal,
                 children: [
-                  _buildCityOption(context, 'Алматы', 'assets/almaty-logo.png'),
-                  _buildCityOption(context, 'Астана', 'assets/astana-logo.png'),
-                  _buildCityOption(context, 'Уральск', 'assets/shymkent-logo.png'),
-                  _buildCityOption(context, 'Актобе', 'assets/shymkent-logo.png'),
+                  _buildCityOption(context, 'Алматы', 'assets/image/almaty-logo.png'),
+                  _buildCityOption(context, 'Астана', 'assets/image/astana-logo.png'),
+                  _buildCityOption(context, 'Уральск', 'assets/image/uralsk-logo.png'),
+                  _buildCityOption(context, 'Актобе', 'assets/image/aktobe-logo.png'),
                 ],
               ),
             ],

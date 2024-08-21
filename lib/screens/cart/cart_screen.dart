@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:process/screens/cart/bloc/cart_bloc.dart';
+import 'package:process/screens/cart/widgets/cart_empty_widget.dart';
 import 'package:process/screens/color.dart';
 
 // Модель
@@ -23,118 +25,20 @@ class Product extends Equatable {
 }
 
 // события
-abstract class CartEvent extends Equatable {
-  const CartEvent();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class AddProduct extends CartEvent {
-  final Product product;
-
-  const AddProduct(this.product);
-
-  @override
-  List<Object?> get props => [product];
-}
-
-class RemoveProduct extends CartEvent {
-  final Product product;
-
-  const RemoveProduct(this.product);
-
-  @override
-  List<Object?> get props => [product];
-}
-
-class IncrementProductQuantity extends CartEvent {
-  final Product product;
-
-  const IncrementProductQuantity(this.product);
-
-  @override
-  List<Object?> get props => [product];
-}
-
-class DecrementProductQuantity extends CartEvent {
-  final Product product;
-
-  const DecrementProductQuantity(this.product);
-
-  @override
-  List<Object?> get props => [product];
-}
-
-class ClearAllProduct extends CartEvent {
-  const ClearAllProduct();
-
-  @override
-  List<Object?> get props => [];
-}
 
 // состояния
-class CartState extends Equatable {
-  final Map<Product, int> cart;
-
-  const CartState(this.cart);
-
-  double get totalPrice {
-    return cart.entries.fold(0, (sum, entry) => sum + entry.key.price * entry.value);
-  }
-
-  @override
-  List<Object?> get props => [cart];
-}
 
 // Блок
-class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc() : super(const CartState({})) {
-    on<AddProduct>((event, emit) {
-      final newCart = Map<Product, int>.from(state.cart);
-      if (newCart.containsKey(event.product)) {
-        newCart[event.product] = newCart[event.product]! + 1;
-      } else {
-        newCart[event.product] = 1;
-      }
-      emit(CartState(newCart));
-    });
 
-    on<RemoveProduct>((event, emit) {
-      final newCart = Map<Product, int>.from(state.cart);
-      newCart.remove(event.product);
-      emit(CartState(newCart));
-    });
-
-    on<IncrementProductQuantity>((event, emit) {
-      final newCart = Map<Product, int>.from(state.cart);
-      newCart[event.product] = newCart[event.product]! + 1;
-      emit(CartState(newCart));
-    });
-
-    on<DecrementProductQuantity>((event, emit) {
-      final newCart = Map<Product, int>.from(state.cart);
-      if (newCart[event.product]! > 1) {
-        newCart[event.product] = newCart[event.product]! - 1;
-      } else {
-        newCart.remove(event.product);
-      }
-      emit(CartState(newCart));
-    });
-
-    on<ClearAllProduct>((event, emit) {
-      emit(const CartState({}));
-    });
-  }
-}
-
+// UI
 class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
+
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
-
   bool _hasShownBottomSheet = false;
   bool _hasBeenTriggeredManually = false;
 
@@ -163,7 +67,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
   var streetCart;
   var districtCart;
 
-
   Future<void> _loadData() async {
     try {
       streetCart = await storage.read(key: 'streetCart');
@@ -174,7 +77,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
     }
   }
 
-  final TextEditingController _controllerDistrict = TextEditingController(text: '');
+  // final TextEditingController _controllerDistrict = TextEditingController(text: '');
 
   final List<Product> _products = [
     Product('украшение 1', 10, 'украшение', '', '',
@@ -215,11 +118,10 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
   }
 
   bool isChecked = false;
-  String _addressType = 'House';
 
   @override
   Widget build(BuildContext context) {
-    late TextEditingController _controllerStreet = TextEditingController(text: streetCart);
+    // late TextEditingController _controllerStreet = TextEditingController(text: streetCart);
 
     return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
       return Scaffold(
@@ -227,12 +129,19 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
           appBar: AppBar(
             backgroundColor: bgColor,
             title: const Text('Корзина'),
+            // surfaceTintColor: Colors.white,
             actions: [
               state.cart.isEmpty
                   ? const Text('')
                   : IconButton(
                       onPressed: () {
-                        context.read<CartBloc>().add(const ClearAllProduct());
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return alertClear(dialogContext);
+                          },
+                        );
+                        // context.read<CartBloc>().add(const ClearAllProduct());
                       },
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       icon: const Icon(Icons.delete_outlined),
@@ -241,7 +150,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
           ),
           body: BlocBuilder<CartBloc, CartState>(builder: (context, state) {
             if (state.cart.isEmpty) {
-              return CartEmpty(context);
+              return CartEmptyWidget(context);
             } else {
               return Stack(
                 children: [
@@ -251,11 +160,12 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 300,
+                          // height: 300,
                           width: MediaQuery.of(context).size.width,
                           child: BlocBuilder<CartBloc, CartState>(
                             builder: (context, state) {
                               return ListView(
+                                shrinkWrap: true,
                                 children: state.cart.entries.map((entry) {
                                   final product = entry.key;
                                   final quantity = entry.value;
@@ -397,7 +307,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                             children: [
                               const Text(
                                 'Получатель',
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                                style: TextStyle(fontSize: 16),
                               ),
                               const SizedBox(height: 8),
                               Container(
@@ -468,10 +378,11 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                         isChecked = value!;
                                       });
                                     },
-                                    fillColor: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-                                      if (!states.contains(MaterialState.selected)) {
+                                    fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+                                      if (!states.contains(WidgetState.selected)) {
                                         return Colors.white;
                                       }
+                                      return null;
                                     }),
                                   ),
                                 ],
@@ -574,46 +485,64 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
           }));
     });
   }
-}
 
-Widget CartEmpty(context) {
-  return Center(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(40),
-          decoration: const BoxDecoration(color: Color(0xFFE7A8A8), shape: BoxShape.circle),
-          child: const Icon(
-            Icons.shopping_cart_outlined,
-            color: Colors.white,
-            size: 180,
-          ),
-        ),
-        const SizedBox(height: 20),
-        const Text('Корзина пуста', style: TextStyle(fontSize: 18)),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Попробуйте что нибудь'),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/');
-              },
-              child: const Text(
-                ' добавить',
-                style: TextStyle(color: Colors.red),
-              ),
+
+  //----------------------------
+
+  Widget alertClear(BuildContext dialogContext) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      backgroundColor: Colors.white,
+      title: const Text(
+        'Очистить корзину',
+        style: TextStyle(fontSize: 20),
+      ),
+      content: const SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Вы уверены?',
+                    softWrap: true,
+                  ),
+                ),
+                SizedBox(
+                  width: 80,
+                )
+              ],
+            ),
+            SizedBox(
+              height: 1,
             )
           ],
-        )
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text(
+            'Отмена',
+            style: TextStyle(color: Colors.grey),
+          ),
+          onPressed: () {
+            Navigator.of(dialogContext).pop();
+          },
+        ),
+        TextButton(
+          child: const Text(
+            'Очистить',
+            style: TextStyle(color: Colors.red),
+          ),
+          onPressed: () async {
+            context.read<CartBloc>().add(const ClearAllProduct());
+            Navigator.of(dialogContext).pop();
+          },
+        ),
       ],
-    ),
-  );
+    );
+  }
 }
-
 
 void _showAddressModal(BuildContext context) {
   showModalBottomSheet(
@@ -635,6 +564,8 @@ void _showAddressModal(BuildContext context) {
 }
 
 class AddressModalContent extends StatefulWidget {
+  const AddressModalContent({super.key});
+
   @override
   _AddressModalContentState createState() => _AddressModalContentState();
 }

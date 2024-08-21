@@ -118,6 +118,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                           obscureText: _obscureText,
                           decoration: InputDecoration(
                             labelText: 'Пароль',
+                            // labelStyle: TextStyle(color: Colors.grey),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscureText ? Icons.visibility_off : Icons.visibility,

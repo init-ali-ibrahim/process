@@ -1,11 +1,15 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:process/screens/Auth/SignUp/sign_up_screen.dart';
 import 'package:process/screens/Auth/Login/login_screen.dart';
+import 'package:process/screens/cake_create/bloc/cake_customization_bloc.dart';
+import 'package:process/screens/cart/bloc/cart_bloc.dart';
+import 'package:process/screens/demo_screen.dart';
 import 'package:process/screens/profile/profile_edit_screen.dart';
 import 'package:process/screens/cake_create/cake_create_screen.dart';
 import 'package:process/screens/cart/cart_screen.dart';
-import 'package:process/screens/item_info/item_info_screeen.dart';
+import 'package:process/screens/item_info/item_info_screen.dart';
 import 'package:process/screens/map_click/map_click_screen.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/see_all_item/see_all_item_screen.dart';
@@ -19,6 +23,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.playIntegrity,
+  );
+
   runApp(const MyApp());
 }
 
@@ -37,26 +46,29 @@ class MyApp extends StatelessWidget {
             title: 'Process',
             theme: ThemeData(
               textTheme: TextTheme(
-                displayLarge: Theme.of(context).textTheme.displayLarge?.copyWith(letterSpacing: -0.2),
-                displayMedium: Theme.of(context).textTheme.displayMedium?.copyWith(letterSpacing: -0.2),
-                displaySmall: Theme.of(context).textTheme.displaySmall?.copyWith(letterSpacing: -0.2),
-                headlineLarge: Theme.of(context).textTheme.headlineLarge?.copyWith(letterSpacing: -0.2),
-                headlineMedium: Theme.of(context).textTheme.headlineMedium?.copyWith(letterSpacing: -0.2),
-                headlineSmall: Theme.of(context).textTheme.headlineSmall?.copyWith(letterSpacing: -0.2),
-                titleLarge: Theme.of(context).textTheme.titleLarge?.copyWith(letterSpacing: -0.2),
-                titleMedium: Theme.of(context).textTheme.titleMedium?.copyWith(letterSpacing: -0.2),
-                titleSmall: Theme.of(context).textTheme.titleSmall?.copyWith(letterSpacing: -0.2),
-                bodyLarge: Theme.of(context).textTheme.bodyLarge?.copyWith(letterSpacing: -0.2),
-                bodyMedium: Theme.of(context).textTheme.bodyMedium?.copyWith(letterSpacing: -0.2),
-                bodySmall: Theme.of(context).textTheme.bodySmall?.copyWith(letterSpacing: -0.2),
-                labelLarge: Theme.of(context).textTheme.labelLarge?.copyWith(letterSpacing: -0.2),
-                labelMedium: Theme.of(context).textTheme.labelMedium?.copyWith(letterSpacing: -0.2),
-                labelSmall: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: -0.2),
+                displayLarge: Theme.of(context).textTheme.displayLarge?.copyWith(letterSpacing: -0.1),
+                displayMedium: Theme.of(context).textTheme.displayMedium?.copyWith(letterSpacing: -0.1),
+                displaySmall: Theme.of(context).textTheme.displaySmall?.copyWith(letterSpacing: -0.1),
+                headlineLarge: Theme.of(context).textTheme.headlineLarge?.copyWith(letterSpacing: -0.1),
+                headlineMedium: Theme.of(context).textTheme.headlineMedium?.copyWith(letterSpacing: -0.1),
+                headlineSmall: Theme.of(context).textTheme.headlineSmall?.copyWith(letterSpacing: -0.1),
+                titleLarge: Theme.of(context).textTheme.titleLarge?.copyWith(letterSpacing: -0.1),
+                titleMedium: Theme.of(context).textTheme.titleMedium?.copyWith(letterSpacing: -0.1),
+                titleSmall: Theme.of(context).textTheme.titleSmall?.copyWith(letterSpacing: -0.1),
+                bodyLarge: Theme.of(context).textTheme.bodyLarge?.copyWith(letterSpacing: -0.1),
+                bodyMedium: Theme.of(context).textTheme.bodyMedium?.copyWith(letterSpacing: -0.1),
+                bodySmall: Theme.of(context).textTheme.bodySmall?.copyWith(letterSpacing: -0.1),
+                labelLarge: Theme.of(context).textTheme.labelLarge?.copyWith(letterSpacing: -0.1),
+                labelMedium: Theme.of(context).textTheme.labelMedium?.copyWith(letterSpacing: -0.1),
+                labelSmall: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: -0.1),
               ),
               fontFamily: 'OpenSans',
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
               useMaterial3: true,
+              scaffoldBackgroundColor: bgColor,
               appBarTheme: const AppBarTheme(
+                // surfaceTintColor: Colors.white,
+                backgroundColor: Colors.white,
                 iconTheme: IconThemeData(
                   color: colorPrimary,
                 ),
@@ -67,24 +79,25 @@ class MyApp extends StatelessWidget {
             ),
             routes: {
               '/': (context) => Navbar(
-                initialPageIndex: 0,
-              ),
+                    initialPageIndex: 0,
+                  ),
               '/cart_screen': (context) => Navbar(
-                initialPageIndex: 1,
-              ),
+                    initialPageIndex: 1,
+                  ),
               '/profile': (context) => Navbar(
-                initialPageIndex: 2,
-              ),
+                    initialPageIndex: 2,
+                  ),
 
               '/map': (context) => const MapClickScreen(),
               '/my-profile': (context) => const ProfileEditScreen(),
               '/httpTest': (context) => const httpTest(),
-              '/cake_create': (context) => CakeCustomizationScreen(),
+              '/cake_create': (context) => const CakeCustomizationScreen(),
               '/item_info': (context) => const ItemInfoScreen(),
               '/see_all_item': (context) => const SeeAllItemScreen(),
               '/signUp': (context) => SignUpScreen(),
               '/logIn': (context) => const LoginScreen(),
-              '/noCart': (context) => CartScreen(),
+              '/noCart': (context) => const CartScreen(),
+              '/demo': (context) => const DemoScreen(),
             }));
   }
 }

@@ -20,6 +20,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Мой профиль'),
+        centerTitle: true,
+        backgroundColor: bgColor,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -55,7 +57,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 children: [
                   TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'ИМЯ',
+                      labelText: 'Имя',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
@@ -67,7 +69,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   const SizedBox(height: 10),
                   TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'ФАМИЛИЯ',
+                      labelText: 'Фамилия',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
@@ -79,7 +81,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   const SizedBox(height: 10),
                   TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'ПОЧТА',
+                      labelText: 'Почта',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.emailAddress,
@@ -89,85 +91,31 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       });
                     },
                   ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'ДАТА РОЖДЕНИЕ',
-                      border: OutlineInputBorder(),
-                    ),
-                    readOnly: true,
-                    initialValue: '2024-08-06',
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime(2100),
-                      );
-                      if (pickedDate != null) {
-                        setState(() {
-                          dateOfBirth = pickedDate.toString().split(' ')[0];
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const Text('ПОЛ'),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                          title: const Text('Male'),
-                          leading: Radio<String>(
-                            value: 'Мужской',
-                            groupValue: gender,
-                            onChanged: (value) {
-                              setState(() {
-                                gender = value!;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: ListTile(
-                          title: const Text('Female'),
-                          leading: Radio<String>(
-                            value: 'Женский',
-                            groupValue: gender,
-                            onChanged: (value) {
-                              setState(() {
-                                gender = value!;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 20),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(context, '/logIn'),
                     style: TextButton.styleFrom(
-                      backgroundColor: colorLight,
-                      minimumSize: Size(MediaQuery.of(context).size.width - 20, 50),
+                      backgroundColor: Colors.green,
+                      maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                      minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
                     ),
                     child: const Text(
-                      'Сохранить ',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      'Сохранить',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextButton(
                     onPressed: () {},
                     style: TextButton.styleFrom(
-                      minimumSize: Size(MediaQuery.of(context).size.width - 20, 50),
+                      backgroundColor: Colors.white,
+                      minimumSize:   Size(MediaQuery.of(context).size.width - 20, 50),
                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
                     ),
                     child: const Text(
                       'Удалить аккаунт',
-                      style: TextStyle(color: Colors.red, fontSize: 16),
+                      style: TextStyle(color: Colors.red, fontSize: 14),
                     ),
                   ),
                 ],

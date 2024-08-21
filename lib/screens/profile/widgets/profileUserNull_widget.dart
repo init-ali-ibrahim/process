@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class profileUserNull_widget extends StatefulWidget {
   const profileUserNull_widget({super.key});
 
@@ -8,6 +9,7 @@ class profileUserNull_widget extends StatefulWidget {
 }
 
 class _profileUserNull_widgetState extends State<profileUserNull_widget> {
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,11 +26,11 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                     size: 150,
                     color: Colors.grey,
                   ),
-                  const Text('Войдите в аккаунт', style: TextStyle(fontSize: 18)),
+                  const Text('Войдите в аккаунт', style: TextStyle(fontSize: 16)),
                   SizedBox(
                       width: MediaQuery.of(context).size.width - 90,
-                      child: const Center(
-                        child: Text('Закажите торты, пироги и наслаждайтесь'),
+                      child: Center(
+                        child: Text('Закажите торты, пироги и наслаждайтесь', style: TextStyle(color: Colors.grey.shade700),),
                       )),
                 ],
               )),
@@ -43,10 +45,10 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                 ),
                 child: Text(
                   'Регистрация',
-                  style: TextStyle(fontSize: 16, color: Colors.black87.withOpacity(0.7)),
+                  style: TextStyle(fontSize: 14, color: Colors.black87.withOpacity(0.7)),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/logIn'),
                 style: TextButton.styleFrom(
@@ -57,7 +59,7 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                 ),
                 child: const Text(
                   'Войти',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
               const SizedBox(height: 30),
@@ -73,7 +75,7 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                 title: const Text('Язык', style: TextStyle(fontSize: 12)),
                 trailing: const Wrap(
                   spacing: 10,
-                  children: [Text('Русский', style: TextStyle(fontSize: 12, color: Colors.red)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
+                  children: [Text('Русский', style: TextStyle(fontSize: 12, color: Colors.red, fontWeight: FontWeight.w400)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
                 ),
                 onTap: () {},
                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
@@ -85,9 +87,11 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                 title: const Text('Город', style: TextStyle(fontSize: 12)),
                 trailing: const Wrap(
                   spacing: 10,
-                  children: [Text('Алматы', style: TextStyle(fontSize: 12, color: Colors.red)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
+                  children: [Text('Алматы', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.red)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, '/demo');
+                },
                 tileColor: Colors.white,
               ),
               CustomDevider(),
@@ -112,7 +116,7 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
   Container CustomDevider() {
     return Container(
       decoration: const BoxDecoration(color: Colors.white),
-      padding: const EdgeInsets.symmetric(horizontal: 15), // Отступы по бокам
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: const Divider(height: 1, color: Color(0xFFB7B7B7)),
     );
   }

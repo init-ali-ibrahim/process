@@ -35,7 +35,7 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: FadeInImage.assetNetwork(
-                  placeholder: 'assets/loadingItem.jpg',
+                  placeholder: 'assets/image/loadingItem.jpg',
                   image: widget.img,
                   width: 170,
                   height: 155,

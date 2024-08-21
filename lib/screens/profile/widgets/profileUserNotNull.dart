@@ -54,11 +54,11 @@ class _profileUserNotNull_widgetState extends State<profileUserNotNull_widget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.only(right: 10, left: 10),
                             child: Icon(
                               Icons.account_circle_sharp,
@@ -70,26 +70,28 @@ class _profileUserNotNull_widgetState extends State<profileUserNotNull_widget> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Name: ${data!['name']}'),
+                              // Text('Name: ${data!['name']}'),
+                              Text('Name: '),
                               Text(
                                 // '${user?.email}',
-                                'Email: ${data!['email']}',
-                                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                // 'Email: ${data!['email']}',
+                                'Email: ',
+                                style: TextStyle(color: Colors.grey, fontSize: 12),
                               ),
                             ],
                           )
                         ],
                       ),
-                      Center(
-                        child: data != null
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('ID: ${data!['id']}'),
-                                ],
-                              )
-                            : CircularProgressIndicator(),
-                      ),
+                      // Center(
+                      //   child: data != null
+                      //       ? Column(
+                      //           mainAxisAlignment: MainAxisAlignment.center,
+                      //           children: [
+                      //             Text('ID: ${data!['id']}'),
+                      //           ],
+                      //         )
+                      //       : CircularProgressIndicator(),
+                      // ),
                       IconButton(
                           onPressed: () {
                             Navigator.pushNamed(context, '/my-profile');
@@ -482,7 +484,7 @@ class _profileUserNotNull_widgetState extends State<profileUserNotNull_widget> {
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () async {
-            // await FirebaseAuth.instance.signOut();
+            await FirebaseAuth.instance.signOut();
 
             await storage.delete(key: 'token');
 

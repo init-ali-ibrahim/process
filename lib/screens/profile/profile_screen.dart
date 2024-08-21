@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:process/screens/profile/widgets/profileUserNotNull.dart';
 import 'package:process/screens/profile/widgets/profileUserNull_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +14,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  User? user = FirebaseAuth.instance.currentUser;
 
   final storage = const FlutterSecureStorage();
   String? _token;
@@ -53,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             children: [
               Center(
-                child: _token != null ? const profileUserNotNull_widget() : const profileUserNull_widget(),
+                child: user != null ? const profileUserNotNull_widget() : const profileUserNull_widget(),
               ),
             ],
           ),

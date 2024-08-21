@@ -147,7 +147,8 @@ class CustomTextButton extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        // shape: const CircleBorder(),
+        shape: const CircleBorder(eccentricity: 0.6),
+        overlayColor: WidgetStateProperty.all(Colors.transparent).resolve({}),
       ),
       child: Column(
         children: [

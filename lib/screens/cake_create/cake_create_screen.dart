@@ -1,248 +1,252 @@
 import 'package:flutter/material.dart';
-import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:process/screens/cake_create/bloc/cake_customization_bloc.dart';
+import 'package:process/screens/cart/bloc/cart_bloc.dart';
+import 'package:process/screens/cart/cart_screen.dart';
+import 'package:process/screens/navbar.dart';
 
-// Event
-abstract class CakeCustomizationEvent extends Equatable {
-  const CakeCustomizationEvent();
-
-  @override
-  List<Object> get props => [];
-}
-
-class ShapeSelected extends CakeCustomizationEvent {
-  final Shape shape;
-
-  const ShapeSelected(this.shape);
-
-  @override
-  List<Object> get props => [shape];
-}
-
-class FlavorSelected extends CakeCustomizationEvent {
-  final Flavor flavor;
-
-  const FlavorSelected(this.flavor);
-
-  @override
-  List<Object> get props => [flavor];
-}
-
-class ColourSelected extends CakeCustomizationEvent {
-  final Colour colour;
-
-  const ColourSelected(this.colour);
-
-  @override
-  List<Object> get props => [colour];
-}
-
-class ToppingSelected extends CakeCustomizationEvent {
-  final Topping topping;
-
-  const ToppingSelected(this.topping);
-
-  @override
-  List<Object> get props => [topping];
-}
-
-// State
-enum Shape { MiniStandard, MiniHeart, StandardCake, HeartCake, SquareCake, SheetCake }
-
-enum Flavor { Vanilla, ChocoCrunch, RedVelvet, Nutella, Fruits, Cinnamon, Pistachio }
-
-enum Colour { Yellow, Red, Blue, Green, White, Brown, Pink, Purple, Orange, LightBlue, DarkBlue, DarkGreen }
-
-enum Topping { None, Snow, Christmas, Classic }
-
-class CakeCustomizationState extends Equatable {
-  final Shape shape;
-  final Flavor flavor;
-  final Colour colour;
-  final Topping topping;
-
-  final String imagePath;
-  final bool isLoadingImage;
-  final double totalPrice;
-
-  final String shapeImagePath;
-  final String flavorImagePath;
-  final String colourImagePath;
-  final String toppingImagePath;
-
-  final String shapeName;
-  final String flavorName;
-  final String colourName;
-  final String toppingName;
-
-  const CakeCustomizationState({
-    required this.topping,
-    required this.toppingName,
-    required this.toppingImagePath,
-    required this.shape,
-    required this.flavor,
-    required this.colour,
-    required this.imagePath,
-    required this.totalPrice,
-    required this.isLoadingImage,
-    required this.shapeImagePath,
-    required this.flavorImagePath,
-    required this.colourImagePath,
-    required this.shapeName,
-    required this.flavorName,
-    required this.colourName,
-  });
-
-  CakeCustomizationState copyWith({
-    Topping? topping,
-    String? toppingName,
-    String? toppingImagePath,
-    Shape? shape,
-    Flavor? flavor,
-    Colour? colour,
-    String? imagePath,
-    double? totalPrice,
-    bool? isLoadingImage,
-    String? shapeImagePath,
-    String? flavorImagePath,
-    String? colourImagePath,
-    String? shapeName,
-    String? flavorName,
-    String? colourName,
-  }) {
-    return CakeCustomizationState(
-      shape: shape ?? this.shape,
-      flavor: flavor ?? this.flavor,
-      colour: colour ?? this.colour,
-      imagePath: imagePath ?? this.imagePath,
-      totalPrice: totalPrice ?? this.totalPrice,
-      isLoadingImage: isLoadingImage ?? this.isLoadingImage,
-      shapeImagePath: shapeImagePath ?? this.shapeImagePath,
-      flavorImagePath: flavorImagePath ?? this.flavorImagePath,
-      colourImagePath: colourImagePath ?? this.colourImagePath,
-      shapeName: shapeName ?? this.shapeName,
-      flavorName: flavorName ?? this.flavorName,
-      colourName: colourName ?? this.colourName,
-      topping: topping ?? this.topping,
-      toppingImagePath: toppingImagePath ?? this.toppingImagePath,
-      toppingName: toppingName ?? this.toppingName,
-    );
-  }
-
-  @override
-  List<Object> get props => [
-        shape,
-        flavor,
-        colour,
-        imagePath,
-        totalPrice,
-        isLoadingImage,
-        shapeImagePath,
-        flavorImagePath,
-        colourImagePath,
-        shapeName,
-        flavorName,
-        colourName,
-        topping,
-        toppingName,
-        toppingImagePath
-      ];
-}
-
-// Bloc
-class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizationState> {
-  CakeCustomizationBloc()
-      : super(
-          CakeCustomizationState(
-            shape: Shape.MiniStandard,
-            flavor: Flavor.Vanilla,
-            colour: Colour.Yellow,
-            topping: Topping.None,
-            imagePath: '',
-            totalPrice: _calculateInitialTotalPrice(),
-            isLoadingImage: true,
-            shapeImagePath: '',
-            flavorImagePath: '',
-            colourImagePath: '',
-            toppingImagePath: '',
-            shapeName: '',
-            flavorName: '',
-            colourName: '',
-            toppingName: '',
-          ),
-        ) {
-    on<ShapeSelected>(_onShapeSelected);
-    on<FlavorSelected>(_onFlavorSelected);
-    on<ColourSelected>(_onColourSelected);
-    on<ToppingSelected>(_onToppingSelected);
-  }
-
-  static double _calculateInitialTotalPrice() {
-    return shapePrices[Shape.MiniStandard]! + flavorPrices[Flavor.Vanilla]! + colourPrices[Colour.Red]! + toppingPrices[Topping.Classic]!;
-  }
-
-  double _calculateTotalPrice(Shape shape, Flavor flavor, Colour colour, Topping topping) {
-    return shapePrices[shape]! + flavorPrices[flavor]! + colourPrices[colour]! + toppingPrices[topping]!;
-  }
-
-  void _onShapeSelected(ShapeSelected event, Emitter<CakeCustomizationState> emit) {
-    emit(state.copyWith(
-        shape: event.shape, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(event.shape, state.flavor, state.colour, state.topping)));
-    _getImagePath(event.shape, state.flavor, state.colour, state.topping).then((imagePath) {
-      emit(state.copyWith(
-        imagePath: imagePath,
-        isLoadingImage: false,
-      ));
-    }).catchError((error) {});
-  }
-
-  void _onFlavorSelected(FlavorSelected event, Emitter<CakeCustomizationState> emit) {
-    emit(state.copyWith(
-        flavor: event.flavor, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, event.flavor, state.colour, state.topping)));
-    _getImagePath(state.shape, event.flavor, state.colour, state.topping).then((imagePath) {
-      emit(state.copyWith(
-        imagePath: imagePath,
-        isLoadingImage: false,
-      ));
-    }).catchError((error) {});
-  }
-
-  void _onColourSelected(ColourSelected event, Emitter<CakeCustomizationState> emit) {
-    emit(state.copyWith(
-        colour: event.colour, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, state.flavor, event.colour, state.topping)));
-    _getImagePath(state.shape, state.flavor, event.colour, state.topping).then((imagePath) {
-      emit(state.copyWith(
-        imagePath: imagePath,
-        isLoadingImage: false,
-      ));
-    }).catchError((error) {});
-  }
-
-  void _onToppingSelected(ToppingSelected event, Emitter<CakeCustomizationState> emit) {
-    emit(state.copyWith(
-        topping: event.topping, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, state.flavor, state.colour, event.topping)));
-    _getImagePath(state.shape, state.flavor, state.colour, event.topping).then((imagePath) {
-      emit(state.copyWith(
-        imagePath: imagePath,
-        isLoadingImage: false,
-      ));
-    }).catchError((error) {});
-  }
-
-  Future<String> _getImagePath(Shape shape, Flavor flavor, Colour colour, Topping topping) {
-    String shapeString = shape.toString().split('.').last.toLowerCase();
-    String flavorString = flavor.toString().split('.').last.toLowerCase();
-    String colourString = colour.toString().split('.').last.toLowerCase();
-    String toppingString = topping.toString().split('.').last.toLowerCase();
-    Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('cakes/$shapeString\_$flavorString\_$colourString\_$toppingString.png');
-    Future<String> downloadURL = ref.getDownloadURL();
-    return downloadURL;
-  }
-}
+// // Event
+// abstract class CakeCustomizationEvent extends Equatable {
+//   const CakeCustomizationEvent();
+//
+//   @override
+//   List<Object> get props => [];
+// }
+//
+// class ShapeSelected extends CakeCustomizationEvent {
+//   final Shape shape;
+//
+//   const ShapeSelected(this.shape);
+//
+//   @override
+//   List<Object> get props => [shape];
+// }
+//
+// class FlavorSelected extends CakeCustomizationEvent {
+//   final Flavor flavor;
+//
+//   const FlavorSelected(this.flavor);
+//
+//   @override
+//   List<Object> get props => [flavor];
+// }
+//
+// class ColourSelected extends CakeCustomizationEvent {
+//   final Colour colour;
+//
+//   const ColourSelected(this.colour);
+//
+//   @override
+//   List<Object> get props => [colour];
+// }
+//
+// class ToppingSelected extends CakeCustomizationEvent {
+//   final Topping topping;
+//
+//   const ToppingSelected(this.topping);
+//
+//   @override
+//   List<Object> get props => [topping];
+// }
+//
+// // State
+// enum Shape { MiniStandard, MiniHeart, StandardCake, HeartCake, SquareCake, SheetCake }
+//
+// enum Flavor { Vanilla, ChocoCrunch, RedVelvet, Nutella, Fruits, Cinnamon, Pistachio }
+//
+// enum Colour { Yellow, Red, Blue, Green, White, Brown, Pink, Purple, Orange, LightBlue, DarkBlue, DarkGreen }
+//
+// enum Topping { None, Snow, Christmas, Classic }
+//
+// class CakeCustomizationState extends Equatable {
+//   final Shape shape;
+//   final Flavor flavor;
+//   final Colour colour;
+//   final Topping topping;
+//
+//   final String imagePath;
+//   final bool isLoadingImage;
+//   final double totalPrice;
+//
+//   final String shapeImagePath;
+//   final String flavorImagePath;
+//   final String colourImagePath;
+//   final String toppingImagePath;
+//
+//   final String shapeName;
+//   final String flavorName;
+//   final String colourName;
+//   final String toppingName;
+//
+//   const CakeCustomizationState({
+//     required this.topping,
+//     required this.toppingName,
+//     required this.toppingImagePath,
+//     required this.shape,
+//     required this.flavor,
+//     required this.colour,
+//     required this.imagePath,
+//     required this.totalPrice,
+//     required this.isLoadingImage,
+//     required this.shapeImagePath,
+//     required this.flavorImagePath,
+//     required this.colourImagePath,
+//     required this.shapeName,
+//     required this.flavorName,
+//     required this.colourName,
+//   });
+//
+//   CakeCustomizationState copyWith({
+//     Topping? topping,
+//     String? toppingName,
+//     String? toppingImagePath,
+//     Shape? shape,
+//     Flavor? flavor,
+//     Colour? colour,
+//     String? imagePath,
+//     double? totalPrice,
+//     bool? isLoadingImage,
+//     String? shapeImagePath,
+//     String? flavorImagePath,
+//     String? colourImagePath,
+//     String? shapeName,
+//     String? flavorName,
+//     String? colourName,
+//   }) {
+//     return CakeCustomizationState(
+//       shape: shape ?? this.shape,
+//       flavor: flavor ?? this.flavor,
+//       colour: colour ?? this.colour,
+//       imagePath: imagePath ?? this.imagePath,
+//       totalPrice: totalPrice ?? this.totalPrice,
+//       isLoadingImage: isLoadingImage ?? this.isLoadingImage,
+//       shapeImagePath: shapeImagePath ?? this.shapeImagePath,
+//       flavorImagePath: flavorImagePath ?? this.flavorImagePath,
+//       colourImagePath: colourImagePath ?? this.colourImagePath,
+//       shapeName: shapeName ?? this.shapeName,
+//       flavorName: flavorName ?? this.flavorName,
+//       colourName: colourName ?? this.colourName,
+//       topping: topping ?? this.topping,
+//       toppingImagePath: toppingImagePath ?? this.toppingImagePath,
+//       toppingName: toppingName ?? this.toppingName,
+//     );
+//   }
+//
+//   @override
+//   List<Object> get props => [
+//         shape,
+//         flavor,
+//         colour,
+//         imagePath,
+//         totalPrice,
+//         isLoadingImage,
+//         shapeImagePath,
+//         flavorImagePath,
+//         colourImagePath,
+//         shapeName,
+//         flavorName,
+//         colourName,
+//         topping,
+//         toppingName,
+//         toppingImagePath
+//       ];
+// }
+//
+// // Bloc
+// class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizationState> {
+//   CakeCustomizationBloc()
+//       : super(
+//           CakeCustomizationState(
+//             shape: Shape.MiniStandard,
+//             flavor: Flavor.Vanilla,
+//             colour: Colour.Yellow,
+//             topping: Topping.None,
+//             imagePath: '',
+//             totalPrice: _calculateInitialTotalPrice(),
+//             isLoadingImage: true,
+//             shapeImagePath: '',
+//             flavorImagePath: '',
+//             colourImagePath: '',
+//             toppingImagePath: '',
+//             shapeName: '',
+//             flavorName: '',
+//             colourName: '',
+//             toppingName: '',
+//           ),
+//         ) {
+//     on<ShapeSelected>(_onShapeSelected);
+//     on<FlavorSelected>(_onFlavorSelected);
+//     on<ColourSelected>(_onColourSelected);
+//     on<ToppingSelected>(_onToppingSelected);
+//   }
+//
+//   static double _calculateInitialTotalPrice() {
+//     return shapePrices[Shape.MiniStandard]! + flavorPrices[Flavor.Vanilla]! + colourPrices[Colour.Red]! + toppingPrices[Topping.Classic]!;
+//   }
+//
+//   double _calculateTotalPrice(Shape shape, Flavor flavor, Colour colour, Topping topping) {
+//     return shapePrices[shape]! + flavorPrices[flavor]! + colourPrices[colour]! + toppingPrices[topping]!;
+//   }
+//
+//   void _onShapeSelected(ShapeSelected event, Emitter<CakeCustomizationState> emit) {
+//     emit(state.copyWith(
+//         shape: event.shape, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(event.shape, state.flavor, state.colour, state.topping)));
+//     _getImagePath(event.shape, state.flavor, state.colour, state.topping).then((imagePath) {
+//       emit(state.copyWith(
+//         imagePath: imagePath,
+//         isLoadingImage: false,
+//       ));
+//     }).catchError((error) {});
+//   }
+//
+//   void _onFlavorSelected(FlavorSelected event, Emitter<CakeCustomizationState> emit) {
+//     emit(state.copyWith(
+//         flavor: event.flavor, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, event.flavor, state.colour, state.topping)));
+//     _getImagePath(state.shape, event.flavor, state.colour, state.topping).then((imagePath) {
+//       emit(state.copyWith(
+//         imagePath: imagePath,
+//         isLoadingImage: false,
+//       ));
+//     }).catchError((error) {});
+//   }
+//
+//   void _onColourSelected(ColourSelected event, Emitter<CakeCustomizationState> emit) {
+//     emit(state.copyWith(
+//         colour: event.colour, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, state.flavor, event.colour, state.topping)));
+//     _getImagePath(state.shape, state.flavor, event.colour, state.topping).then((imagePath) {
+//       emit(state.copyWith(
+//         imagePath: imagePath,
+//         isLoadingImage: false,
+//       ));
+//     }).catchError((error) {});
+//   }
+//
+//   void _onToppingSelected(ToppingSelected event, Emitter<CakeCustomizationState> emit) {
+//     emit(state.copyWith(
+//         topping: event.topping, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, state.flavor, state.colour, event.topping)));
+//     _getImagePath(state.shape, state.flavor, state.colour, event.topping).then((imagePath) {
+//       emit(state.copyWith(
+//         imagePath: imagePath,
+//         isLoadingImage: false,
+//       ));
+//     }).catchError((error) {});
+//   }
+//
+//   Future<String> _getImagePath(Shape shape, Flavor flavor, Colour colour, Topping topping) {
+//     String shapeString = shape.toString().split('.').last.toLowerCase();
+//     String flavorString = flavor.toString().split('.').last.toLowerCase();
+//     String colourString = colour.toString().split('.').last.toLowerCase();
+//     String toppingString = topping.toString().split('.').last.toLowerCase();
+//     Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('cakes/$shapeString\_$flavorString\_$colourString\_$toppingString.png');
+//     Future<String> downloadURL = ref.getDownloadURL();
+//     return downloadURL;
+//   }
+// }
 
 // Total Price
+
 const Map<Shape, double> shapePrices = {
   Shape.MiniStandard: 20.0,
   Shape.MiniHeart: 10.0,
@@ -282,41 +286,41 @@ const Map<Topping, double> toppingPrices = {
 };
 
 const Map<Shape, String> shapeImg = {
-  Shape.MiniStandard: 'assets/fill/ministandard.png',
-  Shape.MiniHeart: 'assets/fill/miniheart.png',
-  Shape.StandardCake: 'assets/fill/standardcake.png',
-  Shape.HeartCake: 'assets/fill/heartcake.png',
-  Shape.SquareCake: 'assets/fill/squarecake.png',
-  Shape.SheetCake: 'assets/fill/sheetcake.png'
+  Shape.MiniStandard: 'assets/image/fill/ministandard.png',
+  Shape.MiniHeart: 'assets/image/fill/miniheart.png',
+  Shape.StandardCake: 'assets/image/fill/standardcake.png',
+  Shape.HeartCake: 'assets/image/fill/heartcake.png',
+  Shape.SquareCake: 'assets/image/fill/squarecake.png',
+  Shape.SheetCake: 'assets/image/fill/sheetcake.png'
 };
 const Map<Flavor, String> flavorImg = {
-  Flavor.Vanilla: 'assets/taste/vanilla.png',
-  Flavor.ChocoCrunch: 'assets/taste/chococrunch.png',
-  Flavor.RedVelvet: 'assets/taste/redvelvet.png',
-  Flavor.Nutella: 'assets/taste/nutella.png',
-  Flavor.Pistachio: 'assets/taste/pistachio.png',
-  Flavor.Cinnamon: 'assets/taste/cinnamon.png',
-  Flavor.Fruits: 'assets/taste/fruits.png'
+  Flavor.Vanilla: 'assets/image/taste/vanilla.png',
+  Flavor.ChocoCrunch: 'assets/image/taste/chococrunch.png',
+  Flavor.RedVelvet: 'assets/image/taste/redvelvet.png',
+  Flavor.Nutella: 'assets/image/taste/nutella.png',
+  Flavor.Pistachio: 'assets/image/taste/pistachio.png',
+  Flavor.Cinnamon: 'assets/image/taste/cinnamon.png',
+  Flavor.Fruits: 'assets/image/taste/fruits.png'
 };
 const Map<Colour, String> colourImg = {
-  Colour.Red: 'assets/color/red.png',
-  Colour.Yellow: 'assets/color/yellow.png',
-  Colour.Blue: 'assets/color/blue.png',
-  Colour.Green: 'assets/color/green.png',
-  Colour.Brown: 'assets/color/brown.png',
-  Colour.White: 'assets/color/white.png',
-  Colour.Orange: 'assets/color/orange.png',
-  Colour.DarkBlue: 'assets/color/darkblue.png',
-  Colour.LightBlue: 'assets/color/whiteblue.png',
-  Colour.Pink: 'assets/color/pink.png',
-  Colour.Purple: 'assets/color/purple.png',
-  Colour.DarkGreen: 'assets/color/darkgreen.png',
+  Colour.Red: 'assets/image/color/red.png',
+  Colour.Yellow: 'assets/image/color/yellow.png',
+  Colour.Blue: 'assets/image/color/blue.png',
+  Colour.Green: 'assets/image/color/green.png',
+  Colour.Brown: 'assets/image/color/brown.png',
+  Colour.White: 'assets/image/color/white.png',
+  Colour.Orange: 'assets/image/color/orange.png',
+  Colour.DarkBlue: 'assets/image/color/darkblue.png',
+  Colour.LightBlue: 'assets/image/color/whiteblue.png',
+  Colour.Pink: 'assets/image/color/pink.png',
+  Colour.Purple: 'assets/image/color/purple.png',
+  Colour.DarkGreen: 'assets/image/color/darkgreen.png',
 };
 const Map<Topping, String> toppingImg = {
-  Topping.Snow: 'assets/topping/christmas.png',
-  Topping.Christmas: 'assets/topping/classic.png',
-  Topping.Classic: 'assets/topping/snow.png',
-  Topping.None: 'assets/topping/none.png',
+  Topping.Snow: 'assets/image/topping/christmas.png',
+  Topping.Christmas: 'assets/image/topping/classic.png',
+  Topping.Classic: 'assets/image/topping/snow.png',
+  Topping.None: 'assets/image/topping/none.png',
 };
 
 const Map<Shape, String> shapeName = {
@@ -359,6 +363,8 @@ const Map<Topping, String> toppingName = {
 
 // UI
 class CakeCustomizationScreen extends StatefulWidget {
+  const CakeCustomizationScreen({super.key});
+
   @override
   State<CakeCustomizationScreen> createState() => _CakeCustomizationScreenState();
 }
@@ -408,18 +414,13 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
           appBar: AppBar(
             leading: IconButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext dialogContext) {
-                      return alertClose(dialogContext);
-                    },
-                  );
+                  Navigator.pop(context);
                 },
                 icon: const Icon(Icons.close)),
             title: const Text('Кастомизация'),
             actions: [
               Text(
-                'Total Price: \₸${state.totalPrice.toStringAsFixed(2)}',
+                'сумма: \₸${state.totalPrice.toStringAsFixed(2)}',
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(width: 20)
@@ -555,7 +556,6 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                             },
                           ),
                           const SizedBox(height: 10),
-
                           InkWell(
                             child: Container(
                               width: 70,
@@ -598,122 +598,87 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
     );
   }
 
-  Widget alertClose(BuildContext dialogContext) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      backgroundColor: Colors.white,
-      title: const Text(
-        'Очистить торт',
-        style: TextStyle(fontSize: 20),
-      ),
-      content: const SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Ваш кастомный торт будет очищен',
-                    softWrap: true,
-                  ),
-                ),
-                SizedBox(
-                  width: 80,
-                )
-              ],
-            ),
-            SizedBox(
-              height: 1,
-            )
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text(
-            'Отмена',
-            style: TextStyle(color: Colors.grey),
-          ),
-          onPressed: () {
-            Navigator.of(dialogContext).pop();
-          },
-        ),
-        TextButton(
-          child: const Text(
-            'Очистить',
-            style: TextStyle(color: Colors.red),
-          ),
-          onPressed: () {
-            Navigator.of(dialogContext).pop();
-            Navigator.pushReplacementNamed(context, '/');
-          },
-        ),
-      ],
-    );
-  }
-
   Widget _buildShapeSelection(BuildContext context) {
-    return Expanded(
-      child: GridView.builder(
-        padding: const EdgeInsets.all(9),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1,
-        ),
-        itemCount: Shape.values.length,
-        itemBuilder: (context, index) {
-          final shape = Shape.values[index];
-          final isSelected = context.watch<CakeCustomizationBloc>().state.shape == shape;
-          return InkWell(
-            highlightColor: Colors.black,
-            splashColor: Colors.black,
-            onTap: () {
-              context.read<CakeCustomizationBloc>().add(ShapeSelected(shape));
-            },
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+    return Column(
+      children: [
+        Expanded(
+          child: GridView.builder(
+            padding: const EdgeInsets.all(9),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 1,
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFF6F6F6).withOpacity(0.9) : Colors.white.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  width: 1,
-                  color: isSelected ? const Color(0xFFB71C1C) : const Color(0xF4DCC6C6),
+            itemCount: Shape.values.length,
+            itemBuilder: (context, index) {
+              final shape = Shape.values[index];
+              final isSelected = context.watch<CakeCustomizationBloc>().state.shape == shape;
+              return InkWell(
+                highlightColor: Colors.black,
+                splashColor: Colors.black,
+                onTap: () {
+                  context.read<CakeCustomizationBloc>().add(ShapeSelected(shape));
+                },
+                customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-              padding: const EdgeInsets.all(9.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    shapeImg[shape]!,
-                    height: 70,
-                    width: 70,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    shapeName[shape]!,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isSelected ? const Color(0xFFF6F6F6).withOpacity(0.9) : Colors.white.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1,
+                      color: isSelected ? const Color(0xFFB71C1C) : const Color(0xF4DCC6C6),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '\₸${shapePrices[shape]!.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Color(0xff4f4f4f),
-                    ),
+                  padding: const EdgeInsets.all(9.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        shapeImg[shape]!,
+                        height: 70,
+                        width: 70,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        shapeName[shape]!,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '\₸${shapePrices[shape]!.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          color: Color(0xff4f4f4f),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+                ),
+              );
+            },
+          ),
+        ),
+        // BlocBuilder<CakeBloc, CakeState>(builder: (context, state) {
+        //   return ElevatedButton(
+        //     onPressed: () {
+        //       var lox = Product('${state.shape}', state.totalPrice, state.flavor.toString(), state.colour.toString(), state.shape.toString(), urlToCart);
+        //
+        //       context.read<CartBloc>().add(AddProduct(lox));
+        //
+        //       Navigator.of(context).pushAndRemoveUntil(
+        //         MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 1)),
+        //         (Route<dynamic> route) => false,
+        //       );
+        //     },
+        //     child: const Text('Добавить в корзину'),
+        //   );
+        // })
+      ],
     );
   }
 
@@ -742,9 +707,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                // color: Colors.white.withOpacity(0.9),
                 color: isSelected ? const Color(0xFFF6F6F6).withOpacity(0.9) : Colors.white.withOpacity(0.9),
-
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   width: 1,

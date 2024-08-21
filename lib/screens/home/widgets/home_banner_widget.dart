@@ -66,7 +66,7 @@ class HomeBannerWidget extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 10),
               child: Image.asset(
-                'assets/main_screen/cake.png',
+                'assets/image/main_screen/cake.png',
                 height: 90,
                 width: 90,
               ),
