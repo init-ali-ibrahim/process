@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -126,16 +127,23 @@ class CakeCustomizationScreen extends StatefulWidget {
   const CakeCustomizationScreen({super.key});
 
   @override
-  State<CakeCustomizationScreen> createState() => _CakeCustomizationScreenState();
+  State<CakeCustomizationScreen> createState() =>
+      _CakeCustomizationScreenState();
 }
 
 class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
-  Future<String> _getImagePath(Shape shape, Flavor flavor, Colour colour, Topping topping) async {
+  Flutter3DController controller = Flutter3DController();
+  String? chosenAnimation;
+  String? chosenTexture;
+
+  Future<String> _getImagePath(
+      Shape shape, Flavor flavor, Colour colour, Topping topping) async {
     String shapeString = shape.toString().split('.').last.toLowerCase();
     String flavorString = flavor.toString().split('.').last.toLowerCase();
     String colorString = colour.toString().split('.').last.toLowerCase();
     String toppingString = topping.toString().split('.').last.toLowerCase();
-    Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('cakes/$shapeString\_$flavorString\_$colorString\_$toppingString.png');
+    Reference ref = firebase_storage.FirebaseStorage.instance.ref().child(
+        'cakes/$shapeString\_$flavorString\_$colorString\_$toppingString.png');
     Future<String> downloadURL = ref.getDownloadURL();
     return downloadURL;
   }
@@ -170,7 +178,8 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CakeCustomizationBloc(),
-      child: BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(builder: (context, state) {
+      child: BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(
+          builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -191,9 +200,11 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
               child: Container(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: FutureBuilder<String>(
-                      future: _getImagePath(state.shape, state.flavor, state.colour, state.topping),
+                      future: _getImagePath(state.shape, state.flavor,
+                          state.colour, state.topping),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Container(
                             height: 200,
                             width: MediaQuery.of(context).size.width,
@@ -211,7 +222,14 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                             child: Text('${snapshot.data.toString()}'),
                           );
                         } else if (snapshot.hasData) {
-                          return Image.network(snapshot.data!, height: 200);
+                          return SizedBox(
+                              height: 100,
+                              width: 200,
+                              child: Flutter3DViewer(
+                                progressBarColor: Colors.blue,
+                                controller: controller,
+                                src: 'assets/models/circle.glb',
+                              ));
                         } else {
                           return const SizedBox.shrink();
                         }
@@ -232,7 +250,8 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                       // Длительность анимации
                       decoration: const BoxDecoration(
                         color: Colors.red,
-                        borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
+                        borderRadius:
+                            BorderRadius.only(topRight: Radius.circular(10)),
                       ),
                       margin: const EdgeInsets.only(top: 10),
                       width: 90,
@@ -248,20 +267,26 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                               width: 70,
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: currentSelection == 'Shape' ? Colors.white : Colors.white.withOpacity(0.2),
+                                color: currentSelection == 'Shape'
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
                                 children: [
                                   Icon(
                                     Icons.cake,
-                                    color: currentSelection == 'Shape' ? Colors.red : Colors.white,
+                                    color: currentSelection == 'Shape'
+                                        ? Colors.red
+                                        : Colors.white,
                                   ),
                                   Text(
                                     'Shape',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: currentSelection == 'Shape' ? Colors.red : Colors.white,
+                                      color: currentSelection == 'Shape'
+                                          ? Colors.red
+                                          : Colors.white,
                                     ),
                                   )
                                 ],
@@ -279,20 +304,26 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                               width: 70,
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: currentSelection == 'Flavor' ? Colors.white : Colors.white.withOpacity(0.2),
+                                color: currentSelection == 'Flavor'
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
                                 children: [
                                   Icon(
                                     Icons.restaurant_menu,
-                                    color: currentSelection == 'Flavor' ? Colors.red : Colors.white,
+                                    color: currentSelection == 'Flavor'
+                                        ? Colors.red
+                                        : Colors.white,
                                   ),
                                   Text(
                                     'Flavor',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: currentSelection == 'Flavor' ? Colors.red : Colors.white,
+                                      color: currentSelection == 'Flavor'
+                                          ? Colors.red
+                                          : Colors.white,
                                     ),
                                   )
                                 ],
@@ -310,20 +341,26 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                               width: 70,
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: currentSelection == 'Colour' ? Colors.white : Colors.white.withOpacity(0.2),
+                                color: currentSelection == 'Colour'
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
                                 children: [
                                   Icon(
                                     Icons.color_lens,
-                                    color: currentSelection == 'Colour' ? Colors.red : Colors.white,
+                                    color: currentSelection == 'Colour'
+                                        ? Colors.red
+                                        : Colors.white,
                                   ),
                                   Text(
                                     'Colour',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: currentSelection == 'Colour' ? Colors.red : Colors.white,
+                                      color: currentSelection == 'Colour'
+                                          ? Colors.red
+                                          : Colors.white,
                                     ),
                                   )
                                 ],
@@ -341,20 +378,26 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
                               width: 70,
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: currentSelection == 'Topping' ? Colors.white : Colors.white.withOpacity(0.2),
+                                color: currentSelection == 'Topping'
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
                                 children: [
                                   Icon(
                                     Icons.style_sharp,
-                                    color: currentSelection == 'Topping' ? Colors.red : Colors.white,
+                                    color: currentSelection == 'Topping'
+                                        ? Colors.red
+                                        : Colors.white,
                                   ),
                                   Text(
                                     'Topping',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: currentSelection == 'Topping' ? Colors.red : Colors.white,
+                                      color: currentSelection == 'Topping'
+                                          ? Colors.red
+                                          : Colors.white,
                                     ),
                                   )
                                 ],
@@ -395,23 +438,30 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
             itemCount: Shape.values.length,
             itemBuilder: (context, index) {
               final shape = Shape.values[index];
-              final isSelected = context.watch<CakeCustomizationBloc>().state.shape == shape;
+              final isSelected =
+                  context.watch<CakeCustomizationBloc>().state.shape == shape;
               return InkWell(
                 highlightColor: Colors.black,
                 splashColor: Colors.black,
                 onTap: () {
-                  context.read<CakeCustomizationBloc>().add(ShapeSelected(shape));
+                  context
+                      .read<CakeCustomizationBloc>()
+                      .add(ShapeSelected(shape));
                 },
                 customBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFFF6F6F6).withOpacity(0.9) : Colors.white.withOpacity(0.9),
+                    color: isSelected
+                        ? const Color(0xFFF6F6F6).withOpacity(0.9)
+                        : Colors.white.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       width: 1,
-                      color: isSelected ? const Color(0xFFB71C1C) : const Color(0xF4DCC6C6),
+                      color: isSelected
+                          ? const Color(0xFFB71C1C)
+                          : const Color(0xF4DCC6C6),
                     ),
                   ),
                   padding: const EdgeInsets.all(9.0),
@@ -462,7 +512,8 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
         itemCount: Flavor.values.length,
         itemBuilder: (context, index) {
           final flavor = Flavor.values[index];
-          final isSelected = context.watch<CakeCustomizationBloc>().state.flavor == flavor;
+          final isSelected =
+              context.watch<CakeCustomizationBloc>().state.flavor == flavor;
           return InkWell(
             highlightColor: Colors.black,
             splashColor: Colors.black,
@@ -474,11 +525,15 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFF6F6F6).withOpacity(0.9) : Colors.white.withOpacity(0.9),
+                color: isSelected
+                    ? const Color(0xFFF6F6F6).withOpacity(0.9)
+                    : Colors.white.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   width: 1,
-                  color: isSelected ? const Color(0xFFB71C1C) : const Color(0xF4DCC6C6),
+                  color: isSelected
+                      ? const Color(0xFFB71C1C)
+                      : const Color(0xF4DCC6C6),
                 ),
               ),
               padding: const EdgeInsets.all(9.0),
@@ -527,7 +582,8 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
         itemCount: Colour.values.length,
         itemBuilder: (context, index) {
           final colour = Colour.values[index];
-          final isSelected = context.watch<CakeCustomizationBloc>().state.colour == colour;
+          final isSelected =
+              context.watch<CakeCustomizationBloc>().state.colour == colour;
           return InkWell(
             highlightColor: Colors.black,
             splashColor: Colors.black,
@@ -539,11 +595,15 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFF6F6F6).withOpacity(0.9) : Colors.white.withOpacity(0.9),
+                color: isSelected
+                    ? const Color(0xFFF6F6F6).withOpacity(0.9)
+                    : Colors.white.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   width: 1,
-                  color: isSelected ? const Color(0xFFB71C1C) : const Color(0xF4DCC6C6),
+                  color: isSelected
+                      ? const Color(0xFFB71C1C)
+                      : const Color(0xF4DCC6C6),
                 ),
               ),
               padding: const EdgeInsets.all(9.0),
@@ -577,7 +637,8 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
         builder: (context, state) {
           return ElevatedButton(
             onPressed: () async {
-              String urlToCart = await _getImagePath(state.shape, state.flavor, state.colour, state.topping);
+              String urlToCart = await _getImagePath(
+                  state.shape, state.flavor, state.colour, state.topping);
               // print('Shape: ${state.shape.toString()}');
               // print('Flavor: ${state.flavor.toString()}');
               // print('Colour: ${state.colour.toString()}');
@@ -596,7 +657,8 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
               context.read<CartBloc>().add(AddProduct(lox));
 
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 1)),
+                MaterialPageRoute(
+                    builder: (context) => Navbar(initialPageIndex: 1)),
                 (Route<dynamic> route) => false,
               );
             },
