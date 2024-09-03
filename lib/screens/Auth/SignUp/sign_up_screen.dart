@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:process/screens/color.dart';
 import 'package:process/screens/navbar.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -10,7 +13,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreen extends State<SignUpScreen> {
-  final _auth = FirebaseAuth.instance;
+  /* final _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
@@ -35,6 +38,70 @@ class _SignUpScreen extends State<SignUpScreen> {
     setState(() {
       _obscureText = !_obscureText;
     });
+  } */
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  bool _obscureText = true;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmationController = TextEditingController();
+
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  Future<void> _register() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final response = await http.post(
+      Uri.parse('http://192.168.0.219:80/api/v1/auth/register'),
+      headers: <String, String>{"Content-Type": "application/json; charset=UTF-8", "Accept": "application/json"},
+      body: jsonEncode(<String, String>{
+        'name': _nameController.text,
+        'last_name': _lastNameController.text,
+        'phone': _phoneController.text,
+        'email': _emailController.text,
+        'password': _passwordController.text,
+        'password_confirmation': _passwordConfirmationController.text,
+      }),
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      if (data['success']) {
+        const storage = FlutterSecureStorage();
+        await storage.write(key: 'token', value: data['token']);
+
+        String? lox = await storage.read(key: 'token');
+        print(lox);
+        print('Registration successful: ${data['message']}');
+        Navigator.of(context).pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
+      } else {
+        setState(() {
+          _errorMessage = data['message'];
+        });
+        print('Error from server: ${data['message']}');
+      }
+    } else {
+      setState(() {
+        _errorMessage = 'Failed to register. Please try again.';
+      });
+      print('Server error: ${response.body}');
+    }
   }
 
   @override
@@ -80,30 +147,40 @@ class _SignUpScreen extends State<SignUpScreen> {
                           'Чтобы создать аккаунт, введите почту и пароль',
                           style: TextStyle(fontSize: 14, color: Colors.black54),
                         ),
-                        // const SizedBox(height: 20),
-                        // TextField(
-                        //   decoration: InputDecoration(
-                        //     labelText: 'Введите имя',
-                        //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        //   ),
-                        // ),
-                        // const SizedBox(height: 20),
-                        // TextField(
-                        //   decoration: InputDecoration(
-                        //     prefixIcon: const Padding(
-                        //       padding: EdgeInsets.symmetric(horizontal: 12),
-                        //       child: Row(
-                        //         mainAxisSize: MainAxisSize.min,
-                        //         children: [
-                        //           SizedBox(width: 5),
-                        //           Text('+7'),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //     labelText: 'Введите номер телефона',
-                        //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        //   ),
-                        // ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            labelText: 'Введите имя',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _lastNameController,
+                          decoration: InputDecoration(
+                            labelText: 'Введите фамилию',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _phoneController,
+                          decoration: InputDecoration(
+                            prefixIcon: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(width: 5),
+                                  Text('+7'),
+                                ],
+                              ),
+                            ),
+                            labelText: 'Введите номер телефона',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
                         const SizedBox(height: 20),
                         TextField(
                           controller: _emailController,
@@ -129,15 +206,16 @@ class _SignUpScreen extends State<SignUpScreen> {
                             // focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
                           ),
                         ),
-                        // const SizedBox(height: 20),
-                        // TextField(
-                        //   obscureText: true,
-                        //   decoration: InputDecoration(
-                        //     labelText: 'Повторите пароль',
-                        //     suffixIcon: const Icon(Icons.visibility_off),
-                        //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        //   ),
-                        // ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          obscureText: true,
+                          controller: _passwordConfirmationController,
+                          decoration: InputDecoration(
+                            labelText: 'Повторите пароль',
+                            suffixIcon: const Icon(Icons.visibility_off),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -165,21 +243,47 @@ class _SignUpScreen extends State<SignUpScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            _signUp();
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
-                              minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                          child: const Text(
-                            'Далее',
-                            style: TextStyle(color: Colors.white),
+                        if (_isLoading)
+                          const CircularProgressIndicator()
+                        else
+                          ElevatedButton(
+                            onPressed: () {
+                              _register();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                                minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                                padding: const EdgeInsets.symmetric(vertical: 15),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                            child: const Text(
+                              'Далее',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                        ),
+                        if (_errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Text(
+                              _errorMessage!,
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     _register();
+                        //   },
+                        //   style: ElevatedButton.styleFrom(
+                        //       backgroundColor: Colors.green,
+                        //       maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                        //       minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                        //       padding: const EdgeInsets.symmetric(vertical: 15),
+                        //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                        //   child: const Text(
+                        //     'Далее',
+                        //     style: TextStyle(color: Colors.white),
+                        //   ),
+                        // ),
                         const SizedBox(height: 20),
                         RichText(
                           textAlign: TextAlign.center,

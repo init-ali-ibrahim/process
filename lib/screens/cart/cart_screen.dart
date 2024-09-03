@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -114,6 +116,8 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
       );
     }
   }
+
+
 
   bool isChecked = false;
 
@@ -450,17 +454,17 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                             ),
                             TextButton(
                               onPressed: () async {
-                                User? user = FirebaseAuth.instance.currentUser;
-                                if (user != null) {
-                                  await sendCartDataToFirebase(state.cart, user);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Данные успешно отправлены на Firebase')),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Ошибка: пользователь не найден')),
-                                  );
-                                }
+                                // User? user = FirebaseAuth.instance.currentUser;
+                                // if (user != null) {
+                                //   await sendCartDataToFirebase(state.cart, user);
+                                //   ScaffoldMessenger.of(context).showSnackBar(
+                                //     const SnackBar(content: Text('Данные успешно отправлены на Firebase')),
+                                //   );
+                                // } else {
+                                //   ScaffoldMessenger.of(context).showSnackBar(
+                                //     const SnackBar(content: Text('Ошибка: пользователь не найден')),
+                                //   );
+                                // }
                                 Navigator.pushNamed(context, '/profile');
                               },
                               style: TextButton.styleFrom(

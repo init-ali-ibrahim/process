@@ -91,6 +91,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       });
                     },
                   ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Номер телефона',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        email = value;
+                      });
+                    },
+                  ),
                   const SizedBox(height: 20),
                   TextButton(
                     onPressed: () => Navigator.pushNamed(context, '/logIn'),

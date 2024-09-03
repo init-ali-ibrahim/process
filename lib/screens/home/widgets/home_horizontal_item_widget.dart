@@ -51,8 +51,9 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
             ),
             Container(
               padding: const EdgeInsets.all(8),
+              height: 95,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(

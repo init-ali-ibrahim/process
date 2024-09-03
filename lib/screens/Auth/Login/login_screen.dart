@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:process/screens/color.dart';
 import 'package:process/screens/navbar.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,31 +16,86 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _auth = FirebaseAuth.instance;
-  final TextEditingController _emailController = TextEditingController();
+  // final _auth = FirebaseAuth.instance;
+  // final TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _passwordController = TextEditingController();
+  // bool _obscureText = true;
+  //
+  // Future<void> _logIn() async {
+  //   try {
+  //     await _auth.signInWithEmailAndPassword(
+  //       email: _emailController.text,
+  //       password: _passwordController.text,
+  //     );
+  //
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //       MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
+  //       (Route<dynamic> route) => false,
+  //     );
+  //   } on FirebaseAuthException catch (e) {
+  //     print('Error: ${e.message}');
+  //   }
+  // }
+  //
+  // void _togglePasswordVisibility() {
+  //   setState(() {
+  //     _obscureText = !_obscureText;
+  //   });
+  // }
+
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  bool _isLoading = false;
+  String? _errorMessage;
   bool _obscureText = true;
-
-  Future<void> _logIn() async {
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
-        (Route<dynamic> route) => false,
-      );
-    } on FirebaseAuthException catch (e) {
-      print('Error: ${e.message}');
-    }
-  }
 
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final response = await http.post(
+      Uri.parse('http://192.168.0.219:80/api/v1/auth/login'),
+      headers: <String, String>{"Content-Type": "application/json; charset=UTF-8", "Accept": "application/json"},
+      body: jsonEncode(<String, String>{
+        'phone': _phoneController.text,
+        'password': _passwordController.text,
+      }),
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['success']) {
+        const storage = FlutterSecureStorage();
+        await storage.write(key: 'token', value: data['token']);
+
+        String? lox = await storage.read(key: 'token');
+        print(lox);
+        print('Login successful: ${data['message']}');
+        Navigator.of(context).pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
+      } else {
+        setState(() {
+          _errorMessage = data['message'];
+        });
+        print('Error from server: ${data['message']}');
+      }
+    } else {
+      setState(() {
+        _errorMessage = 'Failed to login. Please try again.';
+      });
+      print('Server error: ${response.body}');
+    }
   }
 
   @override
@@ -79,14 +138,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 10),
                         const Text(
-                          'Введите почту и пароль',
+                          'Введите номер и пароль',
                           style: TextStyle(fontSize: 14, color: Colors.black54),
                         ),
                         const SizedBox(height: 20),
                         TextField(
-                          controller: _emailController,
+                          controller: _phoneController,
                           decoration: InputDecoration(
-                            labelText: 'Введите почту',
+                            labelText: 'Введите номер телефона',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                         ),
@@ -138,21 +197,47 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            _logIn();
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
-                              minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                          child: const Text(
-                            'Далее',
-                            style: TextStyle(color: Colors.white),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     _login();
+                        //   },
+                        //   style: ElevatedButton.styleFrom(
+                        //       backgroundColor: Colors.green,
+                        //       maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                        //       minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                        //       padding: const EdgeInsets.symmetric(vertical: 15),
+                        //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                        //   child: const Text(
+                        //     'Далее',
+                        //     style: TextStyle(color: Colors.white),
+                        //   ),
+                        // ),
+                        if (_isLoading)
+                          const CircularProgressIndicator()
+                        else
+                          ElevatedButton(
+                            onPressed: () {
+                              _login();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                                minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
+                                padding: const EdgeInsets.symmetric(vertical: 15),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                            child: const Text(
+                              'Далее',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                        ),
+                        if (_errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Text(
+                              _errorMessage!,
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          ),
                         const SizedBox(height: 20),
                         RichText(
                           textAlign: TextAlign.center,
@@ -164,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: const TextStyle(color: Colors.red),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.pushNamed(context, '/logIn');
+                                    Navigator.pushNamed(context, '/signUp');
                                   },
                               ),
                             ],
