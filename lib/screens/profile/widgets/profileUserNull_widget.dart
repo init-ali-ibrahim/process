@@ -70,18 +70,18 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
           width: MediaQuery.of(context).size.width - 40,
           child: Column(
             children: [
-              ListTile(
-                leading: const Icon(Icons.language, color: Colors.grey),
-                title: const Text('Язык', style: TextStyle(fontSize: 12)),
-                trailing: const Wrap(
-                  spacing: 10,
-                  children: [Text('Русский', style: TextStyle(fontSize: 12, color: Colors.red, fontWeight: FontWeight.w400)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
-                ),
-                onTap: () {},
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
-                tileColor: Colors.white,
-              ),
-              CustomDevider(),
+              // ListTile(
+              //   leading: const Icon(Icons.language, color: Colors.grey),
+              //   title: const Text('Язык', style: TextStyle(fontSize: 12)),
+              //   trailing: const Wrap(
+              //     spacing: 10,
+              //     children: [Text('Русский', style: TextStyle(fontSize: 12, color: Colors.red, fontWeight: FontWeight.w400)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
+              //   ),
+              //   onTap: () {},
+              //   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
+              //   tileColor: Colors.white,
+              // ),
+              // CustomDevider(),
               ListTile(
                 leading: const Icon(Icons.location_city, color: Colors.grey),
                 title: const Text('Город', style: TextStyle(fontSize: 12)),
@@ -92,6 +92,7 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                 onTap: () {
                   Navigator.pushNamed(context, '/demo');
                 },
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
                 tileColor: Colors.white,
               ),
               CustomDevider(),

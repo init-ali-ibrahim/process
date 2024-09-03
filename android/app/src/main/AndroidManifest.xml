@@ -34,9 +34,10 @@
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <service
             android:name="io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"
+                />
             </intent-filter>
         </service>
 

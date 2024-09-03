@@ -1,10 +1,7 @@
 name: process
 description: "A new Flutter project."
-
 publish_to: 'none'
-
 version: 1.0.0+1
-
 environment:
   sdk: '>=3.3.4 <4.0.0'
 
@@ -20,7 +17,7 @@ dependencies:
   firebase_database: ^11.0.3
   firebase_core: ^3.2.0
   firebase_auth: ^5.1.2
-  firebase_messaging: ^15.0.3
+  firebase_messaging: ^15.0.4
   gif_view: ^0.4.4
   firebase_app_check: ^0.3.0+3
   equatable: ^2.0.5
@@ -33,13 +30,15 @@ dependencies:
   google_maps_flutter: ^2.9.0
   geocoding: ^3.0.0
   translator: ^1.0.0
-  mobile_scanner: ^5.2.1
+  shared_preferences: ^2.3.2
+  animations: ^2.0.11
+  shimmer: ^3.0.0
+#  mobile_scanner: ^5.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-
   flutter_launcher_icons: ^0.13.1
 
 flutter_launcher_icons:
@@ -47,12 +46,8 @@ flutter_launcher_icons:
   image_path: "assets/logolast.png"
   adaptive_icon_background: "#ffffff"
 
-
-
 flutter:
-
   uses-material-design: true
-
   assets:
   - assets/
   - assets/image/
@@ -63,12 +58,10 @@ flutter:
   - assets/image/main_screen/
   - assets/image/main_screen/pies/
   - assets/image/topping/
-
   fonts:
     - family: OpenSans
       fonts:
         - asset: assets/fonts/OpenSans-Regular.ttf
-
         - asset: assets/fonts/OpenSans-ExtraBold.ttf
         - weight: 800
         - asset: assets/fonts/OpenSans-Bold.ttf
@@ -79,3 +72,5 @@ flutter:
         - weight: 500
         - asset: assets/fonts/OpenSans-Light.ttf
         - weight: 300
+
+

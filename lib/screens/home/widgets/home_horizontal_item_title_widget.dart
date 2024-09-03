@@ -33,14 +33,14 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
               ),
             ]),
           ),
-          InkWell(
-              onTap: () => Navigator.pushNamed(context, '/see_all_item'),
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              child: const Text(
-                'Посмотреть все',
-                style: TextStyle(fontSize: 14, color: colorDark),
-              ))
+          // InkWell(
+          //     onTap: () => Navigator.pushNamed(context, '/see_all_item'),
+          //     splashColor: Colors.transparent,
+          //     highlightColor: Colors.transparent,
+          //     child: const Text(
+          //       'Посмотреть все',
+          //       style: TextStyle(fontSize: 14, color: colorDark),
+          //     ))
         ],
       ),
     );

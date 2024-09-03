@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:process/screens/Auth/SignUp/sign_up_screen.dart';
@@ -14,20 +17,26 @@ import 'package:process/screens/map_click/map_click_screen.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/see_all_item/see_all_item_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/color.dart';
 import 'firebase_options.dart';
 import 'screens/httpTest.dart';
 
-void main() async {
+late SharedPreferences prefs;
+
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  prefs = await SharedPreferences.getInstance();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  final FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity,
-  );
-
+  messaging.getToken().then((token) => log(token ?? 'net tokena'));
+  // await FirebaseAppCheck.instance.activate(
+  //   androidProvider: AndroidProvider.playIntegrity,
+  // );
   runApp(const MyApp());
 }
 
@@ -87,10 +96,9 @@ class MyApp extends StatelessWidget {
               '/profile': (context) => Navbar(
                     initialPageIndex: 2,
                   ),
-
               '/map': (context) => const MapClickScreen(),
               '/my-profile': (context) => const ProfileEditScreen(),
-              '/httpTest': (context) => const httpTest(),
+              '/httpTest': (context) => const HttpTest(),
               '/cake_create': (context) => const CakeCustomizationScreen(),
               '/item_info': (context) => const ItemInfoScreen(),
               '/see_all_item': (context) => const SeeAllItemScreen(),

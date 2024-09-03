@@ -77,8 +77,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
     }
   }
 
-  // final TextEditingController _controllerDistrict = TextEditingController(text: '');
-
   final List<Product> _products = [
     Product('украшение 1', 10, 'украшение', '', '',
         'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fdd.jpeg?alt=media&token=53b9e374-83c0-4bd7-a212-f653a319b30b'),
@@ -121,8 +119,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // late TextEditingController _controllerStreet = TextEditingController(text: streetCart);
-
     return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
       return Scaffold(
           backgroundColor: bgColor,
@@ -256,7 +252,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                         const Padding(
                             padding: EdgeInsets.all(8),
                             child: Text(
-                              'Дополнително на cake',
+                              'Дополнително на заказ',
                               style: TextStyle(fontSize: 16),
                             )),
                         SizedBox(
@@ -348,48 +344,48 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 40),
-                        Container(
-                          margin: const EdgeInsets.only(right: 10, left: 10),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                isChecked = !isChecked;
-                              });
-                            },
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFEFEFEF),
-                                borderRadius: BorderRadius.all(Radius.circular(4)),
-                              ),
-                              padding: const EdgeInsets.only(right: 12, top: 5, bottom: 5, left: 18),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    'Держите мою личность в секрете',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Checkbox(
-                                    value: isChecked,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        isChecked = value!;
-                                      });
-                                    },
-                                    fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-                                      if (!states.contains(WidgetState.selected)) {
-                                        return Colors.white;
-                                      }
-                                      return null;
-                                    }),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        const SizedBox(height: 10),
+                        // Container(
+                        //   margin: const EdgeInsets.only(right: 10, left: 10),
+                        //   child: InkWell(
+                        //     onTap: () {
+                        //       setState(() {
+                        //         isChecked = !isChecked;
+                        //       });
+                        //     },
+                        //     child: Container(
+                        //       decoration: const BoxDecoration(
+                        //         color: Color(0xFFEFEFEF),
+                        //         borderRadius: BorderRadius.all(Radius.circular(4)),
+                        //       ),
+                        //       padding: const EdgeInsets.only(right: 12, top: 5, bottom: 5, left: 18),
+                        //       child: Row(
+                        //         crossAxisAlignment: CrossAxisAlignment.center,
+                        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //         children: [
+                        //           const Text(
+                        //             'Держите мою личность в секрете',
+                        //             style: TextStyle(fontSize: 16),
+                        //           ),
+                        //           Checkbox(
+                        //             value: isChecked,
+                        //             onChanged: (bool? value) {
+                        //               setState(() {
+                        //                 isChecked = value!;
+                        //               });
+                        //             },
+                        //             fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+                        //               if (!states.contains(WidgetState.selected)) {
+                        //                 return Colors.white;
+                        //               }
+                        //               return null;
+                        //             }),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         const SizedBox(height: 20),
                         Container(
                             margin: const EdgeInsets.only(right: 10, left: 10),
@@ -405,7 +401,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                 leading: Icon(Icons.add),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
                                 collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                                title: Text('Оставить записку на cake'),
+                                title: Text('Оставить записку'),
                                 children: <Widget>[
                                   Padding(
                                     padding: EdgeInsets.all(10),
@@ -414,7 +410,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                           border: OutlineInputBorder(),
                                           fillColor: Colors.white,
                                           filled: true,
-                                          hintText: 'Напишите сообщение на cake',
+                                          hintText: 'Напишите сообщение',
                                           hintStyle: TextStyle(fontWeight: FontWeight.w400)),
                                       maxLines: 3,
                                     ),
@@ -485,7 +481,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
           }));
     });
   }
-
 
   //----------------------------
 
@@ -571,11 +566,14 @@ class AddressModalContent extends StatefulWidget {
 }
 
 class _AddressModalContentState extends State<AddressModalContent> {
-  String _addressType = 'Дом';
+  String _addressType = 'Курьер';
 
   final storage = const FlutterSecureStorage();
-  var streetCart;
-  var districtCart;
+  String? streetCart;
+  String? districtCart;
+
+  final TextEditingController _controllerStreet = TextEditingController();
+  final TextEditingController _controllerDistrict = TextEditingController();
 
   @override
   void initState() {
@@ -583,12 +581,22 @@ class _AddressModalContentState extends State<AddressModalContent> {
     _loadData();
   }
 
+  @override
+  void dispose() {
+    _controllerStreet.dispose();
+    _controllerDistrict.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadData() async {
     try {
       streetCart = await storage.read(key: 'streetCart');
-      print(streetCart);
       districtCart = await storage.read(key: 'districtCart');
-      setState(() {});
+
+      setState(() {
+        _controllerStreet.text = streetCart ?? '';
+        _controllerDistrict.text = districtCart ?? '';
+      });
     } catch (e) {
       print('Ошибка при чтении значения: $e');
     }
@@ -596,8 +604,6 @@ class _AddressModalContentState extends State<AddressModalContent> {
 
   @override
   Widget build(BuildContext context) {
-    late TextEditingController _controllerStreet = TextEditingController(text: streetCart);
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -605,56 +611,42 @@ class _AddressModalContentState extends State<AddressModalContent> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                Checkbox(
-                  value: false,
-                  onChanged: (value) {},
-                ),
-                const Text("Я незнаю адреса, свяжитесь со мной"),
-              ],
-            ),
             const SizedBox(height: 10),
             Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(10),
+              height: 200,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: InkWell(
+                child: Center(
+                  child: Text('карта', style: TextStyle(color: Colors.grey[600])),
                 ),
-                child: InkWell(
-                  child: Center(
-                    child: Text('карта', style: TextStyle(color: Colors.grey[600])),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/map');
-                  },
-                )),
+                onTap: () {
+                  Navigator.pushNamed(context, '/map');
+                },
+              ),
+            ),
             const SizedBox(height: 10),
             ToggleButtons(
               isSelected: [
-                _addressType == 'Дом',
-                _addressType == 'Апартамент',
-                _addressType == 'Офис',
+                _addressType == 'Курьер',
+                _addressType == 'Самовывоз',
               ],
               onPressed: (int index) {
                 setState(() {
-                  if (index == 0) _addressType = 'Дом';
-                  if (index == 1) _addressType = 'Апартамент';
-                  if (index == 2) _addressType = 'Офис';
+                  if (index == 0) _addressType = 'Курьер';
+                  if (index == 1) _addressType = 'Самовывоз';
                 });
               },
               children: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('Дом'),
+                  child: Text('Курьер'),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('Апартамент'),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('Офис'),
+                  child: Text('Самовывоз'),
                 ),
               ],
             ),
@@ -667,8 +659,9 @@ class _AddressModalContentState extends State<AddressModalContent> {
               ),
             ),
             const SizedBox(height: 10),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: _controllerDistrict,
+              decoration: const InputDecoration(
                 labelText: 'Район',
                 border: OutlineInputBorder(),
               ),
@@ -691,7 +684,7 @@ class _AddressModalContentState extends State<AddressModalContent> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('Подвердить'),
+              child: const Text('Подтвердить'),
             ),
           ],
         ),

@@ -39,6 +39,7 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
                   image: widget.img,
                   width: 170,
                   height: 155,
+                  fit: BoxFit.cover,
                   imageErrorBuilder: (context, error, stackTrace) {
                     return Container(
                       color: Colors.white,

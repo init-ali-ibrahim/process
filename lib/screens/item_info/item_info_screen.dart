@@ -24,16 +24,19 @@ class _ItemInfoScreenState extends State<ItemInfoScreen> {
       appBar: AppBar(
         title: Text(args['title']),
         centerTitle: true,
+
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
                 args['img'],
                 width: MediaQuery.of(context).size.width,
+                height: 500,
+                fit: BoxFit.cover,
               ),
             ),
           ),

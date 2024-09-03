@@ -1,4 +1,7 @@
-import "package:flutter/material.dart";
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http; // Добавляем для работы с HTTP-запросами
 import 'package:process/screens/color.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
 import 'package:process/screens/home/widgets/home_banner_widget.dart';
@@ -13,6 +16,62 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String countCity = 'Алматы';
+  final storage = const FlutterSecureStorage();
+  List<dynamic> products = []; // Список для хранения продуктов
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedCity();
+  }
+
+  Future<void> _loadSelectedCity() async {
+    final slug = await storage.read(key: 'selected_city_slug');
+    print('$slug AAAAAAAAAAAAAAAAAA');
+    if (slug != null) {
+      setState(() {
+        countCity = _getCityNameFromSlug(slug);
+      });
+    }
+    print('$slug AAAAAAAAAAAAAAAAAA');
+    _fetchProducts(slug ?? 'almaty'); // Загружаем продукты после получения slug
+  }
+
+  Future<void> _fetchProducts(String citySlug) async {
+    final url = Uri.parse('http://192.168.0.219:80/api/v1/catalog/products');
+    final response = await http.get(url, headers: {'City': citySlug});
+
+    print('$citySlug AAAAAAAAAAAAAAAAAA');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        products = data['data'];
+      });
+    } else {
+      // Обработка ошибки
+      print('Failed to load products');
+    }
+  }
+
+  String _getCityNameFromSlug(String slug) {
+    switch (slug) {
+      case 'almaty':
+        print('almaty');
+        return 'Алматы';
+      case 'astana':
+        print('astana');
+        return 'Астана';
+      case 'uralsk':
+        print('uralsk');
+        return 'Уральск';
+      case 'aktobe':
+        print('aktobe');
+        return 'Актобе';
+      default:
+        return 'Алматы';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                       decoration: BoxDecoration(
-                        color: Color(0xFFF6F0F0),
+                        color: const Color(0xFFF6F0F0),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Row(
@@ -90,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const Expanded(
                             child: TextField(
                               decoration: InputDecoration(
-                                hintText: 'Пойск',
+                                hintText: 'Поиск',
                                 border: InputBorder.none,
                                 disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1)),
                                 hintStyle: TextStyle(fontSize: 14, color: Color(0xFF313131), fontWeight: FontWeight.w400),
@@ -111,125 +170,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icons.access_time_filled,
                 ),
                 SizedBox(
-                  height: 240,
-                  child: ListView(
+                  height: 280,
+                  child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      HomeHorizontalItemWidget(
-                          title: 'Баноффи',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2Fapricot.jpg?alt=media&token=fd2b535e-ad74-4f96-a16c-cf555151f55e',
-                          type: 'Состав: Мука пшеничная в/c, разрыхлитель сахар, маргарин. желток, вареная сгущенка, банан, какао, сливки, творжный сыр, сахарная пудра'),
-                      HomeHorizontalItemWidget(
-                          title: 'Абрикосовый',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F4%20(1).jpg?alt=media&token=a4c6ed79-f175-45de-ab25-05004df35b72',
-                          type: 'Состав: Мука пшеничная в/c, разрыхлитель, сахар, маргарин, яйцо, сметана, белая сгущенка, абрикос, сливки'),
-                      HomeHorizontalItemWidget(
-                          title: 'Восточный',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F3%20(1).jpg?alt=media&token=8be3b3c6-f787-48ce-915b-8dc5d05ee09a',
-                          type: 'Состав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, грец.орех, изюм, курага, белая сгущенка'),
-                      HomeHorizontalItemWidget(
-                          title: 'Йогуртовый',
-                          cash: '2 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F2%20(1).jpg?alt=media&token=630e3028-3f20-41f7-998e-ab93575b4003',
-                          type: 'Cостав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, сметана, белая сгущенка, йогурт, растительное масло, персик'),
-                      HomeHorizontalItemWidget(
-                          title: 'Карамельный',
-                          cash: '3 200',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F1%20(1).jpg?alt=media&token=9d3f3222-7bed-44a3-9d48-c6020d351f7c',
-                          type: 'Состав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, сметана, варенная сгущенка, ванилин'),
-                    ],
-                  ),
-                ),
-                HomeHorizontalItemTitleWidget(
-                  title: 'Шоколадные',
-                  icon: Icons.ac_unit_rounded,
-                ),
-                SizedBox(
-                  height: 240,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      HomeHorizontalItemWidget(
-                          title: 'Йогуртовый',
-                          cash: '2 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F2%20(1).jpg?alt=media&token=630e3028-3f20-41f7-998e-ab93575b4003',
-                          type: 'Cостав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, сметана, белая сгущенка, йогурт, растительное масло, персик'),
-                      HomeHorizontalItemWidget(
-                          title: 'Карамельный',
-                          cash: '3 200',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F1%20(1).jpg?alt=media&token=9d3f3222-7bed-44a3-9d48-c6020d351f7c',
-                          type: 'Состав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, сметана, варенная сгущенка, ванилин'),
-                      HomeHorizontalItemWidget(
-                          title: 'Баноффи',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2Fapricot.jpg?alt=media&token=fd2b535e-ad74-4f96-a16c-cf555151f55e',
-                          type: 'Состав: Мука пшеничная в/c, разрыхлитель сахар, маргарин. желток, вареная сгущенка, банан, какао, сливки, творжный сыр, сахарная пудра'),
-                      HomeHorizontalItemWidget(
-                          title: 'Абрикосовый',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F4%20(1).jpg?alt=media&token=a4c6ed79-f175-45de-ab25-05004df35b72',
-                          type: 'Состав: Мука пшеничная в/c, разрыхлитель, сахар, маргарин, яйцо, сметана, белая сгущенка, абрикос, сливки'),
-                      HomeHorizontalItemWidget(
-                          title: 'Восточный',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F3%20(1).jpg?alt=media&token=8be3b3c6-f787-48ce-915b-8dc5d05ee09a',
-                          type: 'Состав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, грец.орех, изюм, курага, белая сгущенка'),
-                    ],
-                  ),
-                ),
-                HomeHorizontalItemTitleWidget(
-                  title: 'Ванильные',
-                  icon: Icons.account_balance_wallet_sharp,
-                ),
-                SizedBox(
-                  height: 240,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      HomeHorizontalItemWidget(
-                          title: 'Йогуртовый',
-                          cash: '2 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F2%20(1).jpg?alt=media&token=630e3028-3f20-41f7-998e-ab93575b4003',
-                          type: 'Cостав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, сметана, белая сгущенка, йогурт, растительное масло, персик'),
-                      HomeHorizontalItemWidget(
-                          title: 'Карамельный',
-                          cash: '3 200',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F1%20(1).jpg?alt=media&token=9d3f3222-7bed-44a3-9d48-c6020d351f7c',
-                          type: 'Состав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, сметана, варенная сгущенка, ванилин'),
-                      HomeHorizontalItemWidget(
-                          title: 'Баноффи',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2Fapricot.jpg?alt=media&token=fd2b535e-ad74-4f96-a16c-cf555151f55e',
-                          type: 'Состав: Мука пшеничная в/c, разрыхлитель сахар, маргарин. желток, вареная сгущенка, банан, какао, сливки, творжный сыр, сахарная пудра'),
-                      HomeHorizontalItemWidget(
-                          title: 'Абрикосовый',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F4%20(1).jpg?alt=media&token=a4c6ed79-f175-45de-ab25-05004df35b72',
-                          type: 'Состав: Мука пшеничная в/c, разрыхлитель, сахар, маргарин, яйцо, сметана, белая сгущенка, абрикос, сливки'),
-                      HomeHorizontalItemWidget(
-                          title: 'Восточный',
-                          cash: '3 500',
-                          img:
-                              'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/main_screen_item%2F3%20(1).jpg?alt=media&token=8be3b3c6-f787-48ce-915b-8dc5d05ee09a',
-                          type: 'Состав: Мука пшеничная в/с, разрыхлитель, сахар, маргарин, яйцо, грец.орех, изюм, курага, белая сгущенка'),
-                    ],
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      print(product['images'][0]);
+                      return HomeHorizontalItemWidget(
+                        title: product['name'],
+                        cash: '${product['price']}',
+                        img: product['images'][0],
+                        // img: 'http://192.168.0.219:80/storage/9/product5front.jpg',
+                        type: 'Категория: ${product['category']}',
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(
@@ -280,15 +235,19 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         countCity = cityName;
       });
+      _fetchProducts(_getSlugForCity(cityName)); // Обновляем продукты после смены города
     }
   }
 
   Widget _buildCityOption(BuildContext context, String cityName, String assetPath) {
     final isSelected = countCity == cityName;
+    final slug = _getSlugForCity(cityName);
+
     return InkWell(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
-      onTap: () {
+      onTap: () async {
+        await storage.write(key: 'selected_city_slug', value: slug);
         Navigator.pop(context, cityName);
       },
       child: Container(
@@ -320,4 +279,22 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  String _getSlugForCity(String cityName) {
+    switch (cityName) {
+      case 'Алматы':
+        print('almaty');
+        return 'almaty';
+      case 'Астана':
+        print('astana');
+        return 'astana';
+      case 'Уральск':
+        print('uralsk');
+        return 'uralsk';
+      case 'Актобе':
+        print('aktobe');
+        return 'aktobe';
+      default:
+        return '';
+    }
+  }
 }

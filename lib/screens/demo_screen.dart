@@ -1,5 +1,6 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+// import 'package:mobile_scanner/mobile_scanner.dart';
 
 class DemoScreen extends StatefulWidget {
   const DemoScreen({super.key});
@@ -9,45 +10,48 @@ class DemoScreen extends StatefulWidget {
 }
 
 class _DemoScreenState extends State<DemoScreen> {
-  final MobileScannerController cameraController = MobileScannerController();
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('data'),),
-      body: Column(
-        children: [
-          Text('data'),
-          MobileScanner(
-            fit: BoxFit.fill,
-            controller: MobileScannerController(
-              facing: CameraFacing.back,
-              torchEnabled: false,
-            ),
-            onDetect: (barcodes) {
-              // QrScannerOverlayShape
-            },
-            overlayBuilder: (context, constraints) {
-              return Stack(
-                children: [
-                  Positioned.fill(
-                    child: Container(
-                      decoration: ShapeDecoration(
-                        shape: CircleBorder(
-                        ),
-                      ),
-                    ),
-                  ),
-                  // ... другие пользовательские виджеты
-                ],
-              );
-            },
-          )
-        ],
-      )
+      appBar: AppBar(
+        title: Text('Home Page'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(_createRoute());
+          },
+          child: Text('Go to Details'),
+        ),
+      ),
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => DetailsPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
+        );
+      },
     );
   }
 }
 
-
+class DetailsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Details Page'),
+      ),
+      body: Center(
+        child: Text('This is the Details Page'),
+      ),
+    );
+  }
+}
