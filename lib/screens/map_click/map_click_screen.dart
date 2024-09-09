@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:process/screens/cart/cart_screen.dart';
+import 'package:process/screens/navbar.dart';
 
 class MapClickScreen extends StatefulWidget {
   const MapClickScreen({super.key});
@@ -27,6 +29,15 @@ class _MapClickScreenState extends State<MapClickScreen> {
   void initState() {
     super.initState();
     _setMarkerIcon();
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2), // Продолжительность отображения SnackBar
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Future<void> _setMarkerIcon() async {
@@ -143,10 +154,10 @@ class _MapClickScreenState extends State<MapClickScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await _getAddressFromLatLng(_markers.first.position);
-          Navigator.pop(context);
-
           await storage.write(key: 'streetCart', value: _selectedStreet);
           await storage.write(key: 'districtCart', value: _selectedDistrict);
+          _showSnackBar(context, 'Адресс обновлен');
+          Navigator.pushNamedAndRemoveUntil(context, '/cart_screen', (route) => false);
         },
         label: const Text('Выбрать адрес'),
         icon: const Icon(Icons.check),

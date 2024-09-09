@@ -27,7 +27,7 @@ class _HttpTestState extends State<HttpTest> {
     });
 
     final response = await http.post(
-      Uri.parse('http://192.168.0.219:80/api/v1/auth/register'),
+      Uri.parse('http://192.168.1.109:80/api/v1/auth/register'),
       headers: <String, String>{"Content-Type": "application/json; charset=UTF-8", "Accept": "application/json"},
       body: jsonEncode(<String, String>{
         'name': _nameController.text,

@@ -1,10 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:process/screens/profile/widgets/profileUserAuth_widget.dart';
 import 'package:process/screens/profile/widgets/profileUserNull_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+
+import 'dart:async';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,31 +14,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-  // User? user = FirebaseAuth.instance.currentUser;
-
   final storage = const FlutterSecureStorage();
   String? _token;
-  Map<String, dynamic>? data;
 
   @override
   void initState() {
-    super.initState();
     _loadToken();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    try {
-      String? dataJson = await storage.read(key: 'data');
-      if (dataJson != null) {
-        setState(() {
-          data = jsonDecode(dataJson);
-        });
-      }
-    } catch (e) {
-      print('Ошибка при загрузке данных: $e');
-    }
+    super.initState();
   }
 
   Future<void> _loadToken() async {
@@ -46,6 +28,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _token = tokenDa;
     });
+
+    // try {
+    //   final url = Uri.parse('http://192.168.1.109:80/api/v1/auth/check');
+    //   final response = await http.post(
+    //     url,
+    //     headers: {
+    //       'Authorization': 'Bearer $tokenDa',
+    //       'Content-Type': 'application/json',
+    //     },
+    //   );
+    //
+    //   if (response.statusCode == 200 || response.statusCode == 201) {
+    //
+    //   } else {
+    //
+    //   }
+    //
+    // } catch(e) {
+    //   await storage.delete(key: 'token');
+    // }
+    //
+    // setState(() {
+    //   _token = tokenDa;
+    // });
+    //
+    // print(_token);
+    // print(tokenDa);
   }
 
   @override

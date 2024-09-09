@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:process/screens/color.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:http/http.dart' as http;
@@ -56,16 +57,23 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  final maskFormatter = MaskTextInputFormatter(
+    mask: '+7 (###) ###-##-##',
+    filter: { "#": RegExp(r'[0-9]') },
+  );
+
   Future<void> _login() async {
     setState(() {
       _isLoading = true;
     });
 
+    String cleanedPhone = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '');
+
     final response = await http.post(
-      Uri.parse('http://192.168.0.219:80/api/v1/auth/login'),
+      Uri.parse('http://192.168.1.109:80/api/v1/auth/login'),
       headers: <String, String>{"Content-Type": "application/json; charset=UTF-8", "Accept": "application/json"},
       body: jsonEncode(<String, String>{
-        'phone': _phoneController.text,
+        'phone': cleanedPhone,
         'password': _passwordController.text,
       }),
     );
@@ -144,7 +152,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 20),
                         TextField(
                           controller: _phoneController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [maskFormatter],
                           decoration: InputDecoration(
+                            hintText: '+7 (700) 000-00-00',
                             labelText: 'Введите номер телефона',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                           ),

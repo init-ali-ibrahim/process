@@ -1,10 +1,10 @@
 part of 'cake_customization_bloc.dart';
 
-enum Shape { MiniStandard, MiniHeart, StandardCake, HeartCake, SquareCake, SheetCake }
+enum Shape { MiniHeart, MiniStandard, StandardCake, HeartCake, SquareCake, SheetCake }
 
-enum Flavor { Vanilla, ChocoCrunch, RedVelvet, Nutella, Fruits, Cinnamon, Pistachio }
+enum Flavor { RedVelvet, ChocoCrunch, Vanilla, Nutella, Fruits, Cinnamon, Pistachio }
 
-enum Colour { Yellow, Red, Blue, Green, White, Brown, Pink, Purple, Orange, LightBlue, DarkBlue, DarkGreen }
+enum Colour { White, Red, Blue, Green, Yellow, Brown, Pink, Purple, Orange, LightBlue, DarkBlue, DarkGreen }
 
 enum Topping { None, Snow, Christmas, Classic }
 
@@ -16,7 +16,7 @@ class CakeCustomizationState extends Equatable {
 
   final String imagePath;
   final bool isLoadingImage;
-  final double totalPrice;
+  final int totalPrice;
 
   final String shapeImagePath;
   final String flavorImagePath;
@@ -27,6 +27,8 @@ class CakeCustomizationState extends Equatable {
   final String flavorName;
   final String colourName;
   final String toppingName;
+
+  final File? selectedImage;
 
   const CakeCustomizationState({
     required this.topping,
@@ -44,6 +46,8 @@ class CakeCustomizationState extends Equatable {
     required this.shapeName,
     required this.flavorName,
     required this.colourName,
+
+    required this.selectedImage
   });
 
   CakeCustomizationState copyWith({
@@ -54,7 +58,7 @@ class CakeCustomizationState extends Equatable {
     Flavor? flavor,
     Colour? colour,
     String? imagePath,
-    double? totalPrice,
+    int? totalPrice,
     bool? isLoadingImage,
     String? shapeImagePath,
     String? flavorImagePath,
@@ -62,6 +66,8 @@ class CakeCustomizationState extends Equatable {
     String? shapeName,
     String? flavorName,
     String? colourName,
+
+    File? selectedImage,
   }) {
     return CakeCustomizationState(
       shape: shape ?? this.shape,
@@ -79,11 +85,13 @@ class CakeCustomizationState extends Equatable {
       topping: topping ?? this.topping,
       toppingImagePath: toppingImagePath ?? this.toppingImagePath,
       toppingName: toppingName ?? this.toppingName,
+
+      selectedImage: selectedImage ?? this.selectedImage,
     );
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     shape,
     flavor,
     colour,
@@ -98,6 +106,7 @@ class CakeCustomizationState extends Equatable {
     colourName,
     topping,
     toppingName,
-    toppingImagePath
+    toppingImagePath,
+    selectedImage,
   ];
 }

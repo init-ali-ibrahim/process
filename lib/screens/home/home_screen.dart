@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http; // Добавляем для работы с HTTP-запросами
+import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/color.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
 import 'package:process/screens/home/widgets/home_banner_widget.dart';
@@ -27,21 +29,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadSelectedCity() async {
     final slug = await storage.read(key: 'selected_city_slug');
-    print('$slug AAAAAAAAAAAAAAAAAA');
     if (slug != null) {
       setState(() {
         countCity = _getCityNameFromSlug(slug);
       });
     }
-    print('$slug AAAAAAAAAAAAAAAAAA');
-    _fetchProducts(slug ?? 'almaty'); // Загружаем продукты после получения slug
+    _fetchProducts(slug ?? 'almaty');
   }
 
   Future<void> _fetchProducts(String citySlug) async {
     final url = Uri.parse('http://192.168.0.219:80/api/v1/catalog/products');
     final response = await http.get(url, headers: {'City': citySlug});
-
-    print('$citySlug AAAAAAAAAAAAAAAAAA');
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -49,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
         products = data['data'];
       });
     } else {
-      // Обработка ошибки
       print('Failed to load products');
     }
   }
@@ -57,16 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getCityNameFromSlug(String slug) {
     switch (slug) {
       case 'almaty':
-        print('almaty');
         return 'Алматы';
       case 'astana':
-        print('astana');
         return 'Астана';
       case 'uralsk':
-        print('uralsk');
         return 'Уральск';
       case 'aktobe':
-        print('aktobe');
         return 'Актобе';
       default:
         return 'Алматы';
@@ -99,27 +92,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         'Доставка в',
                         style: TextStyle(fontSize: 14),
                       ),
-                      Row(
-                        children: [
-                          SizedBox(
-                              width: 110,
-                              child: InkWell(
-                                onTap: () async {
-                                  showAppbarCountry(context);
-                                },
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
+                      InkWell(
+                          onTap: () async {
+                            showAppbarCountry(context);
+                          },
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 85,
                                 child: Text(
                                   countCity,
                                   style: const TextStyle(color: colorDark, fontSize: 20),
                                 ),
-                              )),
-                          const Icon(
-                            Icons.arrow_drop_down_outlined,
-                            color: colorDark,
-                          ),
-                        ],
-                      )
+                              ),
+                              const Icon(
+                                Icons.arrow_drop_down_outlined,
+                                color: colorDark,
+                              ),
+                            ],
+                          )),
                     ],
                   ),
                 ],
@@ -183,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         img: product['images'][0],
                         // img: 'http://192.168.0.219:80/storage/9/product5front.jpg',
                         type: 'Категория: ${product['category']}',
+                        product_id: product['id'],
                       );
                     },
                   ),
@@ -211,9 +205,25 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Выберите город доставки',
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Выберите город доставки',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    radius: double.maxFinite,
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(color: Colors.red.shade100, borderRadius: BorderRadius.circular(99)),
+                      child: const Icon(Icons.close, size: 20, color: Colors.white),
+                    ),
+                  )
+                ],
               ),
               const SizedBox(height: 20),
               Wrap(
@@ -235,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         countCity = cityName;
       });
-      _fetchProducts(_getSlugForCity(cityName)); // Обновляем продукты после смены города
+      _fetchProducts(_getSlugForCity(cityName));
     }
   }
 
@@ -248,6 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
       splashColor: Colors.transparent,
       onTap: () async {
         await storage.write(key: 'selected_city_slug', value: slug);
+        context.read<CartBloc>().add(const ClearAllProduct());
         Navigator.pop(context, cityName);
       },
       child: Container(

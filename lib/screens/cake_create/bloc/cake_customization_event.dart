@@ -42,3 +42,11 @@ class ToppingSelected extends CakeCustomizationEvent {
   @override
   List<Object> get props => [topping];
 }
+
+class ImagePicked extends CakeCustomizationEvent {
+  final File imageFile;
+  ImagePicked(this.imageFile);
+}
+
+class ImageRemoved extends CakeCustomizationEvent {}
+

@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:mime/mime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -9,30 +12,29 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/cart/widgets/cart_empty_widget.dart';
 import 'package:process/screens/color.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 // Модель
 class Product extends Equatable {
   final String name;
-  final double price;
+  final int price;
   final String flavor;
 
   final String colour;
   final String shape;
   final String urlImage;
+  final int product_id;
+  final String product_type;
+  final String comment;
+  final File imgApi;
 
-  Product(this.name, this.price, this.flavor, this.colour, this.shape, this.urlImage);
+  Product(this.name, this.price, this.flavor, this.colour, this.shape, this.urlImage, this.product_id, this.product_type, this.comment, this.imgApi);
 
   @override
   List<Object?> get props => [name, price];
 }
 
-// события
-
-// состояния
-
-// Блок
-
-// UI
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -42,7 +44,23 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
   bool _hasShownBottomSheet = false;
-  bool _hasBeenTriggeredManually = false;
+  final bool _hasBeenTriggeredManually = false;
+  final storage = const FlutterSecureStorage();
+  final maskFormatter = MaskTextInputFormatter(
+    mask: '+7 (###) ###-##-##',
+    filter: {"#": RegExp(r'[0-9]')},
+  );
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  bool isChecked = false;
+  var streetCart;
+  var districtCart;
+
+  final LatLng position = const LatLng(43.220189, 76.876802);
+
+  // final slug = await storage.read(key: 'selected_city_slug');
+
 
   @override
   void initState() {
@@ -59,20 +77,25 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    _loadData();
+    setState(() {});
+
     if (state == AppLifecycleState.resumed && !_hasShownBottomSheet && _hasBeenTriggeredManually) {
-      _showAddressModal(context);
-      _hasShownBottomSheet = true;
+      _loadData().then((_) {
+        setState(() {});
+        Future.delayed(Duration(milliseconds: 100), () {
+          _showAddressModal(context);
+        });
+        _hasShownBottomSheet = true;
+      });
     }
   }
-
-  final storage = const FlutterSecureStorage();
-  var streetCart;
-  var districtCart;
 
   Future<void> _loadData() async {
     try {
       streetCart = await storage.read(key: 'streetCart');
       districtCart = await storage.read(key: 'districtCart');
+
       setState(() {});
     } catch (e) {
       print('Ошибка при чтении значения: $e');
@@ -80,46 +103,167 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
   }
 
   final List<Product> _products = [
-    Product('украшение 1', 10, 'украшение', '', '',
-        'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fdd.jpeg?alt=media&token=53b9e374-83c0-4bd7-a212-f653a319b30b'),
-    Product('украшение 2', 5, 'украшение', '', '',
-        'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fmail.png?alt=media&token=0862f559-ee80-46f1-afd5-870d577f298d'),
+    Product(
+        'украшение 1',
+        10,
+        '',
+        '',
+        '',
+        'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fdd.jpeg?alt=media&token=53b9e374-83c0-4bd7-a212-f653a319b30b',
+        998,
+        '',
+        '',
+        File('')),
+    Product(
+        'украшение 2',
+        5,
+        '',
+        '',
+        '',
+        'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fmail.png?alt=media&token=0862f559-ee80-46f1-afd5-870d577f298d',
+        999,
+        '',
+        '',
+        File('')),
   ];
 
-  Future<void> sendCartDataToFirebase(Map<Product, int> cart, User user) async {
+  // Future sendOrder({
+  //   required List<Map<String, dynamic>> products,
+  //   required String name,
+  //   required String phone,
+  //   required String deliveryType,
+  //   required String address,
+  // }) async {
+  //   const url = 'http://192.168.1.109:80/api/v1/app/orders';
+  //   String? tokenAuth = await storage.read(key: 'token');
+  //
+  //   print('$tokenAuth AAAAAAAAAAAAAAAAAAAAAAAA');
+  //
+  //   final headers = {
+  //     'Authorization': 'Bearer $tokenAuth',
+  //     'City': 'almaty',
+  //     'Content-Type': 'multipart/form-data',
+  //     // 'Content-Type': 'application/json',
+  //   };
+  //
+  //   final body = jsonEncode({
+  //     'products': products,
+  //     'name': name,
+  //     'phone': phone,
+  //     'delivery_type': deliveryType,
+  //     'address': address,
+  //   });
+  //
+  //   print('Body: $body');
+  //
+  //   try {
+  //     final response = await http.post(Uri.parse(url), headers: headers, body: body);
+  //
+  //     print('Body: $body');
+  //
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       print('Order sent successfully');
+  //     } else {
+  //       print('Failed to send order: ${response.statusCode}');
+  //       print('Response body: ${response.body}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+
+  // final storage = FlutterSecureStorage();
+
+  Future<void> sendOrder({
+    required List<Map<String, dynamic>> products,
+    // required String name,
+    // required String phone,
+    required String deliveryType,
+    required String address,
+  }) async {
+    const url = 'http://192.168.0.219:80/api/v1/app/orders';
+    String? tokenAuth = await storage.read(key: 'token');
+
+    String cleanedPhone = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '');
+
+    print(cleanedPhone);
+
+    if (tokenAuth == null) {
+      print('No token found!');
+      return;
+    }
+
+    final TextEditingController _commentController = TextEditingController();
+    // final TextEditingController _nameController = TextEditingController();
+
     try {
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      final cartData = cart.entries.map((entry) {
-        return {
-          'product': {
-            'name': entry.key.name,
-            'price': entry.key.price,
-            'flavor': entry.key.flavor,
-            'colour': entry.key.colour.toString(),
-            'shape': entry.key.shape.toString(),
-          },
-          'quantity': entry.value,
-        };
-      }).toList();
+      var request = http.MultipartRequest('POST', Uri.parse(url))
+        ..headers.addAll({
+          'Authorization': 'Bearer $tokenAuth',
+          'City': 'almaty',
+        })
+        ..fields['name'] = _nameController.text
+        ..fields['phone'] = cleanedPhone
+        ..fields['delivery_type'] = deliveryType
+        ..fields['address'] = address
+        ..fields['comments'] = _commentController.text;
 
-      await firestore.collection('users').doc(user.uid).set({
-        'cart': cartData,
-        'totalPrice': cart.entries.fold(0.0, (sum, entry) => sum + entry.key.price * entry.value),
-      });
+      // Добавление продуктов и изображений
+      for (int i = 0; i < products.length; i++) {
+        var product = products[i];
+        if (product['type'] == 'costume') {
+          var costumeProducts = product['costume_products'] as Map<String, dynamic>;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Данные успешно отправлены на Firebase')),
-      );
+          // Проверка наличия изображения и его типа
+          if (costumeProducts['img'] != null && costumeProducts['img'] is String) {
+            String imgPath = costumeProducts['img'];
+            var mimeType = lookupMimeType(imgPath);
+            if (mimeType != null) {
+              var mimeParts = mimeType.split('/');
+              var file = await http.MultipartFile.fromPath(
+                'products[$i][costume_products][img]',
+                imgPath,
+                contentType: MediaType(mimeParts[0], mimeParts[1]),
+              );
+              request.files.add(file);
+            }
+          } else {
+            print('Invalid image path: ${costumeProducts['img']}');
+          }
+
+          // Добавление полей для костюма
+          request.fields['products[$i][type]'] = 'costume';
+          request.fields['products[$i][costume_products][color]'] = costumeProducts['color'];
+          request.fields['products[$i][costume_products][shape]'] = costumeProducts['shape'];
+          request.fields['products[$i][costume_products][flavor]'] = costumeProducts['flavor'];
+          request.fields['products[$i][costume_products][comments]'] = costumeProducts['comments'];
+          request.fields['products[$i][quantity]'] = product['quantity'].toString();
+          request.fields['products[$i][price]'] = product['price'].toString();
+        } else {
+          // Обработка стандартного продукта
+          request.fields['products[$i][type]'] = 'standard';
+          request.fields['products[$i][product_id]'] = product['product_id'].toString();
+          request.fields['products[$i][quantity]'] = product['quantity'].toString();
+        }
+      }
+
+      // print(request.)
+
+      // Отправка запроса
+      final response = await request.send();
+      print('Response status code: ${response.statusCode}');
+      final responseBody = await response.stream.bytesToString();
+      print('Response body: $responseBody');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Order sent successfully');
+      } else {
+        print('Failed to send order: ${response.statusCode}');
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка при отправке данных: $e')),
-      );
+      print('Error: $e');
     }
   }
-
-
-
-  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +276,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
             // surfaceTintColor: Colors.white,
             actions: [
               state.cart.isEmpty
-                  ? const Text('')
+                  ? const SizedBox()
                   : IconButton(
                       onPressed: () {
                         showDialog(
@@ -183,33 +327,36 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                       children: [
                                         Row(
                                           children: [
+
                                             ClipRRect(
                                               borderRadius: BorderRadius.circular(10),
-                                              child: Image.network(
-                                                product.urlImage,
-                                                width: 70,
-                                                height: 70,
-                                              ),
+                                              child: FadeInImage.assetNetwork(
+                                                  placeholder: 'assets/image/loadingItem.jpg',
+                                                  image: product.urlImage,
+                                                  width: 70,
+                                                  height: 70,
+                                                  fit: BoxFit.cover,
+                                                  imageErrorBuilder: (context, error, stackTrace) {
+                                                    return Container(
+                                                      color: Colors.white,
+                                                      width: 70,
+                                                      height: 70,
+                                                    );
+                                                  }),
                                             ),
                                             const SizedBox(width: 20),
                                             Column(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    Text(product.name, style: const TextStyle(fontSize: 14)),
-                                                    // Text(product.urlImage, style: TextStyle(fontSize: 14)),
-                                                    Text(
-                                                      product.flavor as String,
-                                                      style: const TextStyle(fontSize: 12, color: Color(0xFF212121)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Text('$quantity * ${product.price} = ${quantity * product.price}',
-                                                    style: const TextStyle(fontSize: 12, color: Color(0xFF212121)))
+                                                Text(product.name, style: const TextStyle(fontSize: 14)),
+                                                // Text('${product.product_id}'),
+
+                                                Container(
+                                                  margin: const EdgeInsets.only(bottom: 10),
+                                                  child: Text('₸ ${product.price}', style: const TextStyle(fontSize: 12), softWrap: true),
+                                                )
+
                                               ],
                                             ),
                                           ],
@@ -219,6 +366,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                           children: [
                                             const SizedBox(),
                                             Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 IconButton(
                                                   icon: const Icon(Icons.remove, size: 18),
@@ -260,13 +408,14 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                               style: TextStyle(fontSize: 16),
                             )),
                         SizedBox(
-                          height: 200,
+                          height: 180,
                           child: ListView.builder(
                             itemCount: _products.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               final product = _products[index];
                               return Container(
+                                width: 120,
                                 padding: const EdgeInsets.all(8),
                                 margin: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
@@ -275,20 +424,21 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                   border: Border.all(width: 1, color: const Color(0xFFDADADA)),
                                 ),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Image.network(product.urlImage, width: 75, height: 75),
-                                    Text(product.name),
-                                    Text(
-                                      '\₸${product.price}',
-                                      style: const TextStyle(fontSize: 13),
+                                    Center(
+                                      child: Image.network(product.urlImage, width: 75, height: 75),
                                     ),
-                                    IconButton(
-                                      icon: const Icon(Icons.add_shopping_cart),
+                                    Text(product.name),
+                                    TextButton(
                                       onPressed: () {
                                         context.read<CartBloc>().add(AddProduct(product));
                                       },
+                                      style: TextButton.styleFrom(backgroundColor: Colors.red.shade50, minimumSize: const Size(100, 10)),
+                                      child: Text(
+                                        '\₸ ${product.price}',
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
                                     )
                                   ],
                                 ),
@@ -296,6 +446,9 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                             },
                           ),
                         ),
+                        //
+
+                        //
                         const SizedBox(
                           height: 20,
                         ),
@@ -309,87 +462,102 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                 'Получатель',
                                 style: TextStyle(fontSize: 16),
                               ),
-                              const SizedBox(height: 8),
-                              Container(
-                                height: 120,
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                                    color: const Color(0xFFFFFFFF),
-                                    border: Border.all(width: 1, color: const Color(0xFFDADADA))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        child: Container(
-                                      decoration: const BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(8))),
-                                    )),
-                                    InkWell(
-                                      onTap: () {
-                                        _showAddressModal(context);
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.only(bottom: 8, top: 8, left: 10, right: 10),
-                                        child: const Row(
-                                          children: [
-                                            Icon(Icons.add, color: Color(0xFF953282)),
-                                            SizedBox(width: 20),
-                                            Text(
-                                              'Добавление сведений о получателе',
-                                              style: TextStyle(fontSize: 16),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                              const SizedBox(height: 14),
+                              TextField(
+                                controller: _phoneController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [maskFormatter],
+                                decoration: InputDecoration(
+                                  hintText: '+7 (700) 000-00-00',
+                                  labelText: 'Введите номер получателя',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
-                              )
+                              ),
+                              const SizedBox(height: 14),
+                              TextField(
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  labelText: 'Введите имя получателя',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              InkWell(
+                                  onTap: () {
+                                    _showAddressModal(context);
+                                  },
+                                  child: Container(
+                                    height: 140,
+                                    decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                                        color: const Color(0xFFFFFFFF),
+                                        border: Border.all(width: 1, color: const Color(0xFFDADADA))),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                                decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8))),
+                                                child: Stack(
+                                                  children: [
+                                                    GoogleMap(
+                                                      initialCameraPosition: CameraPosition(
+                                                        target: position,
+                                                        zoom: 10.0,
+                                                      ),
+                                                      // onTap: (){_showAddressModal(position);},
+                                                      zoomControlsEnabled: false,
+                                                      buildingsEnabled: false,
+                                                      compassEnabled: false,
+                                                      fortyFiveDegreeImageryEnabled: false,
+                                                      indoorViewEnabled: false,
+                                                      liteModeEnabled: false,
+                                                      myLocationButtonEnabled: false,
+                                                      trafficEnabled: false,
+                                                      zoomGesturesEnabled: false,
+                                                      myLocationEnabled: false,
+                                                      scrollGesturesEnabled: false,
+                                                      tiltGesturesEnabled: false,
+                                                      rotateGesturesEnabled: false,
+                                                    ),
+                                                    Positioned(
+                                                      top: 0,
+                                                      left: 0,
+                                                      child: Container(
+                                                        color: Colors.red.withOpacity(0),
+                                                        width: MediaQuery.of(context).size.width,
+                                                        height: MediaQuery.of(context).size.width,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ))),
+                                        // InkWell(
+                                        //   onTap: () {
+                                        //     _showAddressModal(context);
+                                        //   },
+                                        //   child:
+
+                                          Container(
+                                            padding: const EdgeInsets.only(bottom: 8, top: 8, left: 10, right: 10),
+                                            child: const Row(
+                                              children: [
+                                                Icon(Icons.add, color: Color(0xFF953282)),
+                                                SizedBox(width: 20),
+                                                Text(
+                                                  'Добавление сведений о получателе',
+                                                  style: TextStyle(fontSize: 16),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        // )
+                                      ],
+                                    ),
+                                  ))
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        // Container(
-                        //   margin: const EdgeInsets.only(right: 10, left: 10),
-                        //   child: InkWell(
-                        //     onTap: () {
-                        //       setState(() {
-                        //         isChecked = !isChecked;
-                        //       });
-                        //     },
-                        //     child: Container(
-                        //       decoration: const BoxDecoration(
-                        //         color: Color(0xFFEFEFEF),
-                        //         borderRadius: BorderRadius.all(Radius.circular(4)),
-                        //       ),
-                        //       padding: const EdgeInsets.only(right: 12, top: 5, bottom: 5, left: 18),
-                        //       child: Row(
-                        //         crossAxisAlignment: CrossAxisAlignment.center,
-                        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //         children: [
-                        //           const Text(
-                        //             'Держите мою личность в секрете',
-                        //             style: TextStyle(fontSize: 16),
-                        //           ),
-                        //           Checkbox(
-                        //             value: isChecked,
-                        //             onChanged: (bool? value) {
-                        //               setState(() {
-                        //                 isChecked = value!;
-                        //               });
-                        //             },
-                        //             fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-                        //               if (!states.contains(WidgetState.selected)) {
-                        //                 return Colors.white;
-                        //               }
-                        //               return null;
-                        //             }),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                         const SizedBox(height: 20),
                         Container(
                             margin: const EdgeInsets.only(right: 10, left: 10),
@@ -398,19 +566,20 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                               ),
-                              child: const ExpansionTile(
-                                backgroundColor: Color(0xFFEFEFEF),
-                                collapsedBackgroundColor: Color(0xFFEFEFEF),
+                              child: ExpansionTile(
+                                backgroundColor: const Color(0xFFEFEFEF),
+                                collapsedBackgroundColor: const Color(0xFFEFEFEF),
                                 iconColor: Colors.black,
-                                leading: Icon(Icons.add),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                                collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                                title: Text('Оставить записку'),
+                                leading: const Icon(Icons.add),
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                                collapsedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                                title: const Text('Оставить записку'),
                                 children: <Widget>[
                                   Padding(
-                                    padding: EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10),
                                     child: TextField(
-                                      decoration: InputDecoration(
+                                      controller: _commentController,
+                                      decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           fillColor: Colors.white,
                                           filled: true,
@@ -447,28 +616,62 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                               children: [
                                 const Text('Итоговая цена'),
                                 Text(
-                                  '₸: ${state.totalPrice.toStringAsFixed(2)}',
+                                  '₸: ${state.totalPrice}',
                                   style: const TextStyle(fontWeight: FontWeight.bold),
                                 )
                               ],
                             ),
                             TextButton(
                               onPressed: () async {
-                                // User? user = FirebaseAuth.instance.currentUser;
-                                // if (user != null) {
-                                //   await sendCartDataToFirebase(state.cart, user);
-                                //   ScaffoldMessenger.of(context).showSnackBar(
-                                //     const SnackBar(content: Text('Данные успешно отправлены на Firebase')),
-                                //   );
-                                // } else {
-                                //   ScaffoldMessenger.of(context).showSnackBar(
-                                //     const SnackBar(content: Text('Ошибка: пользователь не найден')),
-                                //   );
-                                // }
-                                Navigator.pushNamed(context, '/profile');
+                                String? storedValue = await storage.read(key: "typeAdress");
+                                print(storedValue);
+
+                                try {
+                                  final productsSamal = state.cart.entries.map((entry) {
+                                    final productsSamal = entry.key;
+                                    final quantity = entry.value;
+
+                                    print(productsSamal.imgApi.path);
+
+                                    if (productsSamal.product_type == 'costume') {
+                                      return {
+                                        'type': 'costume',
+                                        'quantity': quantity,
+                                        'costume_products': {
+                                          'color': productsSamal.colour,
+                                          'shape': productsSamal.shape,
+                                          'flavor': productsSamal.flavor,
+                                          'comments': productsSamal.comment,
+                                          'img': productsSamal.imgApi.path,
+                                        },
+                                        'price': 123
+                                      };
+                                    } else {
+                                      return {
+                                        'type': 'standard',
+                                        'product_id': productsSamal.product_id,
+                                        'quantity': quantity,
+                                      };
+                                    }
+                                  }).toList();
+
+                                  await sendOrder(
+                                    products: productsSamal,
+                                    deliveryType: '$storedValue',
+                                    address: 'asdas',
+
+                                    // deliveryType: 'pickup',
+                                    // name: _commentController.text,
+                                    // phone: '77066223709',
+                                  );
+                                } catch (e) {
+                                  print('Error: $e');
+                                }
                               },
                               style: TextButton.styleFrom(
-                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))), backgroundColor: colorPrimary),
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
+                                backgroundColor: colorPrimary,
+                              ),
                               child: const Text(
                                 'Продолжить',
                                 style: TextStyle(color: Colors.white),
@@ -541,29 +744,41 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
       ],
     );
   }
-}
 
-void _showAddressModal(BuildContext context) {
-  showModalBottomSheet(
-    backgroundColor: Colors.white,
-    context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (context) {
-      return Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: AddressModalContent(),
-      );
-    },
-  );
+  void _showAddressModal(BuildContext context) async {
+    await _loadData();
+
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: AddressModalContent(
+            streetCart: streetCart,
+            districtCart: districtCart,
+          ),
+        );
+      },
+    );
+  }
 }
 
 class AddressModalContent extends StatefulWidget {
-  const AddressModalContent({super.key});
+  final String? streetCart;
+  final String? districtCart;
+
+  const AddressModalContent({
+    super.key,
+    this.streetCart,
+    this.districtCart,
+  });
 
   @override
   _AddressModalContentState createState() => _AddressModalContentState();
@@ -571,18 +786,27 @@ class AddressModalContent extends StatefulWidget {
 
 class _AddressModalContentState extends State<AddressModalContent> {
   String _addressType = 'Курьер';
-
+  late TextEditingController _controllerStreet;
+  late TextEditingController _controllerDistrict;
   final storage = const FlutterSecureStorage();
-  String? streetCart;
-  String? districtCart;
+  final LatLng position = const LatLng(43.220189, 76.876802);
 
-  final TextEditingController _controllerStreet = TextEditingController();
-  final TextEditingController _controllerDistrict = TextEditingController();
+
+  Future<void> _loadAddressType() async {
+    String? storedType = await storage.read(key: 'typeAdress');
+    if (storedType != null) {
+      setState(() {
+        _addressType = storedType == 'pickup' ? 'Самовывоз' : 'Курьер';
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _loadAddressType();
+    _controllerStreet = TextEditingController(text: widget.streetCart ?? '');
+    _controllerDistrict = TextEditingController(text: widget.districtCart ?? '');
   }
 
   @override
@@ -590,20 +814,6 @@ class _AddressModalContentState extends State<AddressModalContent> {
     _controllerStreet.dispose();
     _controllerDistrict.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadData() async {
-    try {
-      streetCart = await storage.read(key: 'streetCart');
-      districtCart = await storage.read(key: 'districtCart');
-
-      setState(() {
-        _controllerStreet.text = streetCart ?? '';
-        _controllerDistrict.text = districtCart ?? '';
-      });
-    } catch (e) {
-      print('Ошибка при чтении значения: $e');
-    }
   }
 
   @override
@@ -623,8 +833,38 @@ class _AddressModalContentState extends State<AddressModalContent> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: InkWell(
-                child: Center(
-                  child: Text('карта', style: TextStyle(color: Colors.grey[600])),
+                child: Stack(
+                  children: [
+                    GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: position,
+                        zoom: 10.0,
+                      ),
+                      // onTap: (){_showAddressModal(position);},
+                      zoomControlsEnabled: false,
+                      buildingsEnabled: false,
+                      compassEnabled: false,
+                      fortyFiveDegreeImageryEnabled: false,
+                      indoorViewEnabled: false,
+                      liteModeEnabled: false,
+                      myLocationButtonEnabled: false,
+                      trafficEnabled: false,
+                      zoomGesturesEnabled: false,
+                      myLocationEnabled: false,
+                      scrollGesturesEnabled: false,
+                      tiltGesturesEnabled: false,
+                      rotateGesturesEnabled: false,
+                    ),
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Container(
+                        color: Colors.red.withOpacity(0),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width,
+                      ),
+                    )
+                  ],
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, '/map');
@@ -637,11 +877,22 @@ class _AddressModalContentState extends State<AddressModalContent> {
                 _addressType == 'Курьер',
                 _addressType == 'Самовывоз',
               ],
-              onPressed: (int index) {
+              onPressed: (int index) async {
                 setState(() {
                   if (index == 0) _addressType = 'Курьер';
                   if (index == 1) _addressType = 'Самовывоз';
                 });
+
+                if (index == 1){
+                  await storage.write(key: 'typeAdress', value: 'pickup');
+                } else {
+                  await storage.write(key: 'typeAdress', value: 'delivery');
+                }
+
+                // String? storedValue = await storage.read(key: "typeAdress");
+                // print('Stored value: $storedValue');
+
+                setState(() {});
               },
               children: const [
                 Padding(
@@ -667,13 +918,6 @@ class _AddressModalContentState extends State<AddressModalContent> {
               controller: _controllerDistrict,
               decoration: const InputDecoration(
                 labelText: 'Район',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Дополнительные указания (по желанию)',
                 border: OutlineInputBorder(),
               ),
             ),

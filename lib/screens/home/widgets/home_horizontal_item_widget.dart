@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:process/screens/color.dart';
 
 class HomeHorizontalItemWidget extends StatefulWidget {
-  HomeHorizontalItemWidget({super.key, required this.title, required this.img, required this.cash, required this.type});
+  HomeHorizontalItemWidget({super.key, required this.title, required this.img, required this.cash, required this.type, required this.product_id});
 
   final String title;
   final String img;
   final String cash;
   final String type;
+  final int product_id;
 
   @override
   State<HomeHorizontalItemWidget> createState() => _HomeHorizontalItemWidgetState();
@@ -23,6 +24,7 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
           'img': widget.img,
           'cash': widget.cash,
           'type': widget.type,
+          'product_id': widget.product_id
         });
       },
       splashColor: Colors.transparent,

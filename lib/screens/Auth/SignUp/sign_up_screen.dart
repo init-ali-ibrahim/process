@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:process/screens/color.dart';
-import 'package:process/screens/navbar.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpScreen extends StatefulWidget {
@@ -13,40 +12,26 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreen extends State<SignUpScreen> {
-  /* final _auth = FirebaseAuth.instance;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
-
-  Future<void> _signUp() async {
-    try {
-      await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
-        (Route<dynamic> route) => false,
-      );
-    } on FirebaseAuthException catch (e) {
-      print('Error: ${e.message}');
-    }
-  }
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  } */
 
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
+  void _togglePasswordVisibilityR() {
+    setState(() {
+      _obscureTextR = !_obscureTextR;
+    });
+  }
 
   bool _obscureText = true;
+  bool _obscureTextR = true;
+
+  final maskFormatter = MaskTextInputFormatter(
+    mask: '+7 (###) ###-##-##',
+    filter: { "#": RegExp(r'[0-9]') },
+  );
+
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -63,13 +48,15 @@ class _SignUpScreen extends State<SignUpScreen> {
       _isLoading = true;
     });
 
+    String cleanedPhone = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '');
+
     final response = await http.post(
       Uri.parse('http://192.168.0.219:80/api/v1/auth/register'),
       headers: <String, String>{"Content-Type": "application/json; charset=UTF-8", "Accept": "application/json"},
       body: jsonEncode(<String, String>{
         'name': _nameController.text,
         'last_name': _lastNameController.text,
-        'phone': _phoneController.text,
+        'phone': cleanedPhone,
         'email': _emailController.text,
         'password': _passwordController.text,
         'password_confirmation': _passwordConfirmationController.text,
@@ -89,6 +76,7 @@ class _SignUpScreen extends State<SignUpScreen> {
         String? lox = await storage.read(key: 'token');
         print(lox);
         print('Registration successful: ${data['message']}');
+
         Navigator.of(context).pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
       } else {
         setState(() {
@@ -144,7 +132,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                         ),
                         const SizedBox(height: 10),
                         const Text(
-                          'Чтобы создать аккаунт, введите почту и пароль',
+                          'Чтобы создать аккаунт, заполните форму',
                           style: TextStyle(fontSize: 14, color: Colors.black54),
                         ),
                         const SizedBox(height: 20),
@@ -166,24 +154,18 @@ class _SignUpScreen extends State<SignUpScreen> {
                         const SizedBox(height: 20),
                         TextField(
                           controller: _phoneController,
+                          inputFormatters: [maskFormatter],
+                          keyboardType: TextInputType.numberWithOptions(),
                           decoration: InputDecoration(
-                            prefixIcon: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(width: 5),
-                                  Text('+7'),
-                                ],
-                              ),
-                            ),
                             labelText: 'Введите номер телефона',
+                            hintText: '+7 (700) 000-00-00',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                         ),
                         const SizedBox(height: 20),
                         TextField(
                           controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             labelText: 'Введите почту',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -208,11 +190,16 @@ class _SignUpScreen extends State<SignUpScreen> {
                         ),
                         const SizedBox(height: 20),
                         TextField(
-                          obscureText: true,
+                          obscureText: _obscureTextR,
                           controller: _passwordConfirmationController,
                           decoration: InputDecoration(
                             labelText: 'Повторите пароль',
-                            suffixIcon: const Icon(Icons.visibility_off),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureTextR ? Icons.visibility_off : Icons.visibility,
+                              ),
+                              onPressed: _togglePasswordVisibilityR,
+                            ),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                         ),
@@ -269,21 +256,6 @@ class _SignUpScreen extends State<SignUpScreen> {
                               style: const TextStyle(color: Colors.red),
                             ),
                           ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     _register();
-                        //   },
-                        //   style: ElevatedButton.styleFrom(
-                        //       backgroundColor: Colors.green,
-                        //       maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
-                        //       minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
-                        //       padding: const EdgeInsets.symmetric(vertical: 15),
-                        //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                        //   child: const Text(
-                        //     'Далее',
-                        //     style: TextStyle(color: Colors.white),
-                        //   ),
-                        // ),
                         const SizedBox(height: 20),
                         RichText(
                           textAlign: TextAlign.center,

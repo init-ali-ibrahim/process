@@ -5,7 +5,7 @@ class CartState extends Equatable {
 
   const CartState(this.cart);
 
-  double get totalPrice {
+  int get totalPrice {
     return cart.entries.fold(0, (sum, entry) => sum + entry.key.price * entry.value);
   }
 

@@ -9,6 +9,7 @@ import 'package:process/screens/Auth/Login/login_screen.dart';
 import 'package:process/screens/cake_create/bloc/cake_customization_bloc.dart';
 import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/demo_screen.dart';
+import 'package:process/screens/onboarding_screen.dart';
 import 'package:process/screens/profile/profile_edit_screen.dart';
 import 'package:process/screens/cake_create/cake_create_screen.dart';
 import 'package:process/screens/cart/cart_screen.dart';
@@ -26,7 +27,8 @@ late SharedPreferences prefs;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  prefs = await SharedPreferences.getInstance();
+  final prefs = await SharedPreferences.getInstance();
+  final onboardingCompleted = prefs.getBool('onboardingCompleted') ?? false;
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -37,11 +39,13 @@ Future main() async {
   // await FirebaseAppCheck.instance.activate(
   //   androidProvider: AndroidProvider.playIntegrity,
   // );
-  runApp(const MyApp());
+  runApp(MyApp(onboardingCompleted: onboardingCompleted));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool onboardingCompleted;
+
+  const MyApp({Key? key, required this.onboardingCompleted}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +91,24 @@ class MyApp extends StatelessWidget {
               ),
             ),
             routes: {
-              '/': (context) => Navbar(
-                    initialPageIndex: 0,
-                  ),
+              // '/': (context) => Navbar(
+              //       initialPageIndex: 0,
+              //     ),
+
+              // '/': (context) => onboardingCompleted
+              //     ? Navbar(
+              //         initialPageIndex: 0,
+              //       )
+              //     : OnboardingPage(),
+
+              '/': (context) => onboardingCompleted
+                  ? Navbar(
+                      initialPageIndex: 0,
+                    )
+                  : Navbar(
+                      initialPageIndex: 0,
+                    ),
+
               '/cart_screen': (context) => Navbar(
                     initialPageIndex: 1,
                   ),

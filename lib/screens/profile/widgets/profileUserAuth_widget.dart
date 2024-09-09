@@ -13,6 +13,10 @@ class profileUserAuth_widget extends StatefulWidget {
 }
 
 class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
+
+  final storage = const FlutterSecureStorage();
+  Map<String, dynamic>? data;
+
   Future<void> checkAuthToken() async {
     String? tokenAuth = await storage.read(key: 'token');
 
@@ -33,30 +37,30 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
         this.data = data?['data'];
       });
 
-      print(tokenAuth);
-
-      print('Success: ${data['success']}');
-      print('User ID: ${data['data']['id']}');
-      print('Name: ${data['data']['name']}');
+      // print(tokenAuth);
+      // print('Success: ${data['success']}');
+      // print('User ID: ${data['data']['id']}');
+      // print('Name: ${data['data']['name']}');
     } else {
       await storage.delete(key: 'token');
-      Navigator.pushNamedAndRemoveUntil(context, '/profile',  (Route<dynamic> route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/profile', (Route<dynamic> route) => false);
 
       print('Request failed with status: ${response.statusCode}');
     }
   }
 
-  final storage = const FlutterSecureStorage();
-  Map<String, dynamic>? data;
-
   @override
   void initState() {
-    super.initState();
     checkAuthToken();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (data == null) {
+      return SizedBox(); // Или другой индикатор загрузки
+    }
+
     return Column(children: [
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,25 +94,15 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Name: ${data!['name']}'),
+                              Text('${data!['name'] ?? ''}'),
                               Text(
-                                'Email: ${data!['email']}',
+                                '${data!['email'] ?? ''}',
                                 style: const TextStyle(color: Colors.grey, fontSize: 12),
                               ),
                             ],
                           )
                         ],
                       ),
-                      // Center(
-                      //   child: data != null
-                      //       ? Column(
-                      //           mainAxisAlignment: MainAxisAlignment.center,
-                      //           children: [
-                      //             Text('ID: ${data!['id']}'),
-                      //           ],
-                      //         )
-                      //       : CircularProgressIndicator(),
-                      // ),
                       IconButton(
                           onPressed: () {
                             Navigator.pushNamed(context, '/my-profile');
@@ -190,7 +184,9 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
                     spacing: 10,
                     children: [Text('Алматы', style: TextStyle(fontSize: 12, color: Colors.red)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/demo');
+                  },
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
                   tileColor: Colors.white,
                 ),
@@ -312,7 +308,7 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
     );
   }
 
-  Container CustomDevider() {
+  CustomDevider() {
     return Container(
       decoration: const BoxDecoration(color: Colors.white),
       padding: const EdgeInsets.symmetric(horizontal: 15),

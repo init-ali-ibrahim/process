@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:process/screens/cart/bloc/cart_bloc.dart';
@@ -18,7 +20,7 @@ class _ItemInfoScreenState extends State<ItemInfoScreen> {
 
     String cash = args['cash'];
     var cleanString = cash.replaceAll(" ", "");
-    var price = double.parse(cleanString);
+    var price = int.parse(cleanString);
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +55,7 @@ class _ItemInfoScreenState extends State<ItemInfoScreen> {
                 minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
               ),
               onPressed: () {
-                var productItem = Product(args['title'], price, 'pies', 'pies', args['type'], args['img']);
+                var productItem = Product(args['title'], price, '', '', args['type'], args['img'], args['product_id'], 'standard', '', File(''));
 
                 context.read<CartBloc>().add(AddProduct(productItem));
 

@@ -53,7 +53,9 @@ class HomeBannerWidget extends StatelessWidget {
                   ),
                   SizedBox(height: 6),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/cake_create');
+                    },
                     style: TextButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.2), padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5)),
                     child: const Text(
                       'Сделать сейчас',
