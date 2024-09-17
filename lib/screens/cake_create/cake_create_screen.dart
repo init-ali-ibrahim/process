@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:process/screens/cake_create/bloc/cake_customization_bloc.dart';
 import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/cart/cart_screen.dart';
+import 'package:process/screens/connection.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -63,7 +64,7 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
           );
         },
       )
-      ..loadRequest(Uri.parse('http://192.168.1.109:5173/'));
+      ..loadRequest(Uri.parse('http://192.168.0.219:5173/'));
 
     if (kIsWeb || !Platform.isMacOS) {
       controller.setBackgroundColor(const Color(0x00000000));
@@ -98,193 +99,191 @@ class _CakeCustomizationScreenState extends State<CakeCustomizationScreen> {
       create: (context) => CakeCustomizationBloc(),
       child: BlocBuilder<CakeCustomizationBloc, CakeCustomizationState>(builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.close)),
-            title: const Text('Кастомизация'),
-            actions: [
-              Text(
-                'сумма: \₸${state.totalPrice}',
-                style: const TextStyle(fontSize: 16),
+            appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.close)),
+              title: const Text('Кастомизация'),
+              actions: [
+                Text(
+                  'сумма: \₸${state.totalPrice}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(width: 20)
+              ],
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(300),
+                child: Container(
+                    child: SizedBox(
+                        height: 300,
+                        width: MediaQuery.of(context).size.width,
+                        // child: Text('$link')
+                        child: WebViewWidget(controller: _controller))),
               ),
-              const SizedBox(width: 20)
-            ],
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(300),
-              child: Container(
-                  child: SizedBox(
-                      height: 300,
-                      width: MediaQuery.of(context).size.width,
-                      // child: Text('$link')
-                      child: WebViewWidget(controller: _controller))),
             ),
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
-                      ),
-                      margin: const EdgeInsets.only(top: 10),
-                      width: 90,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 10),
-                          InkWell(
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              width: 70,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: currentSelection == 'Shape' ? Colors.white : Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.cake,
-                                    color: currentSelection == 'Shape' ? Colors.red : Colors.white,
-                                  ),
-                                  Text(
-                                    'Shape',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: currentSelection == 'Shape' ? Colors.red : Colors.white,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            onTap: () {
-                              _onSelectionChanged('Shape');
-                            },
+            body: ConnectivityChecker(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
                           ),
-                          const SizedBox(height: 10),
-                          InkWell(
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              width: 70,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: currentSelection == 'Flavor' ? Colors.white : Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.restaurant_menu,
-                                    color: currentSelection == 'Flavor' ? Colors.red : Colors.white,
+                          margin: const EdgeInsets.only(top: 10),
+                          width: 90,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              InkWell(
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  width: 70,
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),                                  decoration: BoxDecoration(
+                                    color: currentSelection == 'Shape' ? Colors.white : Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Text(
-                                    'Flavor',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: currentSelection == 'Flavor' ? Colors.red : Colors.white,
-                                    ),
-                                  )
-                                ],
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.cake,
+                                        color: currentSelection == 'Shape' ? Colors.red : Colors.white,
+                                      ),
+                                      Text(
+                                        'Форма',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: currentSelection == 'Shape' ? Colors.red : Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  _onSelectionChanged('Shape');
+                                },
                               ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _controller.runJavaScript('''
+                              const SizedBox(height: 10),
+                              InkWell(
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  width: 70,
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),                                  decoration: BoxDecoration(
+                                    color: currentSelection == 'Flavor' ? Colors.white : Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.restaurant_menu,
+                                        color: currentSelection == 'Flavor' ? Colors.red : Colors.white,
+                                      ),
+                                      Text(
+                                        'Начинка',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: currentSelection == 'Flavor' ? Colors.red : Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _controller.runJavaScript('''
                                   document.getElementById('flavor').click(); 
                                 ''');
-                              });
-                              _onSelectionChanged('Flavor');
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          InkWell(
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              width: 70,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: currentSelection == 'Colour' ? Colors.white : Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(10),
+                                  });
+                                  _onSelectionChanged('Flavor');
+                                },
                               ),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.color_lens,
-                                    color: currentSelection == 'Colour' ? Colors.red : Colors.white,
+                              const SizedBox(height: 10),
+                              InkWell(
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  width: 70,
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),                                  decoration: BoxDecoration(
+                                    color: currentSelection == 'Colour' ? Colors.white : Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Text(
-                                    'Colour',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: currentSelection == 'Colour' ? Colors.red : Colors.white,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _controller.runJavaScript('''
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.color_lens,
+                                        color: currentSelection == 'Colour' ? Colors.red : Colors.white,
+                                      ),
+                                      Text(
+                                        'Цвет',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: currentSelection == 'Colour' ? Colors.red : Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _controller.runJavaScript('''
                                   document.getElementById('colour').click(); 
                                 ''');
-                              });
-                              _onSelectionChanged('Colour');
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          InkWell(
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              width: 70,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: currentSelection == 'Topping' ? Colors.white : Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(10),
+                                  });
+                                  _onSelectionChanged('Colour');
+                                },
                               ),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.style_sharp,
-                                    color: currentSelection == 'Topping' ? Colors.red : Colors.white,
+                              const SizedBox(height: 10),
+                              InkWell(
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  width: 70,
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: currentSelection == 'Topping' ? Colors.white : Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Text(
-                                    'Topping',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: currentSelection == 'Topping' ? Colors.red : Colors.white,
-                                    ),
-                                  )
-                                ],
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.style_sharp,
+                                        color: currentSelection == 'Topping' ? Colors.red : Colors.white,
+                                      ),
+                                      Text(
+                                        'Заказ',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: currentSelection == 'Topping' ? Colors.red : Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  _onSelectionChanged('Topping');
+                                },
                               ),
-                            ),
-                            onTap: () {
-                              _onSelectionChanged('Topping');
-                            },
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        Expanded(
+                          child: _buildSelection(context),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: _buildSelection(context),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
+                  )
+                ],
+              ),
+            ));
       }),
     );
   }

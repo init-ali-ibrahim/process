@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http; // Добавляем для работы с HTTP-запросами
+import 'package:http/http.dart' as http;
+import 'package:process/main.dart';
 import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/color.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
 import 'package:process/screens/home/widgets/home_banner_widget.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,10 +18,10 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   String countCity = 'Алматы';
   final storage = const FlutterSecureStorage();
-  List<dynamic> products = []; // Список для хранения продуктов
+  List<dynamic> products = [];
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
     _fetchProducts(slug ?? 'almaty');
+    _searchProducts('', slug ?? 'almaty');
   }
 
   Future<void> _fetchProducts(String citySlug) async {
@@ -44,10 +47,24 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
-        products = data['data'];
+        products = data;
       });
     } else {
-      print('Failed to load products');
+      print('Failed to load products ELOG');
+    }
+  }
+
+  Future<void> _searchProducts(String query, String citySlug) async {
+    final url = Uri.parse('http://192.168.0.219:80/api/v1/catalog/products?search=$query');
+    final response = await http.get(url, headers: {'City': citySlug});
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        products = data;
+      });
+    } else {
+      print('Failed to search products ELOG');
     }
   }
 
@@ -72,88 +89,91 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: bgColor,
         body: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.white,
-              elevation: 1,
-              pinned: true,
-              snap: true,
-              floating: true,
-              surfaceTintColor: Colors.transparent,
-              shadowColor: const Color(0xFFF5F5F5),
-              title: SafeArea(
-                  child: Row(
-                children: [
-                  Image.asset('assets/image/logo.png', width: 90),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Доставка в',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      InkWell(
-                          onTap: () async {
-                            showAppbarCountry(context);
-                          },
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 85,
-                                child: Text(
-                                  countCity,
-                                  style: const TextStyle(color: colorDark, fontSize: 20),
+              SliverAppBar(
+                backgroundColor: Colors.white,
+                elevation: 1,
+                pinned: true,
+                snap: true,
+                floating: true,
+                surfaceTintColor: Colors.transparent,
+                shadowColor: const Color(0xFFF5F5F5),
+                title: SafeArea(
+                    child: Row(
+                  children: [
+                    Image.asset('assets/image/logo.png', width: 90),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Доставка в',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        InkWell(
+                            onTap: () async {
+                              showAppbarCountry(context);
+                            },
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 85,
+                                  child: Text(
+                                    countCity,
+                                    style: const TextStyle(color: colorDark, fontSize: 20),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_drop_down_outlined,
+                                  color: colorDark,
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
+                  ],
+                )),
+                bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(58.0),
+                    child: SafeArea(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF6F0F0),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.search,
+                                size: 20,
+                                color: Color(0xFF313131),
+                              ),
+                              onPressed: () {
+                                widget;
+                              },
+                            ),
+                            Expanded(
+                              child: TextField(
+                                onChanged: (query) {
+                                  _searchProducts(query, 'almaty');
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: 'Поиск',
+                                  border: InputBorder.none,
+                                  disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1)),
+                                  hintStyle: TextStyle(fontSize: 14, color: Color(0xFF313131), fontWeight: FontWeight.w400),
                                 ),
                               ),
-                              const Icon(
-                                Icons.arrow_drop_down_outlined,
-                                color: colorDark,
-                              ),
-                            ],
-                          )),
-                    ],
-                  ),
-                ],
-              )),
-              bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(58.0),
-                  child: SafeArea(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF6F0F0),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.search,
-                              size: 20,
-                              color: Color(0xFF313131),
                             ),
-                            onPressed: () {
-                              widget;
-                            },
-                          ),
-                          const Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Поиск',
-                                border: InputBorder.none,
-                                disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1)),
-                                hintStyle: TextStyle(fontSize: 14, color: Color(0xFF313131), fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  )),
-            ),
+                    )),
+              ),
             SliverToBoxAdapter(
                 child: Column(
               children: [
@@ -169,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       final product = products[index];
-                      print(product['images'][0]);
+                      // print(product['images'][0]);
                       return HomeHorizontalItemWidget(
                         title: product['name'],
                         cash: '${product['price']}',
@@ -210,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   const Text(
                     'Выберите город доставки',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 20),
                   ),
                   InkWell(
                     onTap: () {
@@ -226,15 +246,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              Wrap(
-                direction: Axis.horizontal,
-                children: [
-                  _buildCityOption(context, 'Алматы', 'assets/image/almaty-logo.png'),
-                  _buildCityOption(context, 'Астана', 'assets/image/astana-logo.png'),
-                  _buildCityOption(context, 'Уральск', 'assets/image/uralsk-logo.png'),
-                  _buildCityOption(context, 'Актобе', 'assets/image/aktobe-logo.png'),
-                ],
-              ),
+              // Wrap(
+              //   crossAxisAlignment: WrapCrossAlignment.center,
+              //   direction: Axis.horizontal,
+              //   children: [
+              //     _buildCityOption(context, 'Алматы', 'assets/image/almaty-logo.png'),
+              //     _buildCityOption(context, 'Астана', 'assets/image/astana-logo.png'),
+              //     _buildCityOption(context, 'Уральск', 'assets/image/uralsk-logo.png'),
+              //     _buildCityOption(context, 'Актобе', 'assets/image/aktobe-logo.png'),
+              //   ],
+              // ),
+              SizedBox(
+                height: 300,
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                  padding: const EdgeInsets.all(10),
+                  children: [
+                    _buildCityOption(context, 'Алматы', 'assets/image/almaty-logo.png'),
+                    _buildCityOption(context, 'Астана', 'assets/image/astana-logo.png'),
+                    _buildCityOption(context, 'Уральск', 'assets/image/uralsk-logo.png'),
+                    _buildCityOption(context, 'Актобе', 'assets/image/aktobe-logo.png'),
+                  ],
+                ),
+              )
             ],
           ),
         );
@@ -262,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.pop(context, cityName);
       },
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFFE3D8D8) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
@@ -293,16 +329,16 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getSlugForCity(String cityName) {
     switch (cityName) {
       case 'Алматы':
-        print('almaty');
+        // print('almaty');
         return 'almaty';
       case 'Астана':
-        print('astana');
+        // print('astana');
         return 'astana';
       case 'Уральск':
-        print('uralsk');
+        // print('uralsk');
         return 'uralsk';
       case 'Актобе':
-        print('aktobe');
+        // print('aktobe');
         return 'aktobe';
       default:
         return '';

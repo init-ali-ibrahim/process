@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -14,13 +13,32 @@ import 'package:process/screens/cart/widgets/cart_empty_widget.dart';
 import 'package:process/screens/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:process/screens/navbar.dart';
 
 // Модель
+// class Product extends Equatable {
+//   final String name;
+//   final int price;
+//   final String flavor;
+//
+//   final String colour;
+//   final String shape;
+//   final String urlImage;
+//   final int product_id;
+//   final String product_type;
+//   final String comment;
+//   final File imgApi;
+//
+//   Product(this.name, this.price, this.flavor, this.colour, this.shape, this.urlImage, this.product_id, this.product_type, this.comment, this.imgApi);
+//
+//   @override
+//   List<Object?> get props => [name, price];
+// }
+
 class Product extends Equatable {
   final String name;
   final int price;
   final String flavor;
-
   final String colour;
   final String shape;
   final String urlImage;
@@ -29,10 +47,50 @@ class Product extends Equatable {
   final String comment;
   final File imgApi;
 
-  Product(this.name, this.price, this.flavor, this.colour, this.shape, this.urlImage, this.product_id, this.product_type, this.comment, this.imgApi);
+  Product(
+    this.name,
+    this.price,
+    this.flavor,
+    this.colour,
+    this.shape,
+    this.urlImage,
+    this.product_id,
+    this.product_type,
+    this.comment,
+    this.imgApi,
+  );
 
   @override
   List<Object?> get props => [name, price];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'price': price,
+      'flavor': flavor,
+      'colour': colour,
+      'shape': shape,
+      'urlImage': urlImage,
+      'product_id': product_id,
+      'product_type': product_type,
+      'comment': comment,
+    };
+  }
+
+  static Product fromJson(Map<String, dynamic> json) {
+    return Product(
+      json['name'],
+      json['price'],
+      json['flavor'],
+      json['colour'],
+      json['shape'],
+      json['urlImage'],
+      json['product_id'],
+      json['product_type'],
+      json['comment'],
+      File(''),
+    );
+  }
 }
 
 class CartScreen extends StatefulWidget {
@@ -43,8 +101,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
-  bool _hasShownBottomSheet = false;
-  final bool _hasBeenTriggeredManually = false;
+  // bool _hasShownBottomSheet = false;
+  // final bool _hasBeenTriggeredManually = false;
   final storage = const FlutterSecureStorage();
   final maskFormatter = MaskTextInputFormatter(
     mask: '+7 (###) ###-##-##',
@@ -57,45 +115,82 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
   var streetCart;
   var districtCart;
 
-  final LatLng position = const LatLng(43.220189, 76.876802);
-
-  // final slug = await storage.read(key: 'selected_city_slug');
-
+  late LatLng position;
 
   @override
   void initState() {
     super.initState();
     _loadData();
-    WidgetsBinding.instance.addObserver(this);
+    setPosition();
+    // WidgetsBinding.instance.addObserver(this);
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _loadData();
-    setState(() {});
-
-    if (state == AppLifecycleState.resumed && !_hasShownBottomSheet && _hasBeenTriggeredManually) {
-      _loadData().then((_) {
-        setState(() {});
-        Future.delayed(Duration(milliseconds: 100), () {
-          _showAddressModal(context);
-        });
-        _hasShownBottomSheet = true;
-      });
+  Future<void> setPosition() async {
+    final slug = await storage.read(key: 'selected_city_slug');
+    LatLng newPosition;
+    if (slug == 'almaty') {
+      newPosition = const LatLng(43.220189, 76.876802);
+    } else if (slug == 'astana') {
+      newPosition = const LatLng(51.1694, 71.4491);
+    } else {
+      newPosition = const LatLng(0.0, 0.0);
     }
+
+    // Обновляем состояние
+    setState(() {
+      position = newPosition;
+    });
   }
+
+  String? _errorNameMessage;
+  String? _errorPhoneMessage;
+
+  void _validateNameInput() {
+    setState(() {
+      if (_nameController.text.isEmpty) {
+        _errorNameMessage = 'Это поле обязательно для заполнения';
+      } else {
+        _errorNameMessage = null; // Убираем ошибку, если текст введен
+      }
+    });
+  }
+
+  void _validatePhoneInput() {
+    setState(() {
+      if (_phoneController.text.isEmpty) {
+        _errorPhoneMessage = 'Это поле обязательно для заполнения';
+      } else {
+        _errorPhoneMessage = null;
+      }
+    });
+  }
+
+  // @override
+  // void dispose() {
+  //   // WidgetsBinding.instance.removeObserver(this);
+  //   super.dispose();
+  // }
+
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   _loadData();
+  //   setState(() {});
+  //
+  //   if (state == AppLifecycleState.resumed && !_hasShownBottomSheet && _hasBeenTriggeredManually) {
+  //     _loadData().then((_) {
+  //       setState(() {});
+  //       Future.delayed(const Duration(milliseconds: 100), () {
+  //         _showAddressModal(context);
+  //       });
+  //       _hasShownBottomSheet = true;
+  //     });
+  //   }
+  // }
 
   Future<void> _loadData() async {
     try {
       streetCart = await storage.read(key: 'streetCart');
       districtCart = await storage.read(key: 'districtCart');
-
       setState(() {});
     } catch (e) {
       print('Ошибка при чтении значения: $e');
@@ -127,66 +222,20 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
         File('')),
   ];
 
-  // Future sendOrder({
-  //   required List<Map<String, dynamic>> products,
-  //   required String name,
-  //   required String phone,
-  //   required String deliveryType,
-  //   required String address,
-  // }) async {
-  //   const url = 'http://192.168.1.109:80/api/v1/app/orders';
-  //   String? tokenAuth = await storage.read(key: 'token');
-  //
-  //   print('$tokenAuth AAAAAAAAAAAAAAAAAAAAAAAA');
-  //
-  //   final headers = {
-  //     'Authorization': 'Bearer $tokenAuth',
-  //     'City': 'almaty',
-  //     'Content-Type': 'multipart/form-data',
-  //     // 'Content-Type': 'application/json',
-  //   };
-  //
-  //   final body = jsonEncode({
-  //     'products': products,
-  //     'name': name,
-  //     'phone': phone,
-  //     'delivery_type': deliveryType,
-  //     'address': address,
-  //   });
-  //
-  //   print('Body: $body');
-  //
-  //   try {
-  //     final response = await http.post(Uri.parse(url), headers: headers, body: body);
-  //
-  //     print('Body: $body');
-  //
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       print('Order sent successfully');
-  //     } else {
-  //       print('Failed to send order: ${response.statusCode}');
-  //       print('Response body: ${response.body}');
-  //     }
-  //   } catch (e) {
-  //     print('Error: $e');
-  //   }
-  // }
-
-  // final storage = FlutterSecureStorage();
-
   Future<void> sendOrder({
     required List<Map<String, dynamic>> products,
-    // required String name,
-    // required String phone,
     required String deliveryType,
     required String address,
+
+    // required String name,
+    // required String phone,
   }) async {
     const url = 'http://192.168.0.219:80/api/v1/app/orders';
     String? tokenAuth = await storage.read(key: 'token');
 
     String cleanedPhone = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '');
 
-    print(cleanedPhone);
+    // print(cleanedPhone);
 
     if (tokenAuth == null) {
       print('No token found!');
@@ -208,13 +257,11 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
         ..fields['address'] = address
         ..fields['comments'] = _commentController.text;
 
-      // Добавление продуктов и изображений
       for (int i = 0; i < products.length; i++) {
         var product = products[i];
         if (product['type'] == 'costume') {
           var costumeProducts = product['costume_products'] as Map<String, dynamic>;
 
-          // Проверка наличия изображения и его типа
           if (costumeProducts['img'] != null && costumeProducts['img'] is String) {
             String imgPath = costumeProducts['img'];
             var mimeType = lookupMimeType(imgPath);
@@ -231,7 +278,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
             print('Invalid image path: ${costumeProducts['img']}');
           }
 
-          // Добавление полей для костюма
           request.fields['products[$i][type]'] = 'costume';
           request.fields['products[$i][costume_products][color]'] = costumeProducts['color'];
           request.fields['products[$i][costume_products][shape]'] = costumeProducts['shape'];
@@ -240,16 +286,12 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
           request.fields['products[$i][quantity]'] = product['quantity'].toString();
           request.fields['products[$i][price]'] = product['price'].toString();
         } else {
-          // Обработка стандартного продукта
           request.fields['products[$i][type]'] = 'standard';
           request.fields['products[$i][product_id]'] = product['product_id'].toString();
           request.fields['products[$i][quantity]'] = product['quantity'].toString();
         }
       }
 
-      // print(request.)
-
-      // Отправка запроса
       final response = await request.send();
       print('Response status code: ${response.statusCode}');
       final responseBody = await response.stream.bytesToString();
@@ -257,6 +299,36 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('Order sent successfully');
+
+        // Future.delayed(const Duration(seconds: 1), () {
+        //   context.read<CartBloc>().add(const ClearAllProduct());
+        // });
+        //
+        // Navigator.of(context).pushAndRemoveUntil(
+        //   MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
+        //   (Route<dynamic> route) => false,
+        // );
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
+          (Route<dynamic> route) => false,
+        );
+
+        // Future.microtask(() {
+        //   if (mounted) {
+        //     context.read<CartBloc>().add(const ClearAllProduct());
+        //   }
+        // });
+
+        Future.microtask(() {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (mounted) {
+              context.read<CartBloc>().add(const ClearAllProduct());
+            }
+          });
+        });
+
+
       } else {
         print('Failed to send order: ${response.statusCode}');
       }
@@ -285,7 +357,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                             return alertClear(dialogContext);
                           },
                         );
-                        // context.read<CartBloc>().add(const ClearAllProduct());
                       },
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       icon: const Icon(Icons.delete_outlined),
@@ -327,7 +398,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                       children: [
                                         Row(
                                           children: [
-
                                             ClipRRect(
                                               borderRadius: BorderRadius.circular(10),
                                               child: FadeInImage.assetNetwork(
@@ -356,7 +426,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                                   margin: const EdgeInsets.only(bottom: 10),
                                                   child: Text('₸ ${product.price}', style: const TextStyle(fontSize: 12), softWrap: true),
                                                 )
-
                                               ],
                                             ),
                                           ],
@@ -427,7 +496,19 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Center(
-                                      child: Image.network(product.urlImage, width: 75, height: 75),
+                                      child: FadeInImage.assetNetwork(
+                                          placeholder: 'assets/image/loadingItem.jpg',
+                                          image: product.urlImage,
+                                          width: 75,
+                                          height: 75,
+                                          fit: BoxFit.cover,
+                                          imageErrorBuilder: (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.white,
+                                              width: 75,
+                                              height: 75,
+                                            );
+                                          }),
                                     ),
                                     Text(product.name),
                                     TextButton(
@@ -468,6 +549,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [maskFormatter],
                                 decoration: InputDecoration(
+                                  errorText: _errorPhoneMessage,
                                   hintText: '+7 (700) 000-00-00',
                                   labelText: 'Введите номер получателя',
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -477,6 +559,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                               TextField(
                                 controller: _nameController,
                                 decoration: InputDecoration(
+                                  errorText: _errorNameMessage,
                                   labelText: 'Введите имя получателя',
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
@@ -532,25 +615,26 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                                     )
                                                   ],
                                                 ))),
+
                                         // InkWell(
                                         //   onTap: () {
                                         //     _showAddressModal(context);
                                         //   },
                                         //   child:
 
-                                          Container(
-                                            padding: const EdgeInsets.only(bottom: 8, top: 8, left: 10, right: 10),
-                                            child: const Row(
-                                              children: [
-                                                Icon(Icons.add, color: Color(0xFF953282)),
-                                                SizedBox(width: 20),
-                                                Text(
-                                                  'Добавление сведений о получателе',
-                                                  style: TextStyle(fontSize: 16),
-                                                )
-                                              ],
-                                            ),
+                                        Container(
+                                          padding: const EdgeInsets.only(bottom: 8, top: 8, left: 10, right: 10),
+                                          child: const Row(
+                                            children: [
+                                              Icon(Icons.add, color: Color(0xFF953282)),
+                                              SizedBox(width: 20),
+                                              Text(
+                                                'Добавление сведений о получателе',
+                                                style: TextStyle(fontSize: 16),
+                                              )
+                                            ],
                                           ),
+                                        ),
                                         // )
                                       ],
                                     ),
@@ -623,49 +707,56 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                             ),
                             TextButton(
                               onPressed: () async {
-                                String? storedValue = await storage.read(key: "typeAdress");
-                                print(storedValue);
+                                _validateNameInput();
+                                _validatePhoneInput();
 
-                                try {
-                                  final productsSamal = state.cart.entries.map((entry) {
-                                    final productsSamal = entry.key;
-                                    final quantity = entry.value;
+                                if (_errorNameMessage == null && _errorPhoneMessage == null) {
+                                  String? storedValue = await storage.read(key: "typeAdress");
+                                  print(storedValue);
 
-                                    print(productsSamal.imgApi.path);
+                                  try {
+                                    final productsSamal = state.cart.entries.map((entry) {
+                                      final productsSamal = entry.key;
+                                      final quantity = entry.value;
 
-                                    if (productsSamal.product_type == 'costume') {
-                                      return {
-                                        'type': 'costume',
-                                        'quantity': quantity,
-                                        'costume_products': {
-                                          'color': productsSamal.colour,
-                                          'shape': productsSamal.shape,
-                                          'flavor': productsSamal.flavor,
-                                          'comments': productsSamal.comment,
-                                          'img': productsSamal.imgApi.path,
-                                        },
-                                        'price': 123
-                                      };
-                                    } else {
-                                      return {
-                                        'type': 'standard',
-                                        'product_id': productsSamal.product_id,
-                                        'quantity': quantity,
-                                      };
-                                    }
-                                  }).toList();
+                                      // print(productsSamal.imgApi.path);
 
-                                  await sendOrder(
-                                    products: productsSamal,
-                                    deliveryType: '$storedValue',
-                                    address: 'asdas',
+                                      if (productsSamal.product_type == 'costume') {
+                                        return {
+                                          'type': 'costume',
+                                          'quantity': quantity,
+                                          'costume_products': {
+                                            'color': productsSamal.colour,
+                                            'shape': productsSamal.shape,
+                                            'flavor': productsSamal.flavor,
+                                            'comments': productsSamal.comment,
+                                            'img': productsSamal.imgApi.path,
+                                          },
+                                          'price': 123
+                                        };
+                                      } else {
+                                        return {
+                                          'type': 'standard',
+                                          'product_id': productsSamal.product_id,
+                                          'quantity': quantity,
+                                        };
+                                      }
+                                    }).toList();
 
-                                    // deliveryType: 'pickup',
-                                    // name: _commentController.text,
-                                    // phone: '77066223709',
-                                  );
-                                } catch (e) {
-                                  print('Error: $e');
+                                    await sendOrder(
+                                      products: productsSamal,
+                                      deliveryType: '$storedValue',
+                                      address: 'asdas',
+
+                                      // deliveryType: 'pickup',
+                                      // name: _commentController.text,
+                                      // phone: '77066223709',
+                                    );
+                                  } catch (e) {
+                                    print('Error: $e');
+                                  }
+                                } else {
+                                  print('Error to try ELOG');
                                 }
                               },
                               style: TextButton.styleFrom(
@@ -791,7 +882,6 @@ class _AddressModalContentState extends State<AddressModalContent> {
   final storage = const FlutterSecureStorage();
   final LatLng position = const LatLng(43.220189, 76.876802);
 
-
   Future<void> _loadAddressType() async {
     String? storedType = await storage.read(key: 'typeAdress');
     if (storedType != null) {
@@ -877,17 +967,19 @@ class _AddressModalContentState extends State<AddressModalContent> {
                 _addressType == 'Курьер',
                 _addressType == 'Самовывоз',
               ],
-              onPressed: (int index) async {
+              onPressed: (int index) {
                 setState(() {
                   if (index == 0) _addressType = 'Курьер';
                   if (index == 1) _addressType = 'Самовывоз';
                 });
 
-                if (index == 1){
-                  await storage.write(key: 'typeAdress', value: 'pickup');
-                } else {
-                  await storage.write(key: 'typeAdress', value: 'delivery');
-                }
+                setState(() async {
+                  if (index == 1) {
+                    await storage.write(key: 'typeAdress', value: 'pickup');
+                  } else {
+                    await storage.write(key: 'typeAdress', value: 'delivery');
+                  }
+                });
 
                 // String? storedValue = await storage.read(key: "typeAdress");
                 // print('Stored value: $storedValue');

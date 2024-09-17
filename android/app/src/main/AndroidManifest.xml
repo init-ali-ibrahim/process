@@ -3,16 +3,14 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="example"
+        android:label="Samal Cakes"
         android:usesCleartextTraffic="true">
 <!--        android:label="process"-->
-
-
 
         <!--        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDX8GyQwLRjne3ygSGVpaTpmbs2EJ7t1IY" />
+            android:value="AIzaSyDskQeOYS13ySBu1P8VHlfyhwk4Du8Y8_4" />
         <!--        -->
 
         <activity

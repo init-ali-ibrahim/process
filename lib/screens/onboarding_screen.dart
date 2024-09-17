@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:process/main.dart';
+import 'package:process/screens/navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -12,24 +14,28 @@ class OnboardingPage extends StatelessWidget {
         PageViewModel(
           title: "Welcome to my app",
           body: "This is the first page of our onboarding. Here you can explain the firstfeature of your app.",
-          image: Image.asset('assets/images/onboarding1.png'),
+          // image: Image.asset('assets/images/onboarding1.png'),
         ),
         PageViewModel(
           title: "Another feature",
           body: "This is the second page of our onboarding. Here you can explain another feature of your app.",
-          image: Image.asset('assets/images/onboarding2.png'),
+          // image: Image.asset('assets/images/onboarding2.png'),
         ),
         PageViewModel(
           title: "Another title page",
           body: "Another beautiful body text for this example onboarding",
-          image: Image.asset('img2.jpg'),
+          // image: Image.asset('img2.jpg'),
         ),
-        // ... more pages
       ],
       onDone: () async {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('onboardingCompleted', true);
-        Navigator.of(context).pushReplacementNamed('/');
+        final onboardingCompleted = prefs.getBool('onboardingCompleted') ?? false;
+        print('OnBoard $onboardingCompleted');
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 0)),
+              (route) => false,
+        );
       },
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),

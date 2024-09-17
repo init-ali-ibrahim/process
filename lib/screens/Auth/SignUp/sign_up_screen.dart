@@ -43,6 +43,51 @@ class _SignUpScreen extends State<SignUpScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
+  String? _errorNameMessage;
+  String? _errorLastnameMessage;
+  String? _errorPasswordMessage;
+  String? _errorPasswordRMessage;
+  String? _errorNumberMessage;
+  String? _errorEmailMessage;
+
+  void _validateNameInput() {
+    setState(() {
+      if (_nameController.text.isEmpty) {
+        _errorNameMessage = 'Это поле обязательно для заполнения';
+      } else {
+        _errorNameMessage = null;
+      }
+    });
+  }
+  void _validateLastnameInput() {
+    setState(() {
+      if (_lastNameController.text.isEmpty) {
+        _errorLastnameMessage = 'Это поле обязательно для заполнения';
+      } else {
+        _errorLastnameMessage = null;
+      }
+    });
+  }
+  void _validateNumberInput() {
+    setState(() {
+      if (_nameController.text.isEmpty) {
+        _errorNumberMessage = 'Это поле обязательно для заполнения';
+      } else {
+        _errorNumberMessage = null;
+      }
+    });
+  }
+  void _validateEmailInput() {
+    setState(() {
+      if (_nameController.text.isEmpty) {
+        _errorEmailMessage = 'Это поле обязательно для заполнения';
+      } else {
+        _errorEmailMessage = null;
+      }
+    });
+  }
+
+
   Future<void> _register() async {
     setState(() {
       _isLoading = true;

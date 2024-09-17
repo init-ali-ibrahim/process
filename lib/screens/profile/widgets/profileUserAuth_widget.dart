@@ -13,7 +13,6 @@ class profileUserAuth_widget extends StatefulWidget {
 }
 
 class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
-
   final storage = const FlutterSecureStorage();
   Map<String, dynamic>? data;
 
@@ -58,7 +57,7 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
   @override
   Widget build(BuildContext context) {
     if (data == null) {
-      return SizedBox(); // Или другой индикатор загрузки
+      return SizedBox();
     }
 
     return Column(children: [
@@ -103,14 +102,14 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
                           )
                         ],
                       ),
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/my-profile');
-                          },
-                          icon: const Icon(
-                            Icons.edit,
-                            color: Colors.grey,
-                          ))
+                      // IconButton(
+                      //     onPressed: () {
+                      //       Navigator.pushNamed(context, '/my-profile');
+                      //     },
+                      //     icon: const Icon(
+                      //       Icons.edit,
+                      //       color: Colors.grey,
+                      //     ))
                     ],
                   ),
                 ),
@@ -130,19 +129,12 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
                   title: const Text('Ваши заказы', style: TextStyle(fontSize: 12)),
                   trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20),
                   onTap: () {
-                    final user = FirebaseAuth.instance.currentUser;
-                    if (user != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OrderScreen(user: user),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Пользователь не найден.')),
-                      );
-                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrderScreen(),
+                      ),
+                    );
                   },
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
                   tileColor: Colors.white,

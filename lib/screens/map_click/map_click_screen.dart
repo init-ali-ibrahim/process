@@ -95,6 +95,8 @@ class _MapClickScreenState extends State<MapClickScreen> {
             ),
             onMapCreated: (controller) {
               _controller = controller;
+              print('Google Map создан успешно');
+
             },
             markers: _markers,
             onCameraMove: (CameraPosition position) {
