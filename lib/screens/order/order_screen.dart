@@ -118,9 +118,10 @@ class _OrderScreenState extends State<OrderScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Ошибка: ${snapshot.error}'));
+            // return Center(child: Text('Пока заказов нет: ${snapshot.error}'));
+            return const Center(child: Text('Пока заказов у вас нет'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Пока заказов нет'));
+            return const Center(child: Text('Пока заказов у вас нет'));
           }
 
           final orders = snapshot.data!;
@@ -203,7 +204,6 @@ Future<List<Order>> fetchOrders() async {
     List<dynamic> data = json.decode(response.body);
     return data.map((order) => Order.fromJson(order)).toList();
   } else {
-    throw Exception('Failed to load orders');
+    throw const Text('data');
   }
-
 }

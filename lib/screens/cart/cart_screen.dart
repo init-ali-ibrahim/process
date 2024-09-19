@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,26 +15,6 @@ import 'package:process/screens/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:process/screens/navbar.dart';
-
-// Модель
-// class Product extends Equatable {
-//   final String name;
-//   final int price;
-//   final String flavor;
-//
-//   final String colour;
-//   final String shape;
-//   final String urlImage;
-//   final int product_id;
-//   final String product_type;
-//   final String comment;
-//   final File imgApi;
-//
-//   Product(this.name, this.price, this.flavor, this.colour, this.shape, this.urlImage, this.product_id, this.product_type, this.comment, this.imgApi);
-//
-//   @override
-//   List<Object?> get props => [name, price];
-// }
 
 class Product extends Equatable {
   final String name;
@@ -101,8 +82,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
-  // bool _hasShownBottomSheet = false;
-  // final bool _hasBeenTriggeredManually = false;
   final storage = const FlutterSecureStorage();
   final maskFormatter = MaskTextInputFormatter(
     mask: '+7 (###) ###-##-##',
@@ -122,7 +101,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
     super.initState();
     _loadData();
     setPosition();
-    // WidgetsBinding.instance.addObserver(this);
   }
 
   Future<void> setPosition() async {
@@ -136,7 +114,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
       newPosition = const LatLng(0.0, 0.0);
     }
 
-    // Обновляем состояние
     setState(() {
       position = newPosition;
     });
@@ -150,7 +127,7 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
       if (_nameController.text.isEmpty) {
         _errorNameMessage = 'Это поле обязательно для заполнения';
       } else {
-        _errorNameMessage = null; // Убираем ошибку, если текст введен
+        _errorNameMessage = null;
       }
     });
   }
@@ -165,28 +142,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
     });
   }
 
-  // @override
-  // void dispose() {
-  //   // WidgetsBinding.instance.removeObserver(this);
-  //   super.dispose();
-  // }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   _loadData();
-  //   setState(() {});
-  //
-  //   if (state == AppLifecycleState.resumed && !_hasShownBottomSheet && _hasBeenTriggeredManually) {
-  //     _loadData().then((_) {
-  //       setState(() {});
-  //       Future.delayed(const Duration(milliseconds: 100), () {
-  //         _showAddressModal(context);
-  //       });
-  //       _hasShownBottomSheet = true;
-  //     });
-  //   }
-  // }
-
   Future<void> _loadData() async {
     try {
       streetCart = await storage.read(key: 'streetCart');
@@ -197,45 +152,55 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
     }
   }
 
-  final List<Product> _products = [
-    Product(
-        'украшение 1',
-        10,
-        '',
-        '',
-        '',
-        'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fdd.jpeg?alt=media&token=53b9e374-83c0-4bd7-a212-f653a319b30b',
-        998,
-        '',
-        '',
-        File('')),
-    Product(
-        'украшение 2',
-        5,
-        '',
-        '',
-        '',
-        'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fmail.png?alt=media&token=0862f559-ee80-46f1-afd5-870d577f298d',
-        999,
-        '',
-        '',
-        File('')),
+  Future<void> _fetchProductsDopolnenie(String citySlug) async {
+    final url = Uri.parse('https://admin.samalcakes.kz/api/v1/catalog/products?category=dopolnenie');
+    final response = await http.get(url, headers: {'City': citySlug});
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        _products = data;
+      });
+    } else {
+      print('Failed to load products ELOG');
+    }
+  }
+
+  late List<Product> _products = [
+    // Product(
+    //     'украшение 1',
+    //     10,
+    //     '',
+    //     '',
+    //     '',
+    //     'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fdd.jpeg?alt=media&token=53b9e374-83c0-4bd7-a212-f653a319b30b',
+    //     998,
+    //     '',
+    //     '',
+    //     File('')),
+    // Product(
+    //     'украшение 2',
+    //     5,
+    //     '',
+    //     '',
+    //     '',
+    //     'https://firebasestorage.googleapis.com/v0/b/pushnotification-744c7.appspot.com/o/decoration%2Fmail.png?alt=media&token=0862f559-ee80-46f1-afd5-870d577f298d',
+    //     999,
+    //     '',
+    //     '',
+    //     File('')),
   ];
+
+
 
   Future<void> sendOrder({
     required List<Map<String, dynamic>> products,
     required String deliveryType,
     required String address,
-
-    // required String name,
-    // required String phone,
   }) async {
-    const url = 'http://192.168.0.219:80/api/v1/app/orders';
+    const url = 'https://admin.samalcakes.kz/api/v1/app/orders';
     String? tokenAuth = await storage.read(key: 'token');
-
     String cleanedPhone = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '');
-
-    // print(cleanedPhone);
 
     if (tokenAuth == null) {
       print('No token found!');
@@ -243,7 +208,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
     }
 
     final TextEditingController _commentController = TextEditingController();
-    // final TextEditingController _nameController = TextEditingController();
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(url))
@@ -300,25 +264,10 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('Order sent successfully');
 
-        // Future.delayed(const Duration(seconds: 1), () {
-        //   context.read<CartBloc>().add(const ClearAllProduct());
-        // });
-        //
-        // Navigator.of(context).pushAndRemoveUntil(
-        //   MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
-        //   (Route<dynamic> route) => false,
-        // );
-
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Navbar(initialPageIndex: 2)),
           (Route<dynamic> route) => false,
         );
-
-        // Future.microtask(() {
-        //   if (mounted) {
-        //     context.read<CartBloc>().add(const ClearAllProduct());
-        //   }
-        // });
 
         Future.microtask(() {
           Future.delayed(const Duration(milliseconds: 500), () {
@@ -345,7 +294,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
           appBar: AppBar(
             backgroundColor: bgColor,
             title: const Text('Корзина'),
-            // surfaceTintColor: Colors.white,
             actions: [
               state.cart.isEmpty
                   ? const SizedBox()
@@ -375,7 +323,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          // height: 300,
                           width: MediaQuery.of(context).size.width,
                           child: BlocBuilder<CartBloc, CartState>(
                             builder: (context, state) {
@@ -420,8 +367,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(product.name, style: const TextStyle(fontSize: 14)),
-                                                // Text('${product.product_id}'),
-
                                                 Container(
                                                   margin: const EdgeInsets.only(bottom: 10),
                                                   child: Text('₸ ${product.price}', style: const TextStyle(fontSize: 12), softWrap: true),
@@ -589,7 +534,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                                         target: position,
                                                         zoom: 10.0,
                                                       ),
-                                                      // onTap: (){_showAddressModal(position);},
                                                       zoomControlsEnabled: false,
                                                       buildingsEnabled: false,
                                                       compassEnabled: false,
@@ -615,13 +559,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                                     )
                                                   ],
                                                 ))),
-
-                                        // InkWell(
-                                        //   onTap: () {
-                                        //     _showAddressModal(context);
-                                        //   },
-                                        //   child:
-
                                         Container(
                                           padding: const EdgeInsets.only(bottom: 8, top: 8, left: 10, right: 10),
                                           child: const Row(
@@ -635,7 +572,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                             ],
                                           ),
                                         ),
-                                        // )
                                       ],
                                     ),
                                   ))
@@ -719,8 +655,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                       final productsSamal = entry.key;
                                       final quantity = entry.value;
 
-                                      // print(productsSamal.imgApi.path);
-
                                       if (productsSamal.product_type == 'costume') {
                                         return {
                                           'type': 'costume',
@@ -747,10 +681,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                                       products: productsSamal,
                                       deliveryType: '$storedValue',
                                       address: 'asdas',
-
-                                      // deliveryType: 'pickup',
-                                      // name: _commentController.text,
-                                      // phone: '77066223709',
                                     );
                                   } catch (e) {
                                     print('Error: $e');

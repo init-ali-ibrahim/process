@@ -24,7 +24,7 @@ Widget CartEmptyWidget(context) {
             const Text('Попробуйте что нибудь'),
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/');
+                Navigator.pushReplacementNamed(context, '/home');
               },
               child: const Text(
                 ' добавить',

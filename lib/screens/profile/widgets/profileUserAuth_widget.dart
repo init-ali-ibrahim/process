@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:process/screens/order/order_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class profileUserAuth_widget extends StatefulWidget {
   const profileUserAuth_widget({super.key});
@@ -19,7 +20,7 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
   Future<void> checkAuthToken() async {
     String? tokenAuth = await storage.read(key: 'token');
 
-    final url = Uri.parse('http://192.168.0.219:80/api/v1/auth/check');
+    final url = Uri.parse('https://admin.samalcakes.kz/api/v1/auth/check');
 
     final response = await http.post(
       url,
@@ -36,15 +37,16 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
         this.data = data?['data'];
       });
 
-      // print(tokenAuth);
-      // print('Success: ${data['success']}');
-      // print('User ID: ${data['data']['id']}');
-      // print('Name: ${data['data']['name']}');
+      print(tokenAuth);
+      print('Success: ${data['success']}');
+      print('User ID: ${data['data']['id']}');
+      print('Name: ${data['data']['name']}');
     } else {
       await storage.delete(key: 'token');
       Navigator.pushNamedAndRemoveUntil(context, '/profile', (Route<dynamic> route) => false);
 
       print('Request failed with status: ${response.statusCode}');
+      print('body: ${response.body}');
     }
   }
 
@@ -196,7 +198,17 @@ class _profileUserAuth_widgetState extends State<profileUserAuth_widget> {
                   leading: const Icon(Icons.support_agent, color: Colors.grey),
                   title: const Text('Служба поддержки', style: TextStyle(fontSize: 12)),
                   trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20),
-                  onTap: () {},
+                  onTap: () async {
+                    String url = 'https://api.whatsapp.com/send?phone=77776615050&text=Hello';
+
+                    final Uri uri = Uri.parse(url);
+
+                    if (!await launchUrl(uri)) {
+                      throw Exception('Could not launch $uri');
+                    }
+
+                    // Navigator.pushNamed(context, '/httpTest');
+                  },
                   tileColor: Colors.white,
                 ),
               ],

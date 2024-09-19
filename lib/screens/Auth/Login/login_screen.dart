@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String cleanedPhone = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '');
 
     final response = await http.post(
-      Uri.parse('http://192.168.0.219:80/api/v1/auth/login'),
+      Uri.parse('https://admin.samalcakes.kz/api/v1/auth/login'),
       headers: <String, String>{"Content-Type": "application/json; charset=UTF-8", "Accept": "application/json"},
       body: jsonEncode(<String, String>{
         'phone': cleanedPhone,

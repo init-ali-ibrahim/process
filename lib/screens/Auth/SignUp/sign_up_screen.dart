@@ -96,7 +96,7 @@ class _SignUpScreen extends State<SignUpScreen> {
     String cleanedPhone = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '');
 
     final response = await http.post(
-      Uri.parse('http://192.168.0.219:80/api/v1/auth/register'),
+      Uri.parse('https://admin.samalcakes.kz/api/v1/auth/register'),
       headers: <String, String>{"Content-Type": "application/json; charset=UTF-8", "Accept": "application/json"},
       body: jsonEncode(<String, String>{
         'name': _nameController.text,
@@ -118,8 +118,8 @@ class _SignUpScreen extends State<SignUpScreen> {
         const storage = FlutterSecureStorage();
         await storage.write(key: 'token', value: data['token']);
 
-        String? lox = await storage.read(key: 'token');
-        print(lox);
+        String? tokenAuth = await storage.read(key: 'token');
+        print(tokenAuth);
         print('Registration successful: ${data['message']}');
 
         Navigator.of(context).pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
@@ -131,9 +131,9 @@ class _SignUpScreen extends State<SignUpScreen> {
       }
     } else {
       setState(() {
-        _errorMessage = 'Failed to register. Please try again.';
+        _errorMessage = 'Ошибка при регистрации. Пожалуйста, попробуйте снова.';
       });
-      print('Server error: ${response.body}');
+      print('Server error: ${response}');
     }
   }
 

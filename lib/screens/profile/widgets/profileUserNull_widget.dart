@@ -1,5 +1,6 @@
+import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class profileUserNull_widget extends StatefulWidget {
   const profileUserNull_widget({super.key});
@@ -9,7 +10,6 @@ class profileUserNull_widget extends StatefulWidget {
 }
 
 class _profileUserNull_widgetState extends State<profileUserNull_widget> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,7 +30,10 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                   SizedBox(
                       width: MediaQuery.of(context).size.width - 90,
                       child: Center(
-                        child: Text('Закажите торты, пироги и наслаждайтесь', style: TextStyle(color: Colors.grey.shade700),),
+                        child: Text(
+                          'Закажите торты, пироги и наслаждайтесь',
+                          style: TextStyle(color: Colors.grey.shade700),
+                        ),
                       )),
                 ],
               )),
@@ -87,7 +90,10 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                 title: const Text('Город', style: TextStyle(fontSize: 12)),
                 trailing: const Wrap(
                   spacing: 10,
-                  children: [Text('Алматы', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.red)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
+                  children: [
+                    Text('Алматы', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.red)),
+                    Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)
+                  ],
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, '/demo');
@@ -101,8 +107,16 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
                 leading: const Icon(Icons.support_agent, color: Colors.grey),
                 title: const Text('Служба поддержки', style: TextStyle(fontSize: 12)),
                 trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20),
-                onTap: () {
-                  Navigator.pushNamed(context, '/httpTest');
+                onTap: () async {
+                  String url = 'https://api.whatsapp.com/send?phone=77776615050&text=Hello';
+
+                  final Uri uri = Uri.parse(url);
+
+                  if (!await launchUrl(uri)) {
+                    throw Exception('Could not launch $uri');
+                  }
+
+                  // Navigator.pushNamed(context, '/httpTest');
                 },
                 tileColor: Colors.white,
               ),
