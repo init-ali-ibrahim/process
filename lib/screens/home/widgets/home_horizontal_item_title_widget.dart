@@ -11,18 +11,18 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 12, top: 20, left: 12),
+      margin: const EdgeInsets.only(right: 12, top: 20, left: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             child: Row(children: [
-              Icon(
-                icon,
-                size: 22,
-                color: colorDark,
-              ),
+              // Icon(
+              //   icon,
+              //   size: 22,
+              //   color: colorDark,
+              // ),
               const SizedBox(
                 width: 12,
               ),
@@ -33,14 +33,14 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
               ),
             ]),
           ),
-          // InkWell(
-          //     onTap: () => Navigator.pushNamed(context, '/see_all_item'),
-          //     splashColor: Colors.transparent,
-          //     highlightColor: Colors.transparent,
-          //     child: const Text(
-          //       'Посмотреть все',
-          //       style: TextStyle(fontSize: 14, color: colorDark),
-          //     ))
+          InkWell(
+              onTap: () => Navigator.pushNamed(context, '/see_all_item'),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              child: const Text(
+                'Посмотреть все',
+                style: TextStyle(fontSize: 14, color: colorDark),
+              ))
         ],
       ),
     );

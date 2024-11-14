@@ -1,9 +1,13 @@
-import 'dart:developer';
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:process/screens/onboarding_screen.dart';
+// import 'dart:developer';
+// import 'package:firebase_app_check/firebase_app_check.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:process/screens/onboarding_screen.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
+// import 'package:flutter/foundation.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:process/screens/Auth/SignUp/sign_up_screen.dart';
 import 'package:process/screens/Auth/Login/login_screen.dart';
@@ -17,11 +21,8 @@ import 'package:process/screens/item_info/item_info_screen.dart';
 import 'package:process/screens/map_click/map_click_screen.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/see_all_item/see_all_item_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:process/screens/splash_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/color.dart';
-import 'firebase_options.dart';
 import 'screens/httpTest.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,15 +30,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  BindingBase.debugZoneErrorsAreFatal = false;
+
   final storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
+
   HydratedBlocOverrides.runZoned(
     () => runApp(const MyApp()),
     storage: storage,
   );
-  FlutterError.onError = (details) {
-  };
+  FlutterError.onError = (details) {};
 }
 
 class MyApp extends StatelessWidget {
@@ -45,26 +49,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ErrorWidget.builder = (FlutterErrorDetails details) {
-      return Container(
-        width: 400,
-        child: const Center(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.warning_amber_sharp,
-              color: Colors.red,
-            ),
-            Text(
-              "Произошла ошибка. Пожалуйста попробуйте перезарузить приложение.",
-              style: TextStyle(color: Colors.black, fontSize: 10),
-            ),
-          ],
-        )),
-      );
-    };
+    // ErrorWidget.builder = (FlutterErrorDetails details) {
+    //   return const SizedBox(
+    //     width: 400,
+    //     child: Center(
+    //         child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       crossAxisAlignment: CrossAxisAlignment.center,
+    //       children: [
+    //         Icon(
+    //           Icons.warning_amber_sharp,
+    //           color: Colors.red,
+    //         ),
+    //         Text(
+    //           "Произошла ошибка. Пожалуйста попробуйте перезарузить приложение.",
+    //           style: TextStyle(color: Colors.black, fontSize: 10),
+    //         ),
+    //       ],
+    //     )),
+    //   );
+    // };
 
     return MultiBlocProvider(
         providers: [
@@ -73,7 +77,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Process',
+            title: 'Samal Cakes',
             theme: ThemeData(
               textTheme: TextTheme(
                 displayLarge: Theme.of(context).textTheme.displayLarge?.copyWith(letterSpacing: -0.1),
@@ -110,7 +114,7 @@ class MyApp extends StatelessWidget {
             initialRoute: '/',
             // home: const DemoScreen(),
             routes: {
-              '/': (context) => SplashScreen(),
+              '/': (context) => const SplashScreen(),
               '/home': (context) => Navbar(
                     initialPageIndex: 0,
                   ),
@@ -133,19 +137,3 @@ class MyApp extends StatelessWidget {
             }));
   }
 }
-
-// '/': (context) {
-//   if (onboardingCompleted == false) {
-//     return Navbar(initialPageIndex: 0);
-//   } else {
-//     return const OnboardingPage();
-//   }
-// },
-
-// '/': (context) => onboardingCompleted
-//     ? Navbar(
-//         initialPageIndex: 0,
-//       )
-//     : Navbar(
-//         initialPageIndex: 0,
-//       ),

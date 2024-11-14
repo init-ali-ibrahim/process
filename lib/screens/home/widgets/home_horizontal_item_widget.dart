@@ -19,13 +19,8 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/item_info', arguments: {
-          'title': widget.title,
-          'img': widget.img,
-          'cash': widget.cash,
-          'type': widget.type,
-          'product_id': widget.product_id
-        });
+        Navigator.pushNamed(context, '/item_info',
+            arguments: {'title': widget.title, 'img': widget.img, 'cash': widget.cash, 'type': widget.type, 'product_id': widget.product_id});
       },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -34,23 +29,41 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
         width: 175,
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: FadeInImage.assetNetwork(
-                  placeholder: 'assets/image/loadingItem.jpg',
-                  image: widget.img,
-                  width: 170,
-                  height: 155,
-                  fit: BoxFit.cover,
-                  imageErrorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.white,
-                      width: 170,
-                      height: 155,
-                    );
-                  }),
-              // Image.network(widget.img),
-            ),
+            widget.img.isEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: FadeInImage.assetNetwork(
+                        placeholder: 'assets/image/loadingItem.jpg',
+                        image: 'assets/image/loadingItem.jpg',
+                        width: 170,
+                        height: 155,
+                        fit: BoxFit.cover,
+                        imageErrorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.white,
+                            width: 170,
+                            height: 155,
+                          );
+                        }),
+                    // Image.network(widget.img),
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: FadeInImage.assetNetwork(
+                        placeholder: 'assets/image/loadingItem.jpg',
+                        image: widget.img,
+                        width: 170,
+                        height: 155,
+                        fit: BoxFit.cover,
+                        imageErrorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.white,
+                            width: 170,
+                            height: 155,
+                          );
+                        }),
+                    // Image.network(widget.img),
+                  ),
             Container(
               padding: const EdgeInsets.all(8),
               height: 95,
@@ -59,16 +72,23 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                      padding: EdgeInsets.only(bottom: 4),
+                      padding: const EdgeInsets.only(bottom: 4),
                       child: Text(
                         widget.title,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black.withOpacity(0.75)),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black.withOpacity(0.75),
+                        ),
                       )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${widget.cash} ₸',
+                        // '${widget.cash} ₸',
+                        widget.cash == 'null' ? '0 ₸' : '${widget.cash} ₸',
                         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: colorLight),
                       ),
                       Container(

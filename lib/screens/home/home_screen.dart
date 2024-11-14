@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:process/main.dart';
 import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/color.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
 import 'package:process/screens/home/widgets/home_banner_widget.dart';
 import 'package:process/screens/home/widgets/home_horizontal_item_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:process/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     _fetchProductsDeserty(slug ?? 'almaty');
     _fetchProductsVypecka(slug ?? 'almaty');
     _searchProducts('', slug ?? 'almaty');
-    // _searchProducts('', slug ?? 'almaty');
   }
 
   //Fetch
@@ -91,8 +90,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
+
+      // final filteredProducts = data.where((product) => product['category'] == 'Десерты').toList();
+      // productsDeserty = filteredProducts.take(6).toList();
+
       setState(() {
-        productsVypecka = data;
+        productsDeserty = data;
       });
     } else {
       print('Failed to load products ELOG');
@@ -112,8 +115,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       print('Failed to load products ELOG');
     }
   }
-  //Fetch
 
+  //Fetch
 
   Future<void> _searchProducts(String query, String citySlug) async {
     final url = Uri.parse('https://admin.samalcakes.kz/api/v1/catalog/products?search=$query');
@@ -279,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   height: 280,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: productsTorty.length,
+                    itemCount: productsTorty.length = 5,
                     itemBuilder: (context, index) {
                       final torty = productsTorty[index];
                       return HomeHorizontalItemWidget(
@@ -302,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   height: 280,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: productsPirogi.length,
+                    itemCount: productsPirogi.length = 5,
                     itemBuilder: (context, index) {
                       final pirogi = productsPirogi[index];
                       return HomeHorizontalItemWidget(
@@ -325,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   height: 280,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: productsDeserty.length,
+                    itemCount: productsDeserty.length = 5,
                     itemBuilder: (context, index) {
                       final deserty = productsDeserty[index];
                       return HomeHorizontalItemWidget(
@@ -348,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   height: 280,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: productsVypecka.length,
+                    itemCount: productsVypecka.length = 5,
                     itemBuilder: (context, index) {
                       final vypecka = productsVypecka[index];
                       return HomeHorizontalItemWidget(
