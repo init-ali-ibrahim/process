@@ -415,63 +415,63 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
                         const SizedBox(
                           height: 30,
                         ),
-                        const Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(
-                              'Дополнително на заказ',
-                              style: TextStyle(fontSize: 16),
-                            )),
-                        SizedBox(
-                          height: 180,
-                          child: ListView.builder(
-                            itemCount: _products.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              final product = _products[index];
-                              return Container(
-                                width: 120,
-                                padding: const EdgeInsets.all(8),
-                                margin: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                  color: Colors.white,
-                                  border: Border.all(width: 1, color: const Color(0xFFDADADA)),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Center(
-                                      child: FadeInImage.assetNetwork(
-                                          placeholder: 'assets/image/loadingItem.jpg',
-                                          image: product.urlImage,
-                                          width: 75,
-                                          height: 75,
-                                          fit: BoxFit.cover,
-                                          imageErrorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              color: Colors.white,
-                                              width: 75,
-                                              height: 75,
-                                            );
-                                          }),
-                                    ),
-                                    Text(product.name),
-                                    TextButton(
-                                      onPressed: () {
-                                        context.read<CartBloc>().add(AddProduct(product));
-                                      },
-                                      style: TextButton.styleFrom(backgroundColor: Colors.red.shade50, minimumSize: const Size(100, 10)),
-                                      child: Text(
-                                        '\₸ ${product.price}',
-                                        style: const TextStyle(fontSize: 13),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        // const Padding(
+                        //     padding: EdgeInsets.all(8),
+                        //     child: Text(
+                        //       'Дополнително на заказ',
+                        //       style: TextStyle(fontSize: 16),
+                        //     )),
+                        // SizedBox(
+                        //   height: 180,
+                        //   child: ListView.builder(
+                        //     itemCount: _products.length,
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemBuilder: (context, index) {
+                        //       final product = _products[index];
+                        //       return Container(
+                        //         width: 120,
+                        //         padding: const EdgeInsets.all(8),
+                        //         margin: const EdgeInsets.all(6),
+                        //         decoration: BoxDecoration(
+                        //           borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        //           color: Colors.white,
+                        //           border: Border.all(width: 1, color: const Color(0xFFDADADA)),
+                        //         ),
+                        //         child: Column(
+                        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //           children: [
+                        //             Center(
+                        //               child: FadeInImage.assetNetwork(
+                        //                   placeholder: 'assets/image/loadingItem.jpg',
+                        //                   image: product.urlImage,
+                        //                   width: 75,
+                        //                   height: 75,
+                        //                   fit: BoxFit.cover,
+                        //                   imageErrorBuilder: (context, error, stackTrace) {
+                        //                     return Container(
+                        //                       color: Colors.white,
+                        //                       width: 75,
+                        //                       height: 75,
+                        //                     );
+                        //                   }),
+                        //             ),
+                        //             Text(product.name),
+                        //             TextButton(
+                        //               onPressed: () {
+                        //                 context.read<CartBloc>().add(AddProduct(product));
+                        //               },
+                        //               style: TextButton.styleFrom(backgroundColor: Colors.red.shade50, minimumSize: const Size(100, 10)),
+                        //               child: Text(
+                        //                 '\₸ ${product.price}',
+                        //                 style: const TextStyle(fontSize: 13),
+                        //               ),
+                        //             )
+                        //           ],
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
                         //
 
                         //

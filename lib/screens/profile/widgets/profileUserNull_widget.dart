@@ -85,25 +85,25 @@ class _profileUserNull_widgetState extends State<profileUserNull_widget> {
               //   tileColor: Colors.white,
               // ),
               // CustomDevider(),
+              // ListTile(
+              //   leading: const Icon(Icons.location_city, color: Colors.grey),
+              //   title: const Text('Город', style: TextStyle(fontSize: 12)),
+              //   trailing: const Wrap(
+              //     spacing: 10,
+              //     children: [
+              //       Text('Алматы', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.red)),
+              //       Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)
+              //     ],
+              //   ),
+              //   onTap: () {
+              //     Navigator.pushNamed(context, '/demo');
+              //   },
+              //   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
+              //   tileColor: Colors.white,
+              // ),
+              // CustomDevider(),
               ListTile(
-                leading: const Icon(Icons.location_city, color: Colors.grey),
-                title: const Text('Город', style: TextStyle(fontSize: 12)),
-                trailing: const Wrap(
-                  spacing: 10,
-                  children: [
-                    Text('Алматы', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.red)),
-                    Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)
-                  ],
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, '/demo');
-                },
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
-                tileColor: Colors.white,
-              ),
-              CustomDevider(),
-              ListTile(
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(6), bottomLeft: Radius.circular(6))),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
                 leading: const Icon(Icons.support_agent, color: Colors.grey),
                 title: const Text('Служба поддержки', style: TextStyle(fontSize: 12)),
                 trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20),
