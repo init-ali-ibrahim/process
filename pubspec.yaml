@@ -38,12 +38,12 @@ dependencies:
   mask_text_input_formatter: ^2.9.0
   introduction_screen: ^3.1.14
 
-#  flutter_launcher_icons: ^0.13.1
-#  mobile_scanner: ^5.2.1
-#  flutter_bloc: ^8.1.6
-#  hydrated_bloc: ^9.1.5
-#  path_provider: ^2.0.0
-#  connectivity_plus: ^6.0.5
+  #  flutter_launcher_icons: ^0.13.1
+  #  mobile_scanner: ^5.2.1
+  #  flutter_bloc: ^8.1.6
+  #  hydrated_bloc: ^9.1.5
+  #  path_provider: ^2.0.0
+  #  connectivity_plus: ^6.0.5
 
   flutter_bloc: ^8.0.0
   hydrated_bloc: ^8.0.0
@@ -66,26 +66,30 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-  - assets/
-  - assets/image/
-  - assets/image/fill/
-  - assets/image/taste/
-  - assets/image/color/
-  - assets/image/main_screen/
-#  - assets/models/
-
+    - assets/
+    - assets/fonts/
+    - assets/fonts/inter/
+    - assets/image/
+    - assets/image/fill/
+    - assets/image/taste/
+    - assets/image/color/
+    - assets/image/main_screen/
+      #  - assets/models/
 
   fonts:
-    - family: OpenSans
+    - family: Inter
       fonts:
-        - asset: assets/fonts/OpenSans-Regular.ttf
-        - asset: assets/fonts/OpenSans-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/OpenSans-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/OpenSans-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/OpenSans-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/OpenSans-Light.ttf
+        - asset: assets/fonts/inter/Inter_18pt-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/inter/Inter_18pt-Light.ttf
           weight: 300
+        - asset: assets/fonts/inter/Inter_18pt-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/inter/Inter_18pt-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/inter/Inter_18pt-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/inter/Inter_18pt-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/inter/Inter_18pt-ExtraBold.ttf
+          weight: 800

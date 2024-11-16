@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:process/features/home/presentation/screens/home_screen.dart';
 import 'package:process/screens/Auth/SignUp/sign_up_screen.dart';
 import 'package:process/screens/Auth/Login/login_screen.dart';
 import 'package:process/screens/cake_create/bloc/cake_customization_bloc.dart';
@@ -19,20 +20,35 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//
+//   BindingBase.debugZoneErrorsAreFatal = false;
+//
+//   final storage = await HydratedStorage.build(
+//     storageDirectory: await getApplicationDocumentsDirectory(),
+//   );
+//
+//   HydratedBlocOverrides.runZoned(
+//     () => runApp(const MyApp()),
+//     storage: storage,
+//   );
+//   FlutterError.onError = (details) {};
+// }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  BindingBase.debugZoneErrorsAreFatal = false;
-
-  final storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
-
-  HydratedBlocOverrides.runZoned(
-    () => runApp(const MyApp()),
-    storage: storage,
-  );
-  FlutterError.onError = (details) {};
+  // BindingBase.debugZoneErrorsAreFatal = false;
+  // final storage = await HydratedStorage.build(
+  //   storageDirectory: await getApplicationDocumentsDirectory(),
+  // );
+  // HydratedBlocOverrides.runZoned(
+  //   () => runApp(const MyApp()),
+  //   storage: storage,
+  // );
+  // FlutterError.onError = (details) {};
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -70,29 +86,12 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Samal Cakes',
             theme: ThemeData(
-              textTheme: TextTheme(
-                displayLarge: Theme.of(context).textTheme.displayLarge?.copyWith(letterSpacing: -0.1),
-                displayMedium: Theme.of(context).textTheme.displayMedium?.copyWith(letterSpacing: -0.1),
-                displaySmall: Theme.of(context).textTheme.displaySmall?.copyWith(letterSpacing: -0.1),
-                headlineLarge: Theme.of(context).textTheme.headlineLarge?.copyWith(letterSpacing: -0.1),
-                headlineMedium: Theme.of(context).textTheme.headlineMedium?.copyWith(letterSpacing: -0.1),
-                headlineSmall: Theme.of(context).textTheme.headlineSmall?.copyWith(letterSpacing: -0.1),
-                titleLarge: Theme.of(context).textTheme.titleLarge?.copyWith(letterSpacing: -0.1),
-                titleMedium: Theme.of(context).textTheme.titleMedium?.copyWith(letterSpacing: -0.1),
-                titleSmall: Theme.of(context).textTheme.titleSmall?.copyWith(letterSpacing: -0.1),
-                bodyLarge: Theme.of(context).textTheme.bodyLarge?.copyWith(letterSpacing: -0.1),
-                bodyMedium: Theme.of(context).textTheme.bodyMedium?.copyWith(letterSpacing: -0.1),
-                bodySmall: Theme.of(context).textTheme.bodySmall?.copyWith(letterSpacing: -0.1),
-                labelLarge: Theme.of(context).textTheme.labelLarge?.copyWith(letterSpacing: -0.1),
-                labelMedium: Theme.of(context).textTheme.labelMedium?.copyWith(letterSpacing: -0.1),
-                labelSmall: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: -0.1),
-              ),
-              fontFamily: 'OpenSans',
+              fontFamily: 'Inter',
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
               useMaterial3: true,
               scaffoldBackgroundColor: bgColor,
               appBarTheme: const AppBarTheme(
-                // surfaceTintColor: Colors.white,
+                surfaceTintColor: Colors.transparent,
                 backgroundColor: Colors.white,
                 iconTheme: IconThemeData(
                   color: colorPrimary,
@@ -105,7 +104,8 @@ class MyApp extends StatelessWidget {
             initialRoute: '/',
             // home: const DemoScreen(),
             routes: {
-              '/': (context) => const SplashScreen(),
+              // '/': (context) => const SplashScreen(),
+              '/': (context) => const HomeScreen(),
               '/home': (context) => Navbar(
                     initialPageIndex: 0,
                   ),
