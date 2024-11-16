@@ -19,7 +19,7 @@ class _ConnectivityCheckerState extends State<ConnectivityChecker> {
   void initState() {
     super.initState();
     _connectivity = Connectivity();
-    _connectivityStream = _connectivity.onConnectivityChanged;
+    // _connectivityStream = _connectivity.onConnectivityChanged;
 
     _connectivityStream.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {

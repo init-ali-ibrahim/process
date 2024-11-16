@@ -8,7 +8,7 @@ class ProductModel extends Product {
     // required int price,
     required int quantity,
     required String category,
-    required String imageUrl,
+    // required String imageUrl,
   }) : super(
           id: id,
           name: name,
@@ -16,7 +16,7 @@ class ProductModel extends Product {
           // price: price,
           quantity: quantity,
           category: category,
-          imageUrl: imageUrl,
+          // imageUrl: imageUrl,
         );
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -27,7 +27,7 @@ class ProductModel extends Product {
       // price: json['price'],
       quantity: json['quantity'],
       category: json['category'],
-      imageUrl: json['images'][0],
+      // imageUrl: json['images'][0],
     );
   }
 }

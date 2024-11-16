@@ -16,7 +16,7 @@ class FetchProductRemoteDataSource {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final List<dynamic> data = json.decode(response.body);
 
-        print('getProductsByCategory() data: $data');
+        // print('getProductsByCategory() data: $data');
 
         return data.map((json) => ProductModel.fromJson(json)).toList();
       } else {
@@ -35,7 +35,7 @@ class FetchProductRemoteDataSource {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final List<dynamic> data = json.decode(response.body);
 
-        print('getCategoryProducts() data: $data');
+        // print('getCategoryProducts() data: $data');
 
         return data.map((json) => CategoryModel.fromJson(json)).toList();
       } else {
@@ -53,7 +53,7 @@ class FetchProductRemoteDataSource {
 
       for (var category in categories) {
         final products = await getProductsByCategory(citySlug, category.slug);
-        result[category.slug] = products;
+        result[category.name] = products;
       }
       return result;
     } catch (e) {

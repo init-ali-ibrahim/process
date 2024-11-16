@@ -5,7 +5,7 @@ class Product {
   // final int price;
   final int quantity;
   final String category;
-  final String imageUrl;
+  // final String imageUrl;
 
   Product({
     required this.id,
@@ -14,6 +14,6 @@ class Product {
     // required this.price,
     required this.quantity,
     required this.category,
-    required this.imageUrl,
+    // required this.imageUrl,
   });
 }

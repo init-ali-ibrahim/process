@@ -16,7 +16,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late String slugCity;
   late http.Client client;
 
@@ -33,9 +34,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   Future<void> getAll() async {
-    final result = await GetFetchProductUseCase(ProductServiceRepoImpl(FetchProductRemoteDataSource(client))).call(slugCity);
-    categoryProducts = result;
-    // print(result);
+    // Future.wait(Iterable.empty());
+    final result = await GetFetchProductUseCase(
+            ProductServiceRepoImpl(FetchProductRemoteDataSource(client)))
+        .call(slugCity);
+    setState(() {
+      categoryProducts = result;
+    });
+    print(result);
   }
 
   @override
@@ -50,36 +56,58 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 physics: const BouncingScrollPhysics(),
                 slivers: [
                   const HomeAppbarWidget(),
-                  SliverToBoxAdapter(
-                      child: Column(
-                    children: [
-                      // const HomeBannerWidget(),
-                      HomeHorizontalItemTitleWidget(
-                        title: 'Торты',
-                        icon: Icons.access_time_filled,
+                  ...categoryProducts.entries.map((entry) {
+                    final category = entry.key;
+                    final products = entry.value;
+
+                    return SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              category,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                          ),
+                          ...products.map((product) {
+                            return ListTile(
+                              title: Text(product.name),
+                              subtitle: Text(
+                                  'Slug: ${product.slug}, Quantity: ${product.quantity}'),
+                            );
+                          }),
+                          const Divider(),
+                        ],
                       ),
-                      const SizedBox(
-                        height: 280,
-                      ),
-                      HomeHorizontalItemTitleWidget(
-                        title: 'Десерты',
-                        icon: Icons.access_time_filled,
-                      ),
-                      const SizedBox(
-                        height: 280,
-                      ),
-                      HomeHorizontalItemTitleWidget(
-                        title: 'Выпечка',
-                        icon: Icons.access_time_filled,
-                      ),
-                      const SizedBox(
-                        height: 280,
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                    ],
-                  ))
+                    );
+                  }),
+                  // SliverToBoxAdapter(
+                  //     child: Column(
+                  //   children: [
+                  //     ListView(
+                  //       shrinkWrap: true,
+                  //       children: categoryProducts.entries.map((entry) {
+                  //         final category = entry.key;
+                  //         final products = entry.value;
+                  //
+                  //         return ExpansionTile(
+                  //           title: Text(category,
+                  //               style: const TextStyle(
+                  //                   fontWeight: FontWeight.bold)),
+                  //           children: products.map((product) {
+                  //             return ListTile(
+                  //               title: Text(product.name),
+                  //               subtitle: Text(
+                  //                   'Slug: ${product.slug}, Quantity: ${product.quantity}'),
+                  //             );
+                  //           }).toList(),
+                  //         );
+                  //       }).toList(),
+                  //     ),
+                  //   ],
+                  // ))
                 ],
               ));
   }
