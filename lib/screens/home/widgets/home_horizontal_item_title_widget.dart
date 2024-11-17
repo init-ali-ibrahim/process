@@ -3,10 +3,10 @@ import 'package:process/screens/color.dart';
 
 class HomeHorizontalItemTitleWidget extends StatelessWidget {
   HomeHorizontalItemTitleWidget(
-      {super.key, required this.title, required this.icon});
+      {super.key, required this.title, /*required this.icon*/});
 
   String title;
-  var icon;
+  // var icon;
 
   @override
   Widget build(BuildContext context) {

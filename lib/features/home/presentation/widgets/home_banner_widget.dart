@@ -19,16 +19,6 @@ class HomeBannerWidget extends StatelessWidget {
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment(0.8, 1),
-            // colors: <Color>[
-            //   Color(0xff5b093e),
-            //   Color(0xff751746),
-            //   Color(0xff8f274d),
-            //   Color(0xffa93752),
-            //   Color(0xffc14a55),
-            //   Color(0xffd85f57),
-            //   Color(0xffed7558),
-            //   Color(0xffff8d58),
-            // ],
             colors: <Color>[
               Color(0xffff8d58),
               Color(0xffed7558),
@@ -59,7 +49,7 @@ class HomeBannerWidget extends StatelessWidget {
                     'Можно сделать свой торт!',
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18, letterSpacing: -0.2),
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/cake_create');
@@ -74,7 +64,7 @@ class HomeBannerWidget extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10, right: 20),
+              margin: const EdgeInsets.only(top: 10, right: 20),
               child: Image.asset(
                 'assets/image/main_screen/cake.png',
                 height: 90,

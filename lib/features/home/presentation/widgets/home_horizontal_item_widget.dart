@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:process/screens/color.dart';
+import 'package:process/core/entities/product.dart';
+import 'package:process/features/home/presentation/screens/detail_product_screen.dart';
 
-class HomeHorizontalItemWidget extends StatefulWidget {
-  HomeHorizontalItemWidget({super.key, required this.title, required this.img, required this.cash, required this.type, required this.product_id});
+class HomeHorizontalItemWidget extends StatelessWidget {
+  const HomeHorizontalItemWidget({super.key, required this.product});
 
-  final String title;
-  final String img;
-  final String cash;
-  final String type;
-  final int product_id;
+  final Product product;
 
-  @override
-  State<HomeHorizontalItemWidget> createState() => _HomeHorizontalItemWidgetState();
-}
-
-class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/item_info',
-            arguments: {'title': widget.title, 'img': widget.img, 'cash': widget.cash, 'type': widget.type, 'product_id': widget.product_id});
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailProductScreen(product: product),
+          ),
+        );
       },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -29,7 +25,7 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
         width: 175,
         child: Column(
           children: [
-            widget.img.isEmpty
+            product.quantity == 1
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: FadeInImage.assetNetwork(
@@ -51,7 +47,7 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
                     borderRadius: BorderRadius.circular(10),
                     child: FadeInImage.assetNetwork(
                         placeholder: 'assets/image/loadingItem.jpg',
-                        image: widget.img,
+                        image: 'product.id',
                         width: 170,
                         height: 155,
                         fit: BoxFit.cover,
@@ -74,7 +70,7 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
                   Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Text(
-                        widget.title,
+                        product.name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -87,12 +83,18 @@ class _HomeHorizontalItemWidgetState extends State<HomeHorizontalItemWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        // '${widget.cash} ₸',
-                        widget.cash == 'null' ? '0 ₸' : '${widget.cash} ₸',
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: colorLight),
+                        product.quantity == 'null'
+                            ? '₸ 0'
+                            : '₸ ${product.quantity}',
+                        style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFBB4242)),
                       ),
                       Container(
-                          decoration: BoxDecoration(color: colorLight, borderRadius: BorderRadius.circular(4)),
+                          decoration: BoxDecoration(
+                              color: Color(0xFFBB4242),
+                              borderRadius: BorderRadius.circular(4)),
                           child: const Icon(
                             size: 19,
                             Icons.add,

@@ -308,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       const HomeBannerWidget(),
                       HomeHorizontalItemTitleWidget(
                         title: 'Торты',
-                        icon: Icons.access_time_filled,
+                        // icon: Icons.access_time_filled,
                       ),
                       SizedBox(
                         height: 280,
@@ -354,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       //
                       HomeHorizontalItemTitleWidget(
                         title: 'Десерты',
-                        icon: Icons.access_time_filled,
+                        // icon: Icons.access_time_filled,
                       ),
                       SizedBox(
                         height: 280,
@@ -377,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       //
                       HomeHorizontalItemTitleWidget(
                         title: 'Выпечка',
-                        icon: Icons.access_time_filled,
+                        // icon: Icons.access_time_filled,
                       ),
                       SizedBox(
                         height: 280,

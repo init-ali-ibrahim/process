@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:process/screens/color.dart';
 
 class HomeHorizontalItemTitleWidget extends StatelessWidget {
-  HomeHorizontalItemTitleWidget(
-      {super.key, required this.title, required this.icon});
+  const HomeHorizontalItemTitleWidget({super.key, required this.title});
 
-  String title;
-  var icon;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -18,18 +16,13 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
         children: [
           Container(
             child: Row(children: [
-              // Icon(
-              //   icon,
-              //   size: 22,
-              //   color: colorDark,
-              // ),
               const SizedBox(
                 width: 12,
               ),
               Text(
                 title,
                 style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
               ),
             ]),
           ),
@@ -39,7 +32,7 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
               highlightColor: Colors.transparent,
               child: const Text(
                 'Посмотреть все',
-                style: TextStyle(fontSize: 14, color: colorDark),
+                style: TextStyle(fontSize: 15, color: colorDark, fontWeight: FontWeight.w500),
               ))
         ],
       ),

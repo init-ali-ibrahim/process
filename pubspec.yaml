@@ -36,33 +36,28 @@ dependencies:
   dotted_border: ^2.1.0
   mask_text_input_formatter: ^2.9.0
   introduction_screen: ^3.1.14
-
-  #  flutter_launcher_icons: ^0.13.1
-  #  mobile_scanner: ^5.2.1
-  #  flutter_bloc: ^8.1.6
-  #  hydrated_bloc: ^9.1.5
-  #  path_provider: ^2.0.0
-  #  connectivity_plus: ^6.0.5
-
   flutter_bloc: ^8.0.0
   hydrated_bloc: ^8.0.0
   path_provider: ^2.0.0
   url_launcher: ^6.3.0
 
+  build_runner: ^2.4.11
+  isar_flutter_libs:
+    git:
+      url: https://github.com/MrLittleWhite/isar_flutter_libs.git
+  isar:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  build_runner: ^2.4.11
+  flutter_launcher_icons: ^0.14.1
+  isar_generator:
+
 
 dependency_overrides:
   connectivity_plus:
-
-#  flutter_launcher_icons: ^0.13.1
-
-# flutter_launcher_icons:
-#   android: true
-#   image_path: "assets/logo.png"
-#   adaptive_icon_background: "#ffffff"
 
 flutter:
   uses-material-design: true
