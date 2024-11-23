@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:isar/isar.dart';
 import 'package:process/core/entities/product.dart';
 import 'package:process/features/home/data/data_sources/fetch_product_service_ds.dart';
 import 'package:process/features/home/data/repositories/product_service_repo_impl.dart';
@@ -10,7 +11,9 @@ import 'package:process/features/home/presentation/widgets/home_horizontal_item_
 import 'package:process/features/home/presentation/widgets/home_horizontal_item_widget.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.isar});
+
+  final Isar isar;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -28,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     slugCity = 'almaty';
     client = http.Client();
-    getAllProduct();
+    // getAllProduct();
   }
 
   Future<void> getAllProduct() async {
@@ -51,51 +54,51 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         body: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            const HomeAppbarWidget(),
-            const SliverToBoxAdapter(
-              child: HomeBannerWidget(),
-            ),
-            isLoading
-                ?  SliverToBoxAdapter(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 2.2,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ))
-                : SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        final category = categoryProducts.keys.take(5).toList()[index];
-                        final products = categoryProducts[category]!.take(5);
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: HomeHorizontalItemTitleWidget(
-                                title: category,
-                              ),
-                            ),
-                            SingleChildScrollView(
-                              physics: const BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: products.map((product) {
-                                  return HomeHorizontalItemWidget(
-                                      product: product);
-                                }).toList(),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  )
-          ],
-        ));
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        HomeAppbarWidget(isar: widget.isar),
+        const SliverToBoxAdapter(
+          child: HomeBannerWidget(),
+        ),
+        isLoading
+            ? SliverToBoxAdapter(
+                child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 2.2,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ))
+            : SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    final category =
+                        categoryProducts.keys.take(5).toList()[index];
+                    final products = categoryProducts[category]!.take(5);
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: HomeHorizontalItemTitleWidget(
+                            title: category,
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: products.map((product) {
+                              return HomeHorizontalItemWidget(product: product);
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              )
+      ],
+    ));
   }
 }

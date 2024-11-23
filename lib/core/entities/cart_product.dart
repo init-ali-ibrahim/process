@@ -8,7 +8,7 @@ class CartProduct {
   final int product_id;
   final String name;
   final String slug;
-  final int quantity;
+  int quantity;
   final String category;
 
   final String flavor;

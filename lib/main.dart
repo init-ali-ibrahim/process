@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:isar/isar.dart';
+import 'package:process/core/entities/cart_product.dart';
 import 'package:process/features/home/presentation/screens/detail_product_screen.dart';
 import 'package:process/features/home/presentation/screens/home_screen.dart';
 import 'package:process/screens/Auth/SignUp/sign_up_screen.dart';
@@ -10,7 +12,7 @@ import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/demo_screen.dart';
 import 'package:process/screens/profile/profile_edit_screen.dart';
 import 'package:process/screens/cake_create/cake_create_screen.dart';
-// import 'package:process/screens/cart/cart_screen.dart';
+// import 'package:process/screens/cart/auth_verification_screen.dart';
 import 'package:process/screens/item_info/item_info_screen.dart';
 import 'package:process/screens/map_click/map_click_screen.dart';
 import 'package:process/screens/navbar.dart';
@@ -53,17 +55,25 @@ void main() async {
   // FlutterError.onError = (details) {};
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    // statusBarColor: Colors.white,
-    // statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: Color(0xFFF5F5F5),
+    systemNavigationBarColor: Colors.white,
     systemNavigationBarContrastEnforced: true,
     systemNavigationBarIconBrightness: Brightness.light,
   ));
-  runApp(const MyApp());
+
+  final dir = await getApplicationDocumentsDirectory();
+
+  final isar = await Isar.open(
+    [CartProductSchema],
+    directory: dir.path,
+  );
+
+  runApp(MyApp(isar: isar));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key, required this.isar});
+
+  final Isar isar;
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +131,7 @@ class MyApp extends StatelessWidget {
             initialRoute: '/',
             routes: {
               // '/': (context) => const SplashScreen(),
-              '/': (context) => const HomeScreen(),
+              '/': (context) => HomeScreen(isar: isar),
               '/home': (context) => Navbar(
                     initialPageIndex: 0,
                   ),
@@ -143,7 +153,7 @@ class MyApp extends StatelessWidget {
               // '/noCart': (context) => const CartScreen(),
               '/demo': (context) => const DemoScreen(),
 
-              '/cart': (context) => CartScreen()
+              // '/cart': (context) => CartScreen()
             }));
   }
 }

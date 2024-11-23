@@ -1,17 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+import 'package:process/core/entities/cart_product.dart';
+import 'package:process/core/service/cart_product_service.dart';
 import 'package:process/features/cart/presentation/widgets/cart_bottom_widget.dart';
+import 'package:process/features/cart/presentation/widgets/cart_empty_widget.dart';
+import 'package:process/features/cart/presentation/widgets/cart_list_tile_widget.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+  const CartScreen({super.key, required this.isar});
+
+  final Isar isar;
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
+  late CartProductService cartProductService;
+  late Future<List<CartProduct>> cartProductListFuture;
+  late List<CartProduct> cartProductList;
+
   @override
   void initState() {
     super.initState();
+    cartProductList = [];
+    cartProductService = CartProductService(isar: widget.isar);
+    cartProductListFuture = cartProductService.getAllCartProducts();
+    initCartProduct();
+  }
+
+  initCartProduct() async {
+    cartProductList = await cartProductListFuture;
+    setState(() {
+      cartProductList = cartProductList;
+    });
   }
 
   @override
@@ -21,86 +43,16 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
         title: const Text('Корзина'),
         centerTitle: true,
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        child: ListView(shrinkWrap: true, physics: const BouncingScrollPhysics(), children: [
-          Container(
-            height: 90,
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.only(left: 10, top: 10, right: 10),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.white,
-                // border: Border.all(width: 1, color: const Color(0xFFDADADA))
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/image/loadingItem.jpg',
-                          image: 'product.urlImage',
-                          width: 70,
-                          height: 70,
-                          fit: BoxFit.cover,
-                          imageErrorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.red,
-                              width: 70,
-                              height: 70,
-                            );
-                          }),
-                    ),
-                    const SizedBox(width: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('product.name',
-                            style: TextStyle(fontSize: 14)),
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: const Text('₸ }',
-                              style: TextStyle(fontSize: 12), softWrap: true),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove, size: 18),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(width: 2),
-                        const Text(
-                          '',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        const SizedBox(width: 2),
-                        IconButton(
-                          icon: const Icon(Icons.add, size: 18),
-                          onPressed: () {},
-                        ),
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        ]),
-      ),
+      body: cartProductList.isEmpty
+          ? const CartEmptyWidget()
+          : ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: cartProductList.length,
+              itemBuilder: (context, index) {
+                final cartProduct = cartProductList[index];
+                return const CartListTileWidget();
+              }),
       bottomNavigationBar: const CartBottomWidget(),
     );
   }
