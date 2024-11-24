@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:bloc/bloc.dart' show Bloc, Emitter;
 import 'package:equatable/equatable.dart';
 
-part 'cake_customization_event.dart';
-part 'cake_customization_state.dart';
+part 'customization_event.dart';
+part 'customization_state.dart';
 
-class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizationState> {
-  CakeCustomizationBloc()
+class CustomizationBloc extends Bloc<CustomizationEvent, CustomizationState> {
+  CustomizationBloc()
       : super(
-    CakeCustomizationState(
+    CustomizationState(
       selectedImage: null,
       shape: Shape.MiniHeart,
       flavor: Flavor.RedVelvet,
@@ -45,27 +45,27 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
     return shapePrices[shape]! + flavorPrices[flavor]! + colourPrices[colour]! + toppingPrices[topping]!;
   }
 
-  void _onShapeSelected(ShapeSelected event, Emitter<CakeCustomizationState> emit) {
+  void _onShapeSelected(ShapeSelected event, Emitter<CustomizationState> emit) {
     emit(state.copyWith(
         shape: event.shape, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(event.shape, state.flavor, state.colour, state.topping)));
   }
 
-  void _onFlavorSelected(FlavorSelected event, Emitter<CakeCustomizationState> emit) {
+  void _onFlavorSelected(FlavorSelected event, Emitter<CustomizationState> emit) {
     emit(state.copyWith(
         flavor: event.flavor, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, event.flavor, state.colour, state.topping)));
   }
 
-  void _onColourSelected(ColourSelected event, Emitter<CakeCustomizationState> emit) {
+  void _onColourSelected(ColourSelected event, Emitter<CustomizationState> emit) {
     emit(state.copyWith(
         colour: event.colour, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, state.flavor, event.colour, state.topping)));
   }
 
-  void _onToppingSelected(ToppingSelected event, Emitter<CakeCustomizationState> emit) {
+  void _onToppingSelected(ToppingSelected event, Emitter<CustomizationState> emit) {
     emit(state.copyWith(
         topping: event.topping, imagePath: null, isLoadingImage: true, totalPrice: _calculateTotalPrice(state.shape, state.flavor, state.colour, event.topping)));
   }
 
-  void _onImagePicked(ImagePicked event, Emitter<CakeCustomizationState> emit) {
+  void _onImagePicked(ImagePicked event, Emitter<CustomizationState> emit) {
     emit(state.copyWith(
       selectedImage: event.imageFile,
       imagePath: event.imageFile.path,
@@ -73,7 +73,7 @@ class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizati
     ));
   }
 
-  void _onImageRemoved(ImageRemoved event, Emitter<CakeCustomizationState> emit) {
+  void _onImageRemoved(ImageRemoved event, Emitter<CustomizationState> emit) {
     print('DAAAAAAAAAAAAAA');
     emit(state.copyWith(selectedImage: File('')));
   }

@@ -1,13 +1,13 @@
-part of 'cake_customization_bloc.dart';
+part of 'customization_bloc.dart';
 
-abstract class CakeCustomizationEvent extends Equatable {
-  const CakeCustomizationEvent();
+abstract class CustomizationEvent extends Equatable {
+  const CustomizationEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class ShapeSelected extends CakeCustomizationEvent {
+class ShapeSelected extends CustomizationEvent {
   final Shape shape;
 
   const ShapeSelected(this.shape);
@@ -16,7 +16,7 @@ class ShapeSelected extends CakeCustomizationEvent {
   List<Object> get props => [shape];
 }
 
-class FlavorSelected extends CakeCustomizationEvent {
+class FlavorSelected extends CustomizationEvent {
   final Flavor flavor;
 
   const FlavorSelected(this.flavor);
@@ -25,7 +25,7 @@ class FlavorSelected extends CakeCustomizationEvent {
   List<Object> get props => [flavor];
 }
 
-class ColourSelected extends CakeCustomizationEvent {
+class ColourSelected extends CustomizationEvent {
   final Colour colour;
 
   const ColourSelected(this.colour);
@@ -34,7 +34,7 @@ class ColourSelected extends CakeCustomizationEvent {
   List<Object> get props => [colour];
 }
 
-class ToppingSelected extends CakeCustomizationEvent {
+class ToppingSelected extends CustomizationEvent {
   final Topping topping;
 
   const ToppingSelected(this.topping);
@@ -43,10 +43,10 @@ class ToppingSelected extends CakeCustomizationEvent {
   List<Object> get props => [topping];
 }
 
-class ImagePicked extends CakeCustomizationEvent {
+class ImagePicked extends CustomizationEvent {
   final File imageFile;
   ImagePicked(this.imageFile);
 }
 
-class ImageRemoved extends CakeCustomizationEvent {}
+class ImageRemoved extends CustomizationEvent {}
 

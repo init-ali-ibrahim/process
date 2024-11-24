@@ -3,27 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
 import 'package:process/core/entities/cart_product.dart';
-import 'package:process/features/home/presentation/screens/detail_product_screen.dart';
+import 'package:process/features/customize/presentation/bloc/customization_bloc.dart';
 import 'package:process/features/home/presentation/screens/home_screen.dart';
 import 'package:process/screens/Auth/SignUp/sign_up_screen.dart';
 import 'package:process/screens/Auth/Login/login_screen.dart';
-import 'package:process/screens/cake_create/bloc/cake_customization_bloc.dart';
-import 'package:process/screens/cart/bloc/cart_bloc.dart';
 import 'package:process/screens/demo_screen.dart';
 import 'package:process/screens/profile/profile_edit_screen.dart';
 import 'package:process/screens/cake_create/cake_create_screen.dart';
-// import 'package:process/screens/cart/auth_verification_screen.dart';
 import 'package:process/screens/item_info/item_info_screen.dart';
 import 'package:process/screens/map_click/map_click_screen.dart';
 import 'package:process/screens/navbar.dart';
 import 'package:process/screens/see_all_item/see_all_item_screen.dart';
-import 'features/cart/presentation/screens/cart_screen.dart';
 import 'screens/httpTest.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:process/screens/splash_screen.dart';
-import 'screens/color.dart';
 import 'package:path_provider/path_provider.dart';
+
+// import 'package:process/features/home/presentation/screens/detail_product_screen.dart';
+// import 'screens/color.dart';
+// import 'package:hydrated_bloc/hydrated_bloc.dart';
+// import 'package:process/screens/splash_screen.dart';
+// import 'features/cart/presentation/screens/cart_screen.dart';
+// import 'package:process/screens/cart/auth_verification_screen.dart';
+// import 'package:process/screens/cart/bloc/cart_bloc.dart';
+// import 'package:process/screens/cake_create/bloc/customization_bloc.dart';
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -100,8 +102,8 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => CakeCustomizationBloc()),
-          BlocProvider(create: (context) => CartBloc()),
+          BlocProvider(create: (context) => CustomizationBloc()),
+          // BlocProvider(create: (context) => CartBloc()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

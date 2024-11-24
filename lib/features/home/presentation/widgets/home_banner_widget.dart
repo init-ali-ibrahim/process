@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:process/features/customize/presentation/screens/customize_screen.dart';
 
 class HomeBannerWidget extends StatelessWidget {
   const HomeBannerWidget({super.key});
@@ -9,7 +10,7 @@ class HomeBannerWidget extends StatelessWidget {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () {
-        Navigator.pushNamed(context, '/cake_create');
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomizeScreen()));
       },
       child: Container(
         margin: const EdgeInsetsDirectional.all(14),
@@ -54,7 +55,8 @@ class HomeBannerWidget extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushNamed(context, '/cake_create');
                     },
-                    style: TextButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.2), padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5)),
+                    style:
+                        TextButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.2), padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5)),
                     child: const Text(
                       'Сделать сейчас',
                       style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),

@@ -6,8 +6,8 @@
 // import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:process/screens/cake_create/cake_create_screen.dart';
 //
-// part 'cake_customization_event.dart';
-// part 'cake_customization_state.dart';
+// part 'customization_event.dart';
+// part 'customization_state.dart';
 //
 // class CakeCustomizationBloc extends Bloc<CakeCustomizationEvent, CakeCustomizationState> {
 //   CakeCustomizationBloc()

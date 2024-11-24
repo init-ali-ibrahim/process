@@ -66,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen>
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 2.2,
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  // child: CircularProgressIndicator(),
+                  child: Text('data'),
                 ),
               ))
             : SliverList(

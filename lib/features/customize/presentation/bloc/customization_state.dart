@@ -1,4 +1,4 @@
-part of 'cake_customization_bloc.dart';
+part of 'customization_bloc.dart';
 
 enum Shape { MiniHeart, MiniStandard, StandardCake, HeartCake, SquareCake, SheetCake }
 
@@ -8,7 +8,7 @@ enum Colour { White, Red, Blue, Green, Yellow, Brown, Pink, Purple, Orange, Ligh
 
 enum Topping { None, Snow, Christmas, Classic }
 
-class CakeCustomizationState extends Equatable {
+class CustomizationState extends Equatable {
   final Shape shape;
   final Flavor flavor;
   final Colour colour;
@@ -30,7 +30,7 @@ class CakeCustomizationState extends Equatable {
 
   final File? selectedImage;
 
-  const CakeCustomizationState({
+  const CustomizationState({
     required this.topping,
     required this.toppingName,
     required this.toppingImagePath,
@@ -50,7 +50,7 @@ class CakeCustomizationState extends Equatable {
     required this.selectedImage
   });
 
-  CakeCustomizationState copyWith({
+  CustomizationState copyWith({
     Topping? topping,
     String? toppingName,
     String? toppingImagePath,
@@ -69,7 +69,7 @@ class CakeCustomizationState extends Equatable {
 
     File? selectedImage,
   }) {
-    return CakeCustomizationState(
+    return CustomizationState(
       shape: shape ?? this.shape,
       flavor: flavor ?? this.flavor,
       colour: colour ?? this.colour,
