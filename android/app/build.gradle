@@ -4,86 +4,37 @@ plugins {
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
 }
-
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
 android {
-    namespace "com.example.process"
-    compileSdk flutter.compileSdkVersion
-//    ndkVersion flutter.ndkVersion
+    namespace = "com.example.process"
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = "26.1.8937393"
-
     compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_17
         sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
-
     kotlinOptions {
-//        jvmTarget = '1.8'
         jvmTarget = 17
     }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
-
     defaultConfig {
-        applicationId "com.example.process"
-//        minSdkVersion flutter.minSdkVersion
-        minSdkVersion 23
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-
-//        manifestPlaceholders = [playIntegrityApiKey:"AIzaSyCIKnkB2ZrzjOcH_vVj5Bt1rCLfGjmSbiI"]
-
+//        multiDexEnabled true
+        applicationId = "com.example.process"
+        minSdk = 23
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
     }
-
-    signingConfigs {
-        release {
-            storeFile file("my_new_keystore_name.jks")
-            storePassword "initkz"
-            keyAlias "alias_name"
-            keyPassword "initkz"
-        }
-    }
-
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-//            signingConfig signingConfigs.debug
-            signingConfig signingConfigs.release
+            signingConfig = signingConfigs.debug
         }
     }
-}
-
-flutter {
-    source '../..'
 }
 
 dependencies {
-//
-    implementation 'com.google.android.material:material:1.12.0'
-    //
-//    implementation 'com.yandex.android:maps.mobile:4.4.0-lite'
-    //
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+}
+
+flutter {
+    source = "../.."
 }

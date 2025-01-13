@@ -5,9 +5,9 @@ import 'package:process/features/home/presentation/widgets/home_bottom_model_wid
 import 'package:process/features/profile/presentation/screens/auth_verification_screen.dart';
 
 class HomeAppbarWidget extends StatelessWidget {
-  const HomeAppbarWidget({super.key, required this.isar});
+  const HomeAppbarWidget({super.key, /*required this.isar*/});
 
-  final Isar isar;
+  // final Isar isar;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class HomeAppbarWidget extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.shopping_cart),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(isar: isar)));
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(isar: isar)));
           },
         ),
       ],

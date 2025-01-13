@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:process/core/entities/product.dart';
-import 'package:process/features/home/presentation/screens/detail_product_screen.dart';
+import 'package:process/features/detail_product/presentation/screens/detail_product_screen.dart';
 
 class HomeHorizontalItemWidget extends StatelessWidget {
   const HomeHorizontalItemWidget({super.key, required this.product});

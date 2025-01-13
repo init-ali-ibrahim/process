@@ -1,0 +1,17 @@
+import 'dart:io';
+
+class HttpOverridesInit {
+  static void setup() {
+    HttpOverrides.global = HttpOverride();
+  }
+}
+
+class HttpOverride extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) {
+        return true;
+      };
+  }
+}

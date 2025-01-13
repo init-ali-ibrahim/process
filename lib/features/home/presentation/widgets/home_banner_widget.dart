@@ -33,7 +33,7 @@ class HomeBannerWidget extends StatelessWidget {
           ),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
@@ -44,19 +44,18 @@ class HomeBannerWidget extends StatelessWidget {
                 children: [
                   const Text(
                     'Никто не может это сделать лучше вас',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                    style: TextStyle(color: Colors.white, fontSize: 11),
                   ),
                   const Text(
                     'Можно сделать свой торт!',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18, letterSpacing: -0.2),
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 17, letterSpacing: -0.2),
                   ),
                   const SizedBox(height: 6),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/cake_create');
                     },
-                    style:
-                        TextButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.2), padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5)),
+                    style: TextButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.2), padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5)),
                     child: const Text(
                       'Сделать сейчас',
                       style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
@@ -66,7 +65,7 @@ class HomeBannerWidget extends StatelessWidget {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 10, right: 20),
+              margin: const EdgeInsets.only(right: 20),
               child: Image.asset(
                 'assets/image/main_screen/cake-v2.png',
                 height: 90,

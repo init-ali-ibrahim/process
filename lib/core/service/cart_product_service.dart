@@ -77,7 +77,6 @@ class CartProductService {
     final allCartProducts = await getAllCartProducts();
 
     for (var cartProduct in allCartProducts) {
-      // totalPrice += cartProduct.price * cartProduct.quantity;
       totalPrice += cartProduct.product_id * cartProduct.quantity;
     }
 
