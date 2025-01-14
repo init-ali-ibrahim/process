@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/entities/cart_product.dart';
 import 'package:process/core/service/cart_product_service.dart';
+import 'package:process/core/util/isar_get.dart';
 import 'package:process/features/cart/presentation/widgets/cart_bottom_widget.dart';
 import 'package:process/features/cart/presentation/widgets/cart_empty_widget.dart';
 import 'package:process/features/cart/presentation/widgets/cart_list_tile_widget.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({super.key, required this.isar});
-
-  final Isar isar;
+class CartScreen extends ConsumerStatefulWidget {
+  const CartScreen({super.key});
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  ConsumerState<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
+class _CartScreenState extends ConsumerState<CartScreen> {
   late CartProductService cartProductService;
   late Future<List<CartProduct>> cartProductListFuture;
   late List<CartProduct> cartProductList;
@@ -24,24 +23,29 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     cartProductList = [];
-    cartProductService = CartProductService(isar: widget.isar);
-    cartProductListFuture = cartProductService.getAllCartProducts();
-    initCartProduct();
+    initCartProductService();
   }
 
-  initCartProduct() async {
+  Future<void> initCartProductService() async {
+    final isar = await ref.read(isarProvider);
+    cartProductService = CartProductService(isar: isar);
+
+    cartProductListFuture = cartProductService.getAllCartProducts();
     cartProductList = await cartProductListFuture;
-    setState(() {
-      cartProductList = cartProductList;
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text('Корзина'),
         centerTitle: true,
+        surfaceTintColor: Colors.white,
+        elevation: 1,
+        shadowColor: Colors.grey.shade50,
+        toolbarHeight: kToolbarHeight + 10,
       ),
       body: cartProductList.isEmpty
           ? const CartEmptyWidget()
@@ -51,9 +55,11 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver {
               itemCount: cartProductList.length,
               itemBuilder: (context, index) {
                 final cartProduct = cartProductList[index];
-                return const CartListTileWidget();
+                return CartListTileWidget(
+                  product: cartProduct,
+                );
               }),
-      bottomNavigationBar: const CartBottomWidget(),
+      bottomNavigationBar: cartProductList.isEmpty ? null : const CartBottomWidget(),
     );
   }
 }

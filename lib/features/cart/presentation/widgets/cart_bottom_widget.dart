@@ -6,18 +6,23 @@ class CartBottomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 55,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          border:
-          Border(top: BorderSide(width: 1, color: Color(0xFFDADADA)))),
+      height: 100,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            width: 1,
+            color: Colors.grey.shade300,
+          ),
+        ),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Итоговая цена'),
@@ -30,8 +35,7 @@ class CartBottomWidget extends StatelessWidget {
           TextButton(
             onPressed: () {},
             style: TextButton.styleFrom(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(2))),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
               backgroundColor: Colors.red,
             ),
             child: const Text(

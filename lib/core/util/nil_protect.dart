@@ -1,5 +1,7 @@
-const String nilString = 'nil';
-const String nilDate = '';
-const String nilAvatarUrl = '';
-const int nilInt = 0;
-const bool nilBool = false;
+class nilProtect {
+  static String string = 'nil';
+  static String date = '';
+  static String avatarUrl = '';
+  static int integer = 0;
+  static bool boolean = false;
+}

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:process/core/entities/cart_product.dart';
 
 class CartListTileWidget extends StatelessWidget {
-  const CartListTileWidget({super.key});
+  const CartListTileWidget({super.key, required this.product});
+
+  final CartProduct product;
 
   @override
   Widget build(BuildContext context) {
@@ -9,9 +12,12 @@ class CartListTileWidget extends StatelessWidget {
       height: 90,
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(left: 10, top: 10, right: 10),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 1, offset: const Offset(0, 1))
+        ]
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,11 +46,10 @@ class CartListTileWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('product.name', style: TextStyle(fontSize: 14)),
+                  Text(product.name, style: const TextStyle(fontSize: 14)),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10),
-                    child: const Text('₸ }',
-                        style: TextStyle(fontSize: 12), softWrap: true),
+                    child: Text('₸ ${product.price}', style: const TextStyle(fontSize: 12), softWrap: true),
                   )
                 ],
               ),
@@ -62,9 +67,9 @@ class CartListTileWidget extends StatelessWidget {
                     onPressed: () {},
                   ),
                   const SizedBox(width: 2),
-                  const Text(
-                    '',
-                    style: TextStyle(fontSize: 12),
+                  Text(
+                    product.quantity.toString(),
+                    style: const TextStyle(fontSize: 12),
                   ),
                   const SizedBox(width: 2),
                   IconButton(

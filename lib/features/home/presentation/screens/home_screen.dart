@@ -1,6 +1,6 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:process/core/entities/product.dart';
+import 'package:process/features/home/data/repo/home_repo.dart';
 import 'package:process/features/home/presentation/widgets/home_appbar_widget.dart';
 import 'package:process/features/home/presentation/widgets/home_banner_widget.dart';
 import 'package:process/features/home/presentation/widgets/home_horizontal_item_title_widget.dart';
@@ -15,6 +15,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late String slugCity;
+  late HomeRepo repo;
+
   bool isLoading = true;
   Map<String, List<Product>> categoryProducts = {};
 
@@ -22,53 +24,40 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     slugCity = 'almaty';
-    // getAllProduct();
+    repo = HomeRepo();
+    getAllProduct();
   }
 
-  // Future<void> getAllProduct() async {
-  //   try {
-  //     final result = await GetFetchProductUseCase(
-  //             ProductServiceRepoImpl(FetchProductRemoteDataSource(client)))
-  //         .call(slugCity);
-  //     if (mounted) {
-  //       setState(() {
-  //         categoryProducts = result;
-  //         isLoading = false;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     throw Exception('getAllProduct() tryCatch $e');
-  //   }
-  // }
+  Future<void> getAllProduct() async {
+    try {
+      final result = await repo.getAllProducts(slugCity);
+      if (mounted) {
+        setState(() {
+          categoryProducts = result;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      throw Exception('e_: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        const HomeAppbarWidget(),
-        const SliverToBoxAdapter(
-          child: HomeBannerWidget(),
-        ),
-        isLoading
-            ? SliverToBoxAdapter(
-                child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 2.2,
-                child: Center(
-                  child: Text('data'),
-                  // child: CircularProgressIndicator(),
-                  // child: Container(
-                  //   height: 2000,
-                  //   color: Colors.red,
-                  // ),
-                ),
-              ))
-            : SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    final category = categoryProducts.keys.take(5).toList()[index];
+      backgroundColor: Colors.grey.shade100,
+      appBar: const HomeAppbarWidget(),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const HomeBannerWidget(),
+                  ...categoryProducts.keys.take(5).map((category) {
                     final products = categoryProducts[category]!.take(5);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,10 +79,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ),
                       ],
                     );
-                  },
-                ),
-              )
-      ],
-    ));
+                  }),
+                  const SizedBox(height: 100),
+                ],
+              ),
+            ),
+    );
   }
 }

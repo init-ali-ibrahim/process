@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:process/core/entities/cart_product.dart';
+import 'package:process/core/util/logger.dart';
 
 class CartProductService {
   final Isar isar;
@@ -22,7 +23,7 @@ class CartProductService {
         await isar.cartProducts.put(cartProduct);
       });
     } catch (e) {
-      print("Error in addCartProduct: $e");
+      logger.i("e_: $e");
     }
 
     await _updateTotalPrice();
@@ -41,9 +42,8 @@ class CartProductService {
           await isar.cartProducts.put(cartProduct);
         }
       });
-    } catch (e, stackTrace) {
-      print("Error in updateQuantity: $e");
-      print("Stack trace: $stackTrace");
+    } catch (e) {
+      logger.i("e_: $e");
     }
 
     await _updateTotalPrice();

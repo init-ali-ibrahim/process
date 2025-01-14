@@ -5,10 +5,11 @@ part 'cart_product.g.dart';
 @collection
 class CartProduct {
   Id id = Isar.autoIncrement;
+  int quantity;
   final int product_id;
+  final int price;
   final String name;
   final String slug;
-  int quantity;
   final String category;
 
   final String flavor;
@@ -17,6 +18,7 @@ class CartProduct {
 
   CartProduct({
     required this.product_id,
+    required this.price,
     required this.name,
     required this.slug,
     required this.quantity,

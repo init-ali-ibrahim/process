@@ -37,23 +37,28 @@ const CartProductSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'product_id': PropertySchema(
+    r'price': PropertySchema(
       id: 4,
+      name: r'price',
+      type: IsarType.long,
+    ),
+    r'product_id': PropertySchema(
+      id: 5,
       name: r'product_id',
       type: IsarType.long,
     ),
     r'quantity': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'quantity',
       type: IsarType.long,
     ),
     r'shape': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'shape',
       type: IsarType.string,
     ),
     r'slug': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'slug',
       type: IsarType.string,
     )
@@ -97,10 +102,11 @@ void _cartProductSerialize(
   writer.writeString(offsets[1], object.colour);
   writer.writeString(offsets[2], object.flavor);
   writer.writeString(offsets[3], object.name);
-  writer.writeLong(offsets[4], object.product_id);
-  writer.writeLong(offsets[5], object.quantity);
-  writer.writeString(offsets[6], object.shape);
-  writer.writeString(offsets[7], object.slug);
+  writer.writeLong(offsets[4], object.price);
+  writer.writeLong(offsets[5], object.product_id);
+  writer.writeLong(offsets[6], object.quantity);
+  writer.writeString(offsets[7], object.shape);
+  writer.writeString(offsets[8], object.slug);
 }
 
 CartProduct _cartProductDeserialize(
@@ -114,10 +120,11 @@ CartProduct _cartProductDeserialize(
     colour: reader.readString(offsets[1]),
     flavor: reader.readString(offsets[2]),
     name: reader.readString(offsets[3]),
-    product_id: reader.readLong(offsets[4]),
-    quantity: reader.readLong(offsets[5]),
-    shape: reader.readString(offsets[6]),
-    slug: reader.readString(offsets[7]),
+    price: reader.readLong(offsets[4]),
+    product_id: reader.readLong(offsets[5]),
+    quantity: reader.readLong(offsets[6]),
+    shape: reader.readString(offsets[7]),
+    slug: reader.readString(offsets[8]),
   );
   object.id = id;
   return object;
@@ -143,8 +150,10 @@ P _cartProductDeserializeProp<P>(
     case 5:
       return (reader.readLong(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 7:
+      return (reader.readString(offset)) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -831,6 +840,60 @@ extension CartProductQueryFilter
     });
   }
 
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition> priceEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'price',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
+      priceGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'price',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition> priceLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'price',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition> priceBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'price',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
       product_idEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -1262,6 +1325,18 @@ extension CartProductQuerySortBy
     });
   }
 
+  QueryBuilder<CartProduct, CartProduct, QAfterSortBy> sortByPrice() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'price', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterSortBy> sortByPriceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'price', Sort.desc);
+    });
+  }
+
   QueryBuilder<CartProduct, CartProduct, QAfterSortBy> sortByProduct_id() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'product_id', Sort.asc);
@@ -1373,6 +1448,18 @@ extension CartProductQuerySortThenBy
     });
   }
 
+  QueryBuilder<CartProduct, CartProduct, QAfterSortBy> thenByPrice() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'price', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterSortBy> thenByPriceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'price', Sort.desc);
+    });
+  }
+
   QueryBuilder<CartProduct, CartProduct, QAfterSortBy> thenByProduct_id() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'product_id', Sort.asc);
@@ -1452,6 +1539,12 @@ extension CartProductQueryWhereDistinct
     });
   }
 
+  QueryBuilder<CartProduct, CartProduct, QDistinct> distinctByPrice() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'price');
+    });
+  }
+
   QueryBuilder<CartProduct, CartProduct, QDistinct> distinctByProduct_id() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'product_id');
@@ -1508,6 +1601,12 @@ extension CartProductQueryProperty
   QueryBuilder<CartProduct, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<CartProduct, int, QQueryOperations> priceProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'price');
     });
   }
 
