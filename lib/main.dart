@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/app.dart';
+import 'package:process/core/dependency/cart_product_service_init.dart';
 import 'package:process/core/dependency/init.dart';
 import 'core/dependency/eazy_localization_widget.dart';
 
 void main() async {
   await AppInit.initialize();
 
-  runApp(easyLocalizationWidget(const ProviderScope(child: App())));
+  runApp(
+    easyLocalizationInitWidget(
+      child: ProviderScope(
+        child: await cartProductServiceInitWidget(
+          child: const App(),
+        ),
+      ),
+    ),
+  );
 }
 
 //

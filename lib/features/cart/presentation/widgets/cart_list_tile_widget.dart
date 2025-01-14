@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/entities/cart_product.dart';
+import 'package:process/core/service/cart_product_service.dart';
+import 'package:process/core/util/isar_get.dart';
+import 'package:process/core/util/logger.dart';
 
-class CartListTileWidget extends StatelessWidget {
+class CartListTileWidget extends ConsumerWidget {
   const CartListTileWidget({super.key, required this.product});
 
   final CartProduct product;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isar = ref.watch(isarProvider);
+
     return Container(
       height: 90,
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(left: 10, top: 10, right: 10),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 1, offset: const Offset(0, 1))
-        ]
-      ),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 1, offset: const Offset(0, 1))]),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,7 +67,14 @@ class CartListTileWidget extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.remove, size: 18),
-                    onPressed: () {},
+                    onPressed: () async {
+                      // try {
+                      //   await CartProductService(isar: await isar).updateQuantity(product, product.quantity);
+                      //   logger.i('good?');
+                      // } catch (e) {
+                      //   logger.i(e);
+                      // }
+                    },
                   ),
                   const SizedBox(width: 2),
                   Text(
@@ -74,8 +84,17 @@ class CartListTileWidget extends StatelessWidget {
                   const SizedBox(width: 2),
                   IconButton(
                     icon: const Icon(Icons.add, size: 18),
-                    onPressed: () {},
+                    onPressed: () async {
+                      // try {
+                      //   final cartService = CartProductService(isar: await isar);
+                      //   await cartService.updateQuantity(product, product.quantity + 1);
+                      //   logger.i('good?');
+                      // } catch (e) {
+                      //   logger.e('e: $e');
+                      // }
+                    },
                   ),
+
                 ],
               )
             ],

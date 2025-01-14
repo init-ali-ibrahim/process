@@ -22,7 +22,7 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
               Text(
                 title,
                 style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ]),
           ),
@@ -31,8 +31,8 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               child: const Text(
-                'Посмотреть все',
-                style: TextStyle(fontSize: 15, color: colorDark, fontWeight: FontWeight.w500),
+                'Еще',
+                style: TextStyle(fontSize: 14, color: colorDark, fontWeight: FontWeight.w500),
               ))
         ],
       ),

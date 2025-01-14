@@ -4,7 +4,6 @@ import 'package:process/core/entities/cart_product.dart';
 import 'package:process/core/entities/product.dart';
 import 'package:process/core/router/routes.dart';
 import 'package:process/core/service/cart_product_service.dart';
-import 'package:process/core/util/isar_get.dart';
 import 'package:process/core/util/logger.dart';
 import 'package:process/core/util/nil_protect.dart';
 
@@ -15,7 +14,7 @@ class DetailProductScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isar = ref.watch(isarProvider);
+    final cartService = ref.watch(cartServiceProvider);
 
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -73,26 +72,24 @@ class DetailProductScreen extends ConsumerWidget {
                             minimumSize: Size(MediaQuery.of(context).size.width - 40, 52),
                           ),
                           onPressed: () async {
-                            CartProduct cartProduct = CartProduct(
-                              category: product.category,
-                              name: product.name,
-                              product_id: product.id,
-                              quantity: product.quantity,
-                              slug: product.slug,
-                              price: product.price,
-
-                              ///
-                              shape: nilProtect.string,
-                              colour: nilProtect.string,
-                              flavor: nilProtect.string,
-                            );
-
                             try {
-                              CartProductService(isar: await isar).addCartProduct(cartProduct);
+                              final cartProduct = CartProduct(
+                                category: product.category,
+                                name: product.name,
+                                product_id: product.id,
+                                quantity: product.quantity,
+                                slug: product.slug,
+                                price: product.price,
+                                shape: nilProtect.string,
+                                colour: nilProtect.string,
+                                flavor: nilProtect.string,
+                              );
 
-                              logger.i('good?');
+                              await cartService.addCartProduct(cartProduct);
+                              logger.i('Product added to cart successfully');
+                              router.pop();
                             } catch (e) {
-                              logger.e(e);
+                              logger.e('e: $e');
                             }
                           },
                           child: const Text('В корзину', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white)),

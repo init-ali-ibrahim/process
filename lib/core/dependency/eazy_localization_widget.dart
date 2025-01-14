@@ -6,11 +6,11 @@ const path = 'assets/translations';
 const fallbackLocale = Locale('ru');
 
 /// Widget from works with Localization (uses the "easy_localization" package)
-Widget easyLocalizationWidget(Widget child) {
+Widget easyLocalizationInitWidget({required Widget child}) {
   return EasyLocalization(
-      supportedLocales: supportedLocales,
-      path: path,
-      fallbackLocale: fallbackLocale,
-      child: child,
+    supportedLocales: supportedLocales,
+    path: path,
+    fallbackLocale: fallbackLocale,
+    child: child,
   );
 }

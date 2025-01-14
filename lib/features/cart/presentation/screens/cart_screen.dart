@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/entities/cart_product.dart';
 import 'package:process/core/service/cart_product_service.dart';
 import 'package:process/core/util/isar_get.dart';
+import 'package:process/features/cart/presentation/widgets/cart_appbar_widget.dart';
 import 'package:process/features/cart/presentation/widgets/cart_bottom_widget.dart';
 import 'package:process/features/cart/presentation/widgets/cart_empty_widget.dart';
 import 'package:process/features/cart/presentation/widgets/cart_list_tile_widget.dart';
@@ -27,9 +28,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   Future<void> initCartProductService() async {
-    final isar = await ref.read(isarProvider);
-    cartProductService = CartProductService(isar: isar);
-
     cartProductListFuture = cartProductService.getAllCartProducts();
     cartProductList = await cartProductListFuture;
     setState(() {});
@@ -39,14 +37,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: const Text('Корзина'),
-        centerTitle: true,
-        surfaceTintColor: Colors.white,
-        elevation: 1,
-        shadowColor: Colors.grey.shade50,
-        toolbarHeight: kToolbarHeight + 10,
-      ),
+      appBar: const ChatAppbarWidget(),
       body: cartProductList.isEmpty
           ? const CartEmptyWidget()
           : ListView.builder(
