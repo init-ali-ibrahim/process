@@ -9,7 +9,7 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 12, top: 20, left: 0),
+      margin: const EdgeInsets.only(right: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,

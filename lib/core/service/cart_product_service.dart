@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:process/core/entities/cart_product.dart';
 import 'package:process/core/util/isar_get.dart';
+import 'package:flutter/foundation.dart';
 import 'package:process/core/util/logger.dart';
 
-final cartServiceProvider = Provider<CartProductService>((ref) {
+final cartProductServiceProvider = Provider<CartProductService>((ref) {
   return CartProductService(ref: ref);
 });
+
 
 class CartProductService {
   final Ref _ref;
@@ -15,76 +17,33 @@ class CartProductService {
 
   CartProductService({required Ref ref}) : _ref = ref;
 
-  Isar get _isar {
-    final isar = _ref.read(isarProvider);
-    if (isar == null) throw StateError('e');
+  Future<Isar> _getIsarInstance() async {
+    final isar = await _ref.read(isarProvider.future);
     return isar;
   }
 
   Future<List<CartProduct>> getAllCartProducts() async {
-    return await _isar.cartProducts.where().findAll();
+    try {
+      final isar = await _getIsarInstance();
+      return await isar.cartProducts.where().findAll();
+    } catch (e) {
+      logger.e('e: $e');
+      return [];
+    }
   }
 
   Future<void> addCartProduct(CartProduct cartProduct) async {
     try {
-      await _isar.writeTxn(() async {
-        final existingProduct = await _isar.cartProducts
-            .where()
-            .filter()
-            .product_idEqualTo(cartProduct.product_id)
-            .findFirst();
+      final isar = await _getIsarInstance();
+      await isar.writeTxn(() async {
+        final existingProduct = await isar.cartProducts.where().filter().product_idEqualTo(cartProduct.product_id).findFirst();
 
         if (existingProduct != null) {
           existingProduct.quantity += cartProduct.quantity;
           existingProduct.quantity = existingProduct.quantity.clamp(1, 10);
-          await _isar.cartProducts.put(existingProduct);
+          await isar.cartProducts.put(existingProduct);
         } else {
-          await _isar.cartProducts.put(cartProduct);
-        }
-      });
-      await _updateTotalPrice();
-    } catch (e) {
-      logger.e("e: $e");
-    }
-  }
-
-  Future<void> updateQuantity(CartProduct cartProduct, int quantity) async {
-    try {
-      await _isar.writeTxn(() async {
-        final existingProduct = await _isar.cartProducts.get(cartProduct.id);
-
-        if (existingProduct != null) {
-          if (quantity <= 0) {
-            await _isar.cartProducts.delete(existingProduct.id);
-          } else {
-            existingProduct.quantity = quantity.clamp(1, 10);
-            await _isar.cartProducts.put(existingProduct);
-          }
-        }
-      });
-      await _updateTotalPrice();
-    } catch (e) {
-      logger.e("e: $e");
-    }
-  }
-
-  Future<void> deleteCartProduct(int id) async {
-    try {
-      await _isar.writeTxn(() async {
-        await _isar.cartProducts.delete(id);
-      });
-      await _updateTotalPrice();
-    } catch (e) {
-      logger.e("e: $e");
-    }
-  }
-
-  Future<void> clearCartProducts() async {
-    try {
-      final allCartProducts = await getAllCartProducts();
-      await _isar.writeTxn(() async {
-        for (var cartProduct in allCartProducts) {
-          await _isar.cartProducts.delete(cartProduct.id);
+          await isar.cartProducts.put(cartProduct);
         }
       });
       await _updateTotalPrice();
@@ -100,16 +59,55 @@ class CartProductService {
     }
   }
 
-  Future<int> calculateTotalPrice() async {
-    int totalPrice = 0;
+  Future<void> updateQuantity({
+    required int productId,
+    required bool increment,
+  }) async {
     try {
-      final allCartProducts = await getAllCartProducts();
-      for (var cartProduct in allCartProducts) {
-        totalPrice += cartProduct.price * cartProduct.quantity;
-      }
+      final isar = await _getIsarInstance();
+
+      await isar.writeTxn(() async {
+        final existingProduct = await isar.cartProducts.where().filter().product_idEqualTo(productId).findFirst();
+
+        if (existingProduct != null) {
+          if (increment) {
+            existingProduct.quantity = (existingProduct.quantity + 1).clamp(1, 10);
+          } else {
+            existingProduct.quantity -= 1;
+            if (existingProduct.quantity <= 0) {
+              await isar.cartProducts.delete(existingProduct.id);
+              return;
+            }
+          }
+          await isar.cartProducts.put(existingProduct);
+        }
+      });
+      await _updateTotalPrice();
     } catch (e) {
       logger.e("e: $e");
     }
-    return totalPrice;
+  }
+
+  Future<void> clearCartProducts() async {
+    try {
+      final isar = await _getIsarInstance();
+
+      await isar.writeTxn(() async {
+        await isar.cartProducts.clear();
+      });
+      await _updateTotalPrice();
+    } catch (e) {
+      logger.e("e: $e");
+    }
+  }
+
+  Future<int> calculateTotalPrice() async {
+    try {
+      final products = await getAllCartProducts();
+      return products.fold(0, (sum, product) => product.price * product.quantity);
+    } catch (e) {
+      logger.e("e: $e");
+      return 0;
+    }
   }
 }

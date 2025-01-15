@@ -31,6 +31,13 @@ class HomeBannerWidget extends StatelessWidget {
             ],
             tileMode: TileMode.mirror,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 1,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

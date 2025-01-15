@@ -14,7 +14,19 @@ class DetailProductScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartService = ref.watch(cartServiceProvider);
+    final cartService = ref.read(cartProductServiceProvider);
+
+    final cartProduct = CartProduct(
+      category: product.category,
+      name: product.name,
+      product_id: product.id,
+      quantity: product.quantity,
+      slug: product.slug,
+      price: product.price,
+      shape: nilProtect.string,
+      colour: nilProtect.string,
+      flavor: nilProtect.string,
+    );
 
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -73,21 +85,7 @@ class DetailProductScreen extends ConsumerWidget {
                           ),
                           onPressed: () async {
                             try {
-                              final cartProduct = CartProduct(
-                                category: product.category,
-                                name: product.name,
-                                product_id: product.id,
-                                quantity: product.quantity,
-                                slug: product.slug,
-                                price: product.price,
-                                shape: nilProtect.string,
-                                colour: nilProtect.string,
-                                flavor: nilProtect.string,
-                              );
-
                               await cartService.addCartProduct(cartProduct);
-                              logger.i('Product added to cart successfully');
-                              router.pop();
                             } catch (e) {
                               logger.e('e: $e');
                             }

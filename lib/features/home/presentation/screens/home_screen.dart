@@ -56,13 +56,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 14),
                   const HomeBannerWidget(),
                   ...categoryProducts.keys.take(5).map((category) {
                     final products = categoryProducts[category]!.take(5);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                           child: HomeHorizontalItemTitleWidget(
