@@ -11,7 +11,8 @@ class CartProduct {
   final String name;
   final String slug;
   final String category;
-
+  final String imageUrl;
+  
   final String flavor;
   final String shape;
   final String colour;
@@ -23,6 +24,7 @@ class CartProduct {
     required this.slug,
     required this.quantity,
     required this.category,
+    required this.imageUrl,
 
     required this.flavor,
     required this.shape,

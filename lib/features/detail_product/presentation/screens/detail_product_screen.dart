@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/entities/cart_product.dart';
 import 'package:process/core/entities/product.dart';
 import 'package:process/core/router/routes.dart';
-import 'package:process/core/service/cart_product_service.dart';
 import 'package:process/core/util/logger.dart';
 import 'package:process/core/util/nil_protect.dart';
+import 'package:process/features/cart/presentation/riverpod/cartProvider.dart';
 
 class DetailProductScreen extends ConsumerWidget {
   const DetailProductScreen({super.key, required this.product});
@@ -14,7 +14,7 @@ class DetailProductScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartService = ref.read(cartProductServiceProvider);
+    final cartRiverpod = ref.read(cartProvider.notifier);
 
     final cartProduct = CartProduct(
       category: product.category,
@@ -26,6 +26,7 @@ class DetailProductScreen extends ConsumerWidget {
       shape: nilProtect.string,
       colour: nilProtect.string,
       flavor: nilProtect.string,
+      imageUrl: product.imageUrl,
     );
 
     return Scaffold(
@@ -85,7 +86,7 @@ class DetailProductScreen extends ConsumerWidget {
                           ),
                           onPressed: () async {
                             try {
-                              await cartService.addCartProduct(cartProduct);
+                              cartRiverpod.addCartProduct(cartProduct);
                             } catch (e) {
                               logger.e('e: $e');
                             }

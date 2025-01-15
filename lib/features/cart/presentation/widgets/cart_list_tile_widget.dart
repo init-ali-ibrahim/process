@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/entities/cart_product.dart';
-import 'package:process/core/service/cart_product_service.dart';
-import 'package:process/core/util/logger.dart';
+import 'package:process/features/cart/presentation/riverpod/cartProvider.dart';
 
 class CartListTileWidget extends ConsumerWidget {
   const CartListTileWidget({super.key, required this.product});
@@ -11,8 +10,6 @@ class CartListTileWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartService = ref.read(cartProductServiceProvider);
-
     return Container(
       height: 90,
       padding: const EdgeInsets.all(10),
@@ -38,7 +35,7 @@ class CartListTileWidget extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: FadeInImage.assetNetwork(
                     placeholder: 'assets/image/loadingItem.jpg',
-                    image: 'product.urlImage',
+                    image: product.imageUrl,
                     width: 70,
                     height: 70,
                     fit: BoxFit.cover,
@@ -77,19 +74,19 @@ class CartListTileWidget extends ConsumerWidget {
                       size: 18,
                       color: Colors.grey.shade700,
                     ),
-                    onPressed: () async {
-                      try {
-                        await cartService.updateQuantity(productId: product.product_id, increment: false);
-                        logger.i('good?');
-                      } catch (e) {
-                        logger.e('e: $e');
-                      }
+                    onPressed: () {
+                      ref.read(cartProvider.notifier).updateQuantity(product.product_id, false);
                     },
                   ),
                   const SizedBox(width: 2),
-                  Text(
-                    product.quantity.toString(),
-                    style: const TextStyle(fontSize: 12),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 100),
+                    transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+                    child: Text(
+                      product.quantity.toString(),
+                      key: ValueKey<int>(product.quantity),
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ),
                   const SizedBox(width: 2),
                   IconButton(
@@ -98,13 +95,8 @@ class CartListTileWidget extends ConsumerWidget {
                       size: 18,
                       color: Colors.grey.shade700,
                     ),
-                    onPressed: () async {
-                      try {
-                        await cartService.updateQuantity(productId: product.product_id, increment: true);
-                        logger.i('good?');
-                      } catch (e) {
-                        logger.e('e: $e');
-                      }
+                    onPressed: () {
+                      ref.read(cartProvider.notifier).updateQuantity(product.product_id, true);
                     },
                   ),
                 ],

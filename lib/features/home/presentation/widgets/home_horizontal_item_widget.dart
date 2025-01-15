@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:process/core/entities/product.dart';
 import 'package:process/core/router/routes.dart';
-import 'package:process/features/detail_product/presentation/screens/detail_product_screen.dart';
 
 class HomeHorizontalItemWidget extends StatelessWidget {
   const HomeHorizontalItemWidget({super.key, required this.product});
@@ -12,12 +11,6 @@ class HomeHorizontalItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => DetailProductScreen(product: product),
-        //   ),
-        // );
         router.pushNamed(
           RouteNames.singleProduct.name,
           extra: {'product': product},

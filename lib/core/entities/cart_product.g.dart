@@ -32,33 +32,38 @@ const CartProductSchema = CollectionSchema(
       name: r'flavor',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
+    r'imageUrl': PropertySchema(
       id: 3,
+      name: r'imageUrl',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 4,
       name: r'name',
       type: IsarType.string,
     ),
     r'price': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'price',
       type: IsarType.long,
     ),
     r'product_id': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'product_id',
       type: IsarType.long,
     ),
     r'quantity': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'quantity',
       type: IsarType.long,
     ),
     r'shape': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'shape',
       type: IsarType.string,
     ),
     r'slug': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'slug',
       type: IsarType.string,
     )
@@ -86,6 +91,7 @@ int _cartProductEstimateSize(
   bytesCount += 3 + object.category.length * 3;
   bytesCount += 3 + object.colour.length * 3;
   bytesCount += 3 + object.flavor.length * 3;
+  bytesCount += 3 + object.imageUrl.length * 3;
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.shape.length * 3;
   bytesCount += 3 + object.slug.length * 3;
@@ -101,12 +107,13 @@ void _cartProductSerialize(
   writer.writeString(offsets[0], object.category);
   writer.writeString(offsets[1], object.colour);
   writer.writeString(offsets[2], object.flavor);
-  writer.writeString(offsets[3], object.name);
-  writer.writeLong(offsets[4], object.price);
-  writer.writeLong(offsets[5], object.product_id);
-  writer.writeLong(offsets[6], object.quantity);
-  writer.writeString(offsets[7], object.shape);
-  writer.writeString(offsets[8], object.slug);
+  writer.writeString(offsets[3], object.imageUrl);
+  writer.writeString(offsets[4], object.name);
+  writer.writeLong(offsets[5], object.price);
+  writer.writeLong(offsets[6], object.product_id);
+  writer.writeLong(offsets[7], object.quantity);
+  writer.writeString(offsets[8], object.shape);
+  writer.writeString(offsets[9], object.slug);
 }
 
 CartProduct _cartProductDeserialize(
@@ -119,12 +126,13 @@ CartProduct _cartProductDeserialize(
     category: reader.readString(offsets[0]),
     colour: reader.readString(offsets[1]),
     flavor: reader.readString(offsets[2]),
-    name: reader.readString(offsets[3]),
-    price: reader.readLong(offsets[4]),
-    product_id: reader.readLong(offsets[5]),
-    quantity: reader.readLong(offsets[6]),
-    shape: reader.readString(offsets[7]),
-    slug: reader.readString(offsets[8]),
+    imageUrl: reader.readString(offsets[3]),
+    name: reader.readString(offsets[4]),
+    price: reader.readLong(offsets[5]),
+    product_id: reader.readLong(offsets[6]),
+    quantity: reader.readLong(offsets[7]),
+    shape: reader.readString(offsets[8]),
+    slug: reader.readString(offsets[9]),
   );
   object.id = id;
   return object;
@@ -146,14 +154,16 @@ P _cartProductDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 5:
       return (reader.readLong(offset)) as P;
     case 6:
       return (reader.readLong(offset)) as P;
     case 7:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 8:
+      return (reader.readString(offset)) as P;
+    case 9:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -705,6 +715,141 @@ extension CartProductQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition> imageUrlEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imageUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
+      imageUrlGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'imageUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
+      imageUrlLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'imageUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition> imageUrlBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'imageUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
+      imageUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'imageUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
+      imageUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'imageUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
+      imageUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'imageUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition> imageUrlMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'imageUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
+      imageUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imageUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterFilterCondition>
+      imageUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'imageUrl',
+        value: '',
       ));
     });
   }
@@ -1313,6 +1458,18 @@ extension CartProductQuerySortBy
     });
   }
 
+  QueryBuilder<CartProduct, CartProduct, QAfterSortBy> sortByImageUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imageUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterSortBy> sortByImageUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imageUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<CartProduct, CartProduct, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1436,6 +1593,18 @@ extension CartProductQuerySortThenBy
     });
   }
 
+  QueryBuilder<CartProduct, CartProduct, QAfterSortBy> thenByImageUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imageUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CartProduct, CartProduct, QAfterSortBy> thenByImageUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imageUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<CartProduct, CartProduct, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1532,6 +1701,13 @@ extension CartProductQueryWhereDistinct
     });
   }
 
+  QueryBuilder<CartProduct, CartProduct, QDistinct> distinctByImageUrl(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'imageUrl', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<CartProduct, CartProduct, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1595,6 +1771,12 @@ extension CartProductQueryProperty
   QueryBuilder<CartProduct, String, QQueryOperations> flavorProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'flavor');
+    });
+  }
+
+  QueryBuilder<CartProduct, String, QQueryOperations> imageUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'imageUrl');
     });
   }
 

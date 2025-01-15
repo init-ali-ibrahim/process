@@ -5,10 +5,7 @@ import 'package:process/features/profile/presentation/screens/auth_verification_
 class HomeAppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppbarWidget({
     super.key,
-    /*required this.isar*/
   });
-
-  // final Isar isar;
 
   @override
   Widget build(BuildContext context) {
