@@ -53,6 +53,12 @@ class CartNotifier extends StateNotifier<CartState> {
     await cartService.clearCartProducts();
     await _loadCartProducts();
   }
+
+  Future<void> removeProduct(CartProduct product) async {
+    final cartService = _ref.read(cartProductServiceProvider);
+    await cartService.updateQuantity(productId: product.product_id, increment: false);
+    await _loadCartProducts();
+  }
 }
 
 final cartProvider = StateNotifierProvider<CartNotifier, CartState>((ref) {
