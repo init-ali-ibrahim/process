@@ -49,7 +49,7 @@ class HomeAppbarWidget extends StatelessWidget implements PreferredSizeWidget {
             color: Colors.red,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const AuthVerificationScreen()));
+            router.pushNamed(RouteNames.profile.name);
           },
         ),
         const SizedBox(width: 4),

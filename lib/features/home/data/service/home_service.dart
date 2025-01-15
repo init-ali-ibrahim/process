@@ -8,7 +8,7 @@ class HomeService {
 
   Future<List<CategoryModel>> getCategoryProducts() async {
     try {
-      final response = await dio.get('https://admin.samalcakes.kz/api/v1/categories');
+        final response = await dio.get('https://admin.samalcakes.kz/api/v1/categories');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final List<dynamic> data = response.data;

@@ -1,324 +1,260 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:process/screens/profile/widgets/profileUserAuth_widget.dart';
-import 'package:process/screens/profile/widgets/profileUserNull_widget.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
+import 'package:process/features/profile/presentation/widgets/profile_appbar_widget.dart';
 
-import 'dart:async';
-
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  final storage = const FlutterSecureStorage();
-  Map<String, dynamic>? data;
-
-  Future<void> checkAuthToken() async {
-    String? tokenAuth = await storage.read(key: 'token');
-
-    final url = Uri.parse('https://admin.samalcakes.kz/api/v1/auth/check');
-
-    final response = await http.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer $tokenAuth',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final data = jsonDecode(response.body);
-
-      setState(() {
-        this.data = data?['data'];
-      });
-
-      print(tokenAuth);
-      print('Success: ${data['success']}');
-      print('User ID: ${data['data']['id']}');
-      print('Name: ${data['data']['name']}');
-    } else {
-      await storage.delete(key: 'token');
-      Navigator.pushNamedAndRemoveUntil(context, '/profile', (Route<dynamic> route) => false);
-
-      print('Request failed with status: ${response.statusCode}');
-      print('body: ${response.body}');
-    }
-  }
-
-  @override
-  void initState() {
-    checkAuthToken();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (data == null) {
-      return SizedBox();
-    }
+    return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      appBar: const ProfileAppbarWidget(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 14),
+              _buildProfileDataSection(),
+              const SizedBox(height: 30),
+              _buildSettingsSection(),
+              const SizedBox(height: 30),
+              _buildSecondSection(),
+              const SizedBox(height: 30),
 
-    return Column(children: [
-      Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 40),
-            decoration: const BoxDecoration(color: Colors.white),
-            child: Column(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 70,
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 10, left: 10),
-                            child: Icon(
-                              Icons.account_circle_sharp,
-                              color: Colors.grey,
-                              size: 40,
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${data!['name'] ?? ''}'),
-                              Text(
-                                '${data!['email'] ?? ''}',
-                                style: const TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      // IconButton(
-                      //     onPressed: () {
-                      //       Navigator.pushNamed(context, '/my-profile');
-                      //     },
-                      //     icon: const Icon(
-                      //       Icons.edit,
-                      //       color: Colors.grey,
-                      //     ))
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ///
+              // Center(
+              //   child: ElevatedButton.icon(
+              //     onPressed: () {
+              //       // logOut();
+              //     },
+              //     icon: const Icon(Icons.logout),
+              //     label: const Text('Выйти'),
+              //     style: ElevatedButton.styleFrom(
+              //       foregroundColor: Colors.white,
+              //       backgroundColor: Colors.redAccent,
+              //       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+            ],
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            width: MediaQuery.of(context).size.width - 40,
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.cake, color: Colors.grey),
-                  title: const Text('Ваши заказы', style: TextStyle(fontSize: 12)),
-                  trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20),
-                  // onTap: () {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => OrderScreen(),
-                  //     ),
-                  //   );
-                  // },
-                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
-                  tileColor: Colors.white,
-                ),
-                // CustomDevider(),
-                // ListTile(
-                //   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(6), bottomLeft: Radius.circular(6))),
-                //   leading: const Icon(Icons.payment, color: Colors.grey),
-                //   title: const Text('Платежная система', style: TextStyle(fontSize: 12)),
-                //   trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20),
-                //   onTap: () {},
-                //   tileColor: Colors.white,
-                // ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            width: MediaQuery.of(context).size.width - 40,
-            child: Column(
-              children: [
-                // ListTile(
-                //   leading: const Icon(Icons.language, color: Colors.grey),
-                //   title: const Text('Язык', style: TextStyle(fontSize: 12)),
-                //   trailing: const Wrap(
-                //     spacing: 10,
-                //     children: [Text('Русский', style: TextStyle(fontSize: 12, color: Colors.red)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
-                //   ),
-                //   onTap: () {},
-                //   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
-                //   tileColor: Colors.white,
-                // ),
-                // CustomDevider(),
-                ListTile(
-                  leading: const Icon(Icons.location_city, color: Colors.grey),
-                  title: const Text('Город', style: TextStyle(fontSize: 12)),
-                  trailing: const Wrap(
-                    spacing: 10,
-                    children: [Text('Алматы', style: TextStyle(fontSize: 12, color: Colors.red)), Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20)],
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/demo');
-                  },
-                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(6), topLeft: Radius.circular(6))),
-                  tileColor: Colors.white,
-                ),
-                // CustomDevider(),
-                // ListTile(
-                //   leading: const Icon(Icons.info, color: Colors.grey),
-                //   title: const Text('О приложений', style: TextStyle(fontSize: 12)),
-                //   trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20),
-                //   onTap: () {},
-                //   tileColor: Colors.white,
-                // ),
-                CustomDevider(),
-                ListTile(
-                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(6), bottomLeft: Radius.circular(6))),
-                  leading: const Icon(Icons.support_agent, color: Colors.grey),
-                  title: const Text('Служба поддержки', style: TextStyle(fontSize: 12)),
-                  trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 20),
-                  onTap: () async {
-                    String url = 'https://api.whatsapp.com/send?phone=77776615050&text=Hello';
+        ),
+      ),
+    );
+  }
 
-                    final Uri uri = Uri.parse(url);
-
-                    // if (!await launchUrl(uri)) {
-                    //   throw Exception('Could not launch $uri');
-                    // }
-
-                    // Navigator.pushNamed(context, '/httpTest');
-                  },
-                  tileColor: Colors.white,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextButton(
-            onPressed: () async {
-              showDialog(
-                context: context,
-                builder: (BuildContext dialogContext) {
-                  return alertClose(dialogContext);
-                },
-              );
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.white,
-              maximumSize: Size(MediaQuery.of(context).size.width - 40, 50),
-              minimumSize: Size(MediaQuery.of(context).size.width - 40, 50),
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.logout,
-                  color: Colors.red,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Выйти',
-                  style: TextStyle(color: Colors.red, fontSize: 16),
-                ),
-              ],
-            ),
-            // )
+  Widget _buildProfileDataSection() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(12),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 1,
+            offset: const Offset(0, 1),
           ),
         ],
-      )
-    ]);
-  }
-
-  Widget alertClose(BuildContext dialogContext) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      backgroundColor: Colors.white,
-      title: const Text(
-        'Выйти',
-        style: TextStyle(fontSize: 20),
       ),
-      content: const SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Вы уверены?',
-                    softWrap: true,
-                  ),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: CircleAvatar(
+                radius: 32,
+                backgroundColor: Colors.red[100],
+                // child: Text(
+                //   'D',
+                //   style: TextStyle(color: Colors.red[900], fontSize: 30),
+                // ),
+
+                child: Icon(
+                  Icons.account_circle_outlined,
+                  color: Colors.red[900],
+                  size: 36,
+                )),
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Иван Иванов',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
                 ),
-                SizedBox(
-                  width: 80,
-                )
-              ],
-            ),
-            SizedBox(
-              height: 1,
-            )
-          ],
-        ),
+              ),
+              Text(
+                'ivan@gmail.com',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text(
-            'Отмена',
-            style: TextStyle(color: Colors.grey),
-          ),
-          onPressed: () {
-            Navigator.of(dialogContext).pop();
-          },
-        ),
-        TextButton(
-          child: const Text(
-            'Выйти',
-            style: TextStyle(color: Colors.red),
-          ),
-          onPressed: () async {
-            // await FirebaseAuth.instance.signOut();
-
-            await storage.delete(key: 'token');
-
-            Navigator.of(dialogContext).pop();
-            Navigator.pushReplacementNamed(context, '/profile');
-          },
-        ),
-      ],
     );
   }
 
-  CustomDevider() {
+  Widget _buildSettingsSection() {
     return Container(
-      decoration: const BoxDecoration(color: Colors.white),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: const Divider(height: 1, color: Color(0xFFB7B7B7)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 1,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(right: 16, left: 16, bottom: 10, top: 16),
+            child: Text(
+              'Настройки',
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+            ),
+          ),
+
+          ///
+          // _buildSettingsTile(
+          //   icon: Icons.location_on_outlined,
+          //   title: 'Город',
+          //   onTap: () {},
+          //   trailing: const Text(
+          //     'Алматы',
+          //     style: TextStyle(color: Colors.grey, fontSize: 11),
+          //   ),
+          // ),
+          // _buildCustomDivider(),
+          // _buildSettingsTile(
+          //   icon: Icons.language,
+          //   title: 'Язык',
+          //   trailing: const Text(
+          //     'Русский',
+          //     style: TextStyle(color: Colors.grey, fontSize: 11),
+          //   ),
+          // ),
+          // _buildCustomDivider(),
+          ///
+
+          _buildSettingsTile(
+            icon: Icons.notifications_outlined,
+            title: 'Уведомления',
+          ),
+          _buildCustomDivider(),
+          _buildSettingsTile(
+            icon: Icons.dark_mode_outlined,
+            title: 'Тема',
+          ),
+          _buildCustomDivider(),
+          _buildSettingsTile(
+            icon: Icons.home_repair_service_outlined,
+            title: 'О приложении',
+          ),
+          _buildCustomDivider(),
+          _buildSettingsTile(
+            icon: Icons.support_agent,
+            title: 'Поддержка',
+          ),
+          _buildCustomDivider(),
+          _buildSettingsTile(
+            icon: Icons.language,
+            title: 'Язык',
+            trailing: const Text(
+              'Русский',
+              style: TextStyle(color: Colors.grey, fontSize: 11),
+            ),
+          ),
+          _buildCustomDivider(),
+          _buildSettingsTile(
+            icon: Icons.location_on_outlined,
+            title: 'Город',
+            onTap: () {},
+            trailing: const Text(
+              'Алматы',
+              style: TextStyle(color: Colors.grey, fontSize: 11),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSecondSection() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 1,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildSettingsTile(
+            icon: Icons.book_outlined,
+            title: 'Заказы',
+          ),
+          _buildCustomDivider(),
+          _buildSettingsTile(
+            icon: Icons.insert_page_break_outlined,
+            title: 'Публична оферта',
+            onTap: () {},
+          ),
+          _buildCustomDivider(),
+          _buildSettingsTile(
+            icon: Icons.find_in_page_outlined,
+            title: 'Политика конфиденциаальности',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomDivider() {
+    return Divider(height: 1, color: Colors.grey.shade300, indent: 18, endIndent: 18);
+  }
+
+  Widget _buildSettingsTile({
+    required IconData icon,
+    required String title,
+    Widget? trailing,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      tileColor: Colors.white,
+      dense: true,
+      leading: Icon(icon, color: Colors.red[300]),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
+      ),
+      trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.grey),
+      onTap: onTap,
+      splashColor: Colors.black,
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:process/core/router/route_guard.dart';
 import 'package:process/features/cart/presentation/screens/cart_screen.dart';
 import 'package:process/features/detail_product/presentation/screens/detail_product_screen.dart';
 import 'package:process/features/home/presentation/screens/home_screen.dart';
+import 'package:process/features/profile/presentation/screens/profile_screen.dart';
 
 /// Names of route (typo secure)
 enum RouteNames {
@@ -12,6 +13,7 @@ enum RouteNames {
   cart('/cart'),
   register('/register'),
   login('/login'),
+  profile('/profile'),
   home('/home');
 
   final String path;
@@ -50,6 +52,12 @@ final router = GoRouter(
         path: RouteNames.cart.path,
         name: RouteNames.cart.name,
         builder: (context, state) => const CartScreen(),
+      ),
+
+      GoRoute(
+        path: RouteNames.profile.path,
+        name: RouteNames.profile.name,
+        builder: (context, state) => const ProfileScreen(),
       ),
 
       /// Auth routes

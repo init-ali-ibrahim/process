@@ -27,7 +27,7 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     pageIndex = widget.initialPageIndex;
+//     pageIndex = widgets.initialPageIndex;
 //   }
 //
 //   @override

@@ -44,7 +44,7 @@
 //                   Positioned(
 //                     top: 10,
 //                     left: -10,
-//                     child: Image(image: AssetImage(widget.img)),
+//                     child: Image(image: AssetImage(widgets.img)),
 //                   ),
 //                 ],
 //               ),
@@ -61,18 +61,18 @@
 //                 crossAxisAlignment: CrossAxisAlignment.start,
 //                 children: [
 //                   Text(
-//                     widget.title,
+//                     widgets.title,
 //                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
 //                   ),
 //                   Text(
-//                     widget.type,
+//                     widgets.type,
 //                     style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
 //                   ),
 //                   Row(
 //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                     children: [
 //                       Text(
-//                         widget.cash,
+//                         widgets.cash,
 //                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF953282)),
 //                       ),
 //                       Container(

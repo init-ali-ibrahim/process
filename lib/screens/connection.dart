@@ -70,6 +70,6 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     // Возвращаем основной экран приложения
-//     return widget.child;
+//     return widgets.child;
 //   }
 // }

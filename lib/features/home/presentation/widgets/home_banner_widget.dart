@@ -13,7 +13,7 @@ class HomeBannerWidget extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomizeScreen()));
       },
       child: Container(
-        margin: const EdgeInsetsDirectional.all(14),
+        margin: const EdgeInsetsDirectional.symmetric(horizontal: 14),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

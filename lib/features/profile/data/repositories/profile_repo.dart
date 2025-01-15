@@ -1,23 +1,19 @@
-import 'package:process/features/profile/data/data_sources/auth_service_ds.dart';
-import 'package:process/features/profile/domain/repositories/auth_repo.dart';
 
-class AuthRepoImpl implements AuthRepo {
-  final AuthServiceDataSource authService;
+import 'package:process/features/profile/data/data_sources/profile_service.dart';
 
-  AuthRepoImpl(this.authService);
+class ProfileRepo {
+  final ProfileService service = ProfileService();
 
-  @override
   Future<void> login({
     required String phone,
     required String password,
   }) async {
-    return await authService.loginUser(
+    return await service.loginUser(
       phone: phone,
       password: password,
     );
   }
 
-  @override
   Future<void> register({
     required String first_name,
     required String last_name,
@@ -27,7 +23,7 @@ class AuthRepoImpl implements AuthRepo {
     required String password,
     required String password_confirm,
   }) async {
-    return await authService.registerUser(
+    return await service.registerUser(
       first_name: first_name,
       last_name: last_name,
       middle_name: middle_name,

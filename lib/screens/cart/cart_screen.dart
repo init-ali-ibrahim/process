@@ -825,8 +825,8 @@
 //   void initState() {
 //     super.initState();
 //     _loadAddressType();
-//     _controllerStreet = TextEditingController(text: widget.streetCart ?? '');
-//     _controllerDistrict = TextEditingController(text: widget.districtCart ?? '');
+//     _controllerStreet = TextEditingController(text: widgets.streetCart ?? '');
+//     _controllerDistrict = TextEditingController(text: widgets.districtCart ?? '');
 //   }
 //
 //   @override
