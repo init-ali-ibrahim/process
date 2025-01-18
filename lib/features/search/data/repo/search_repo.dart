@@ -1,5 +1,5 @@
 import 'package:process/core/entities/product.dart';
-import 'package:process/features/home/data/service/search_service.dart';
+import 'package:process/features/search/data/service/search_service.dart';
 
 class SearchRepo {
   final SearchService service = SearchService();

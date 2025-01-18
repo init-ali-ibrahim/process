@@ -87,6 +87,7 @@ class DetailProductScreen extends ConsumerWidget {
                           onPressed: () async {
                             try {
                               cartRiverpod.addCartProduct(cartProduct);
+                              router.pop();
                             } catch (e) {
                               logger.e('e: $e');
                             }

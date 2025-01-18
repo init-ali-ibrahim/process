@@ -5,7 +5,10 @@ import 'package:process/core/router/route_guard.dart';
 import 'package:process/features/cart/presentation/screens/cart_screen.dart';
 import 'package:process/features/detail_product/presentation/screens/detail_product_screen.dart';
 import 'package:process/features/home/presentation/screens/home_screen.dart';
+import 'package:process/features/profile/presentation/screens/login_screen.dart';
 import 'package:process/features/profile/presentation/screens/profile_screen.dart';
+import 'package:process/features/profile/presentation/screens/register_screen.dart';
+import 'package:process/features/search/presentation/screens/search_screen.dart';
 
 /// Names of route (typo secure)
 enum RouteNames {
@@ -14,6 +17,7 @@ enum RouteNames {
   register('/register'),
   login('/login'),
   profile('/profile'),
+  search('/search'),
   home('/home');
 
   final String path;
@@ -60,16 +64,22 @@ final router = GoRouter(
         builder: (context, state) => const ProfileScreen(),
       ),
 
+      GoRoute(
+        path: RouteNames.search.path,
+        name: RouteNames.search.name,
+        builder: (context, state) => const SearchScreen(),
+      ),
+
       /// Auth routes
       GoRoute(
         path: RouteNames.register.path,
         name: RouteNames.register.name,
-        builder: (context, state) => Container(),
+        builder: (context, state) => RegisterScreen(),
       ),
 
       GoRoute(
         path: RouteNames.login.path,
         name: RouteNames.login.name,
-        builder: (context, state) => Container(),
+        builder: (context, state) => LoginScreen(),
       ),
     ]);

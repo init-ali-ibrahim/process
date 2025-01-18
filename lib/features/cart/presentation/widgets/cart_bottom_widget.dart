@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:process/features/cart/presentation/riverpod/cartProvider.dart';
 
-class CartBottomWidget extends StatelessWidget {
+class CartBottomWidget extends ConsumerWidget {
   const CartBottomWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartRiverpod = ref.watch(cartProvider);
+
     return Container(
       height: 100,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
@@ -21,14 +25,14 @@ class CartBottomWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Column(
+          Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Итоговая цена'),
+              const Text('Итоговая цена'),
               Text(
-                '₸: }',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                '${cartRiverpod.totalPrice}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
               )
             ],
           ),

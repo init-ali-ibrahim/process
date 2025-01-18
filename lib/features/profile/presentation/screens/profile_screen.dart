@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:process/features/profile/presentation/widgets/profile_appbar_widget.dart';
+import 'package:process/core/router/routes.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_appbar_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -112,69 +113,74 @@ class ProfileScreen extends StatelessWidget {
 
     ///
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(12),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 1,
-            offset: const Offset(0, 1),
+    return InkWell(
+      onTap: (){
+        router.pushNamed(RouteNames.register.name);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.9),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(12),
           ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: CircleAvatar(
-                    radius: 32,
-                    backgroundColor: Colors.grey[200],
-                    child: Icon(
-                      Icons.account_circle_outlined,
-                      color: Colors.grey[700],
-                      size: 36,
-                    )),
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Вы не вошли в аккаунт',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.chevron_right,
-                size: 26,
-                color: Colors.grey,
-              ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 1,
+              offset: const Offset(0, 1),
             ),
-          )
-        ],
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: CircleAvatar(
+                      radius: 32,
+                      backgroundColor: Colors.grey[200],
+                      child: Icon(
+                        Icons.account_circle_outlined,
+                        color: Colors.grey[700],
+                        size: 36,
+                      )),
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Вы не вошли в аккаунт',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.chevron_right,
+                  size: 26,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -283,6 +289,12 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.book_outlined,
               onTap: () {},
               title: 'Заказы',
+            ),
+            _buildCustomDivider(),
+            _buildSettingsTile(
+              icon: Icons.history,
+              onTap: () {},
+              title: 'История',
             ),
           ],
         ),

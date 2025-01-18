@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:process/core/util/logger.dart';
 
@@ -35,21 +37,22 @@ class ProfileService {
     }
   }
 
+  ///
+  ///
+  ///
   Future<void> registerUser({
     required String first_name,
     required String last_name,
-    required String middle_name,
     required String email,
     required String phone,
     required String password,
     required String password_confirm,
   }) async {
-    const url = 'https://go-auth.srv/api/auth/register';
+    const baseUrl = 'https://admin.samalcakes.kz/api/v1/auth/register';
 
     final Map<String, dynamic> body = {
       "first_name": first_name,
       "last_name": last_name,
-      "middle_name": middle_name,
       "email": email,
       "phone": phone,
       "password": password,
@@ -60,21 +63,22 @@ class ProfileService {
 
     try {
       final response = await dio.post(
-        url,
-        data: body,
-        options: Options(headers: {'Content-Type': 'application/json'}),
+        baseUrl,
+        data: jsonEncode(body),
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+        }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        logger.i('Data fetched successfully: ${response.data}');
+        logger.i('good: ${response.data}');
       } else {
         logger.i(response.data);
-        throw Exception('RegisterService() registerUser() statusCode ${response.statusCode}');
+        throw Exception('e: ${response.statusCode}');
       }
     } catch (e) {
-      logger.i('Error in registerUser: $e');
+      logger.i('e: $e');
       rethrow;
     }
   }
 }
-

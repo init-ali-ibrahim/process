@@ -59,6 +59,12 @@ class CartNotifier extends StateNotifier<CartState> {
     await cartService.updateQuantity(productId: product.product_id, increment: false);
     await _loadCartProducts();
   }
+
+  Future<int> calculateTotalPrice() async {
+    final cartService = _ref.read(cartProductServiceProvider);
+    await cartService.calculateTotalPrice();
+    return await state.totalPrice;
+  }
 }
 
 final cartProvider = StateNotifierProvider<CartNotifier, CartState>((ref) {

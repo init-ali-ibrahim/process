@@ -1,5 +1,4 @@
-
-import 'package:process/features/profile/data/data_sources/profile_service.dart';
+import 'package:process/features/profile/data/service/profile_service.dart';
 
 class ProfileRepo {
   final ProfileService service = ProfileService();
@@ -26,7 +25,6 @@ class ProfileRepo {
     return await service.registerUser(
       first_name: first_name,
       last_name: last_name,
-      middle_name: middle_name,
       email: email,
       phone: phone,
       password: password,

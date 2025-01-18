@@ -1,7 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
-class CartEmptyWidget extends StatelessWidget {
+class CartEmptyWidget extends StatefulWidget {
   const CartEmptyWidget({super.key});
+
+  @override
+  State<CartEmptyWidget> createState() => _CartEmptyWidgetState();
+}
+
+class _CartEmptyWidgetState extends State<CartEmptyWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,29 +30,35 @@ class CartEmptyWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(40),
-            decoration: const BoxDecoration(
-                color: Color(0xFFE7A8A8), shape: BoxShape.circle),
-            child: const Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.white,
-              size: 180,
-            ),
+          Lottie.asset(
+            'assets/anima/cartEmpty.json',
+            controller: _controller,
+            onLoaded: (composition) {
+              _controller.duration = composition.duration;
+
+              _controller.forward();
+            },
           ),
           const SizedBox(height: 20),
-          const Text('Корзина пуста',
-              style:
-              TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+          const Text(
+            'Корзина пуста',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 6),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 50),
+            padding: EdgeInsets.symmetric(
+              horizontal: 50,
+            ),
             child: Text(
-                'Попробуйте что нибудь добавить, потом она здесь появится',
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: TextStyle(color: Colors.grey),
-                overflow: TextOverflow.ellipsis),
+              'Попробуйте что нибудь добавить, потом она здесь появится',
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(color: Colors.grey),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

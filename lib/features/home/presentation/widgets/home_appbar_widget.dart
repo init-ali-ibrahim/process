@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:process/core/router/routes.dart';
-import 'package:process/features/home/presentation/screens/search_screen.dart';
 
 class HomeAppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppbarWidget({
@@ -31,7 +30,7 @@ class HomeAppbarWidget extends StatelessWidget implements PreferredSizeWidget {
             color: Colors.red,
           ),
           onPressed: () {
-            SearchBottomSheet.show(context);
+            router.pushNamed(RouteNames.search.name);
           },
         ),
         IconButton(
