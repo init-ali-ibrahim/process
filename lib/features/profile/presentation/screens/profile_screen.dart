@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:process/core/entities/user.dart';
 import 'package:process/core/router/routes.dart';
+import 'package:process/core/util/logger.dart';
+import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
 import 'package:process/features/profile/presentation/widgets/profile/profile_appbar_widget.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
+  final storage = const FlutterSecureStorage();
+
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileState = ref.watch(profileProvider);
+    final User? user = profileState.user;
+
+    if (profileState.isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: const ProfileAppbarWidget(),
@@ -17,20 +36,81 @@ class ProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 14),
-              _buildProfileDataSection(),
-              const SizedBox(height: 30),
-              _buildSecondSection(),
-              const SizedBox(height: 14),
-              _buildSettingsSection(),
+              _buildProfileDataSection(user),
               const SizedBox(height: 30),
 
               ///
-              ElevatedButton(
-                onPressed: () {
-                  StaticBottomSheet.show(context);
-                },
-                child: const Text('Показать BottomSheet'),
-              ),
+              ///
+              ///
+              user != null
+                  ? Column(
+                      children: [
+                        _buildSecondSection(),
+                        const SizedBox(height: 14),
+                      ],
+                    )
+                  : const SizedBox(),
+              _buildSettingsSection(),
+
+              ///
+              ///
+              ///
+              const SizedBox(height: 30),
+
+              ///
+              // ElevatedButton(
+              //   onPressed: () {
+              //     StaticBottomSheet.show(context);
+              //   },
+              //   child: const Text('Показать BottomSheet'),
+              // ),
+              user != null
+                  ? SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 40,
+                      child: TextButton(
+                        onPressed: () async {
+                          await ref.read(profileProvider.notifier).logout();
+                        },
+                        style: TextButton.styleFrom(
+                          elevation: 1.5,
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12),
+                            ),
+                          ),
+                          shadowColor: Colors.grey.withOpacity(0.3),
+                        ),
+                        child: const Text(
+                          'Закрыть',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 40,
+                      child: TextButton(
+                        onPressed: () async {
+                          logger.i(await storage.read(key: 'token'));
+                        },
+                        style: TextButton.styleFrom(
+                          elevation: 1.5,
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12),
+                            ),
+                          ),
+                          shadowColor: Colors.grey.withOpacity(0.3),
+                        ),
+                        child: const Text(
+                          'token',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -38,88 +118,11 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileDataSection() {
-    // return Container(
-    //   decoration: BoxDecoration(
-    //     color: Colors.white,
-    //     borderRadius: const BorderRadius.all(
-    //       Radius.circular(12),
-    //     ),
-    //     boxShadow: [
-    //       BoxShadow(
-    //         color: Colors.black.withOpacity(0.1),
-    //         blurRadius: 1,
-    //         offset: const Offset(0, 1),
-    //       ),
-    //     ],
-    //   ),
-    //   child: Row(
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //     children: [
-    //       Row(
-    //         mainAxisAlignment: MainAxisAlignment.start,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //           Padding(
-    //             padding: const EdgeInsets.all(10),
-    //             child: CircleAvatar(
-    //                 radius: 32,
-    //                 backgroundColor: Colors.red[100],
-    //                 child: Icon(
-    //                   Icons.account_circle_outlined,
-    //                   color: Colors.red[900],
-    //                   size: 36,
-    //                 )),
-    //           ),
-    //           const SizedBox(
-    //             width: 4,
-    //           ),
-    //           const Column(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             children: [
-    //               Text(
-    //                 'Иван Иванов',
-    //                 style: TextStyle(
-    //                   fontSize: 16,
-    //                   fontWeight: FontWeight.w400,
-    //                 ),
-    //               ),
-    //               Text(
-    //                 'ivan@gmail.com',
-    //                 style: TextStyle(
-    //                   fontSize: 12,
-    //                   color: Colors.black,
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ],
-    //       ),
-    //       Padding(
-    //         padding: const EdgeInsets.only(right: 14),
-    //         child: IconButton(
-    //           onPressed: () {},
-    //           icon: const Icon(
-    //             Icons.edit_outlined,
-    //             size: 22,
-    //           ),
-    //         ),
-    //       )
-    //     ],
-    //   ),
-    // );
-
-    ///
-
-    return InkWell(
-      onTap: (){
-        router.pushNamed(RouteNames.register.name);
-      },
-      child: Container(
+  Widget _buildProfileDataSection(User? user) {
+    if (user != null) {
+      return Container(
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white,
           borderRadius: const BorderRadius.all(
             Radius.circular(12),
           ),
@@ -143,25 +146,32 @@ class ProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: CircleAvatar(
                       radius: 32,
-                      backgroundColor: Colors.grey[200],
+                      backgroundColor: Colors.red[100],
                       child: Icon(
                         Icons.account_circle_outlined,
-                        color: Colors.grey[700],
+                        color: Colors.red[900],
                         size: 36,
                       )),
                 ),
                 const SizedBox(
                   width: 4,
                 ),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Вы не вошли в аккаунт',
-                      style: TextStyle(
+                      '${user.firstName} ${user.lastName}',
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      user.phoneNumber,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -169,20 +179,94 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.only(right: 14),
               child: IconButton(
                 onPressed: () {},
                 icon: const Icon(
-                  Icons.chevron_right,
-                  size: 26,
-                  color: Colors.grey,
+                  Icons.edit_outlined,
+                  size: 22,
                 ),
               ),
             )
           ],
         ),
-      ),
-    );
+      );
+
+      ///
+    } else {
+      ///
+
+      return InkWell(
+        onTap: () {
+          router.pushNamed(RouteNames.register.name);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.9),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(12),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 1,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: CircleAvatar(
+                        radius: 32,
+                        backgroundColor: Colors.grey[200],
+                        child: Icon(
+                          Icons.account_circle_outlined,
+                          color: Colors.grey[700],
+                          size: 36,
+                        )),
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Вы не вошли в аккаунт',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.chevron_right,
+                    size: 26,
+                    color: Colors.grey,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildSettingsSection() {

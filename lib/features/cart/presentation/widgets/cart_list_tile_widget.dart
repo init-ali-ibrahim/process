@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/entities/cart_product.dart';
-import 'package:process/features/cart/presentation/riverpod/cartProvider.dart';
+import 'package:process/features/cart/presentation/riverpod/cart_riverpod.dart';
 
 class CartListTileWidget extends ConsumerWidget {
   const CartListTileWidget({super.key, required this.product, this.onRemove});

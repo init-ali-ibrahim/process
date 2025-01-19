@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:process/features/cart/presentation/riverpod/cartProvider.dart';
+import 'package:process/features/cart/presentation/riverpod/cart_riverpod.dart';
 import 'package:process/features/cart/presentation/widgets/cart_appbar_widget.dart';
 import 'package:process/features/cart/presentation/widgets/cart_bottom_widget.dart';
 import 'package:process/features/cart/presentation/widgets/cart_empty_widget.dart';

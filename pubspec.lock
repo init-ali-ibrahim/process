@@ -1305,7 +1305,7 @@ packages:
   provider:
     dependency: transitive
     description:
-      name: provider
+      name: riverpod
       sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c
       url: "https://pub.dev"
     source: hosted

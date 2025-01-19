@@ -1,29 +1,35 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:process/core/util/logger.dart';
+import 'package:process/features/profile/data/repo/profile_repo.dart';
+import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
 import 'package:process/features/profile/presentation/widgets/register/register_appbar_widget.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
   _RegisterScreen createState() => _RegisterScreen();
 }
 
-class _RegisterScreen extends State<RegisterScreen> {
+class _RegisterScreen extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
+  late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   late TextEditingController _passwordConfirmationController;
+  late ProfileRepo repo;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
+    repo = ProfileRepo();
+    _firstNameController = TextEditingController();
     _lastNameController = TextEditingController();
     _phoneController = TextEditingController();
     _emailController = TextEditingController();
@@ -37,6 +43,16 @@ class _RegisterScreen extends State<RegisterScreen> {
     mask: '+7 (###) ###-##-##',
     filter: {"#": RegExp(r'[0-9]')},
   );
+
+  String formatPhoneNumber(String input) {
+    String digitsOnly = input.replaceAll(RegExp(r'\D'), '');
+
+    if (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) {
+      digitsOnly = '7${digitsOnly.substring(1)}';
+    }
+
+    return digitsOnly;
+  }
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -82,9 +98,20 @@ class _RegisterScreen extends State<RegisterScreen> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
+      final phoneFormat = formatPhoneNumber(_phoneController.text);
 
+      await repo.register(
+        email: _emailController.text,
+        first_name: _firstNameController.text,
+        last_name: _lastNameController.text,
+        password: _passwordController.text,
+        password_confirm: _passwordConfirmationController.text,
+        phone: phoneFormat,
+      ).then((_) async {
+        await ref.read(profileProvider.notifier).getUser();
+      });
     }
   }
 
@@ -106,7 +133,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                   const SizedBox(height: 32),
 
                   TextFormField(
-                    controller: _nameController,
+                    controller: _firstNameController,
                     decoration: _getInputDecoration('Имя'),
                     validator: ValidationBuilder(localeName: 'ru')
                         .required('Введите имя')
@@ -142,7 +169,6 @@ class _RegisterScreen extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: _getInputDecoration('Email'),
@@ -162,7 +188,8 @@ class _RegisterScreen extends State<RegisterScreen> {
                         onPressed: _togglePasswordVisibility,
                       ),
                     ),
-                    validator: ValidationBuilder(localeName: 'ru').required('Введите пароль').minLength(8, 'Пароль должен содержать минимум 8 символов').build(),
+                    validator:
+                        ValidationBuilder(localeName: 'ru').required('Введите пароль').minLength(8, 'Пароль должен содержать минимум 8 символов').build(),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -216,7 +243,13 @@ class _RegisterScreen extends State<RegisterScreen> {
 
                   // Submit Button
                   ElevatedButton(
-                    onPressed: _submitForm,
+                    onPressed: () async {
+                      try {
+                        _submitForm();
+                      } catch (e) {
+                        logger.e(e);
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,

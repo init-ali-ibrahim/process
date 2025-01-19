@@ -1,44 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:process/features/search/presentation/riverpod/search_provider.dart';
 import 'package:process/features/search/presentation/widgets/search_appbar_widget.dart';
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends ConsumerState<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      ref.read(searchQueryProvider.notifier).state = _searchController.text;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final searchResults = ref.watch(searchResultsProvider);
+
     return Scaffold(
       appBar: const SearchAppbarWidget(),
       body: Container(
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.grey.shade200),
-        child: Expanded(
-          child: ListView.builder(
-            itemCount: 10,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.grey.shade200
+        ),
+        child: searchResults.when(
+          data: (results) => results.isEmpty
+              ? const Center(child: Text('Ничего не найдено'))
+              : ListView.builder(
+            itemCount: results.length,
             itemBuilder: (context, index) {
+              final category = results.keys.elementAt(index);
+              final products = results[category]!;
+
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Card(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      category,
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold
+                      ),
                     ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      title: Text('Search Result ${index + 1}'),
-                      subtitle: const Text('All Categories'),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    ),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: products.length,
+                    itemBuilder: (context, productIndex) {
+                      final product = products[productIndex];
+                      return ListTile(
+                        title: Text(product.name),
+                        subtitle: Text(product.slug),
+                        // Добавьте здесь дополнительные детали продукта
+                      );
+                    },
                   ),
                 ],
               );
             },
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(
+            child: Text('Ошибка: ${error.toString()}'),
           ),
         ),
       ),

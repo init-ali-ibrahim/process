@@ -104,7 +104,7 @@ class CartProductService {
   Future<int> calculateTotalPrice() async {
     try {
       final products = await getAllCartProducts();
-      return products.fold(0, (sum, product) => product.price * product.quantity);
+      return products.fold<int>(0, (sum, product) => sum + (product.price * product.quantity));
     } catch (e) {
       logger.e("e: $e");
       return 0;

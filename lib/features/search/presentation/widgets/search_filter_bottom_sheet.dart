@@ -1,29 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:process/core/entities/category.dart';
+import 'package:process/features/search/data/service/search_service.dart';
+import 'package:process/features/search/presentation/riverpod/search_provider.dart';
 
-String? selectedCity = 'Алматы';
-List<String> selectedCategories = [
-  'Restaurants',
-  'Shopping',
-  'Entertainment',
-  'Services',
-];
+final categoriesProvider = FutureProvider<List<Category>>((ref) async {
+  final searchService = SearchService();
+  return await searchService.getCategoryProducts();
+});
 
-final List<String> cities = [
-  'Алматы',
-  'Астана',
-  'Петропавслк',
-  'Актобе',
-];
+final selectedCategoriesProvider = StateProvider<List<String>>((ref) => []);
 
-final List<String> categories = [
-  'Restaurants',
-  'Shopping',
-  'Entertainment',
-  'Services',
-];
-
-
-void showFilterMenu(BuildContext context) {
+void showFilterMenu(BuildContext context, WidgetRef ref) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -31,8 +19,11 @@ void showFilterMenu(BuildContext context) {
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, setMenuState) {
+      return Consumer(
+        builder: (context, ref, child) {
+          final categoriesAsync = ref.watch(categoriesProvider);
+          final selectedCategories = ref.watch(selectedCategoriesProvider);
+
           return Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -48,7 +39,7 @@ void showFilterMenu(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Filters',
+                        'Фильтры',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -61,7 +52,7 @@ void showFilterMenu(BuildContext context) {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  // Cities Filter
+                  // City Filter (статичный для Алматы)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
@@ -80,36 +71,19 @@ void showFilterMenu(BuildContext context) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Cities',
+                          'Город',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Wrap(
-                          spacing: 12,
-                          children: cities.map((city) {
-                            final isSelected = selectedCity == city;
-                            return ChoiceChip(
-                              selected: isSelected,
-                              label: Text(city),
-                              selectedColor: Colors.red,
-                              backgroundColor: Colors.grey[100],
-                              labelStyle: TextStyle(
-                                color: isSelected ? Colors.white : Colors.black,
-                              ),
-                              onSelected: (bool selected) {
-                                if (selected) {
-                                  setMenuState(() {
-                                    // setState(() {
-                                    //   selectedCity = city;
-                                    // });
-                                  });
-                                }
-                              },
-                            );
-                          }).toList(),
+                        const ChoiceChip(
+                          selected: true,
+                          label: Text('Алматы'),
+                          selectedColor: Colors.red,
+                          labelStyle: TextStyle(color: Colors.white),
+                          onSelected: null, // Disabled since we only use Almaty
                         ),
                       ],
                     ),
@@ -134,38 +108,46 @@ void showFilterMenu(BuildContext context) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Categories',
+                          'Категории',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Wrap(
-                          spacing: 12,
-                          children: categories.map((category) {
-                            final isSelected = selectedCategories.contains(category);
-                            return FilterChip(
-                              selected: isSelected,
-                              label: Text(category),
-                              selectedColor: Colors.red,
-                              backgroundColor: Colors.grey[100],
-                              labelStyle: TextStyle(
-                                color: isSelected ? Colors.white : Colors.black,
-                              ),
-                              onSelected: (bool selected) {
-                                setMenuState(() {
-                                  // setState(() {
-                                  //   if (selected) {
-                                  //     selectedCategories.add(category);
-                                  //   } else {
-                                  //     selectedCategories.remove(category);
-                                  //   }
-                                  // });
-                                });
-                              },
-                            );
-                          }).toList(),
+                        categoriesAsync.when(
+                          data: (categories) => Wrap(
+                            spacing: 12,
+                            children: categories.map((category) {
+                              final isSelected = selectedCategories.contains(category.name);
+                              return FilterChip(
+                                selected: isSelected,
+                                label: Text(category.name),
+                                selectedColor: Colors.red,
+                                backgroundColor: Colors.grey[100],
+                                labelStyle: TextStyle(
+                                  color: isSelected ? Colors.white : Colors.black,
+                                ),
+                                onSelected: (bool selected) {
+                                  if (selected) {
+                                    ref.read(selectedCategoriesProvider.notifier)
+                                        .state = [...selectedCategories, category.name];
+                                  } else {
+                                    ref.read(selectedCategoriesProvider.notifier)
+                                        .state = selectedCategories
+                                        .where((name) => name != category.name)
+                                        .toList();
+                                  }
+                                },
+                              );
+                            }).toList(),
+                          ),
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          error: (error, stack) => Center(
+                            child: Text('Ошибка загрузки категорий: $error'),
+                          ),
                         ),
                       ],
                     ),
@@ -176,14 +158,21 @@ void showFilterMenu(BuildContext context) {
                     width: double.infinity,
                     height: 50,
                     child: TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        // Обновляем поиск при применении фильтров
+                        ref.invalidate(searchResultsProvider);
+                        Navigator.pop(context);
+                      },
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Apply Filters'),
+                      child: const Text(
+                        'Применить фильтры',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),

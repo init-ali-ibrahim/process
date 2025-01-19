@@ -5,7 +5,7 @@ import 'package:process/core/entities/product.dart';
 import 'package:process/core/router/routes.dart';
 import 'package:process/core/util/logger.dart';
 import 'package:process/core/util/nil_protect.dart';
-import 'package:process/features/cart/presentation/riverpod/cartProvider.dart';
+import 'package:process/features/cart/presentation/riverpod/cart_riverpod.dart';
 
 class DetailProductScreen extends ConsumerWidget {
   const DetailProductScreen({super.key, required this.product});

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/router/routes.dart';
+import 'package:process/features/search/presentation/riverpod/search_provider.dart';
 import 'package:process/features/search/presentation/widgets/search_filter_bottom_sheet.dart';
 
 class SearchAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
-  const SearchAppbarWidget({
-    super.key,
-  });
+  const SearchAppbarWidget({super.key});
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 70);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final searchController = TextEditingController(text: ref.watch(searchQueryProvider));
+
     return AppBar(
       toolbarHeight: kToolbarHeight + 10,
       automaticallyImplyLeading: false,
@@ -18,13 +22,11 @@ class SearchAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
       elevation: 1,
       shadowColor: Colors.grey.shade50,
       title: const Text(
-        'Пойск',
+        'Поиск',
         style: TextStyle(fontWeight: FontWeight.w500),
       ),
       leading: IconButton(
-        onPressed: () {
-          router.pop();
-        },
+        onPressed: () => router.pop(),
         icon: const Icon(Icons.arrow_back),
       ),
       bottom: PreferredSize(
@@ -42,8 +44,12 @@ class SearchAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: searchController,
+                  onChanged: (value) {
+                    ref.read(searchQueryProvider.notifier).state = value;
+                  },
+                  decoration: const InputDecoration(
                     hintText: 'Что будем искать?',
                     hintStyle: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey),
                     prefixIcon: Icon(Icons.search),
@@ -61,29 +67,13 @@ class SearchAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
               ),
               child: IconButton(
                 icon: const Icon(Icons.tune),
-                onPressed: () {
-                  showFilterMenu(context);
-                },
+                onPressed: () => showFilterMenu(context, ref),
               ),
             ),
             const SizedBox(width: 16),
           ],
         ),
       ),
-
-      ///
-      // actions: [
-      //   Padding(
-      //     padding: const EdgeInsets.only(right: 4),
-      //     child: IconButton(
-      //       onPressed: () async {},
-      //       icon: const Icon(Icons.logout),
-      //     ),
-      //   ),
-      // ],
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 60 + 10);
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:process/features/cart/presentation/riverpod/cartProvider.dart';
+import 'package:process/features/cart/presentation/riverpod/cart_riverpod.dart';
 
 class CartBottomWidget extends ConsumerWidget {
   const CartBottomWidget({super.key});
@@ -30,10 +30,15 @@ class CartBottomWidget extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Итоговая цена'),
-              Text(
-                '${cartRiverpod.totalPrice}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              )
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 100),
+                transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+                child: Text(
+                  '₸ ${cartRiverpod.totalPrice}',
+                  key: ValueKey<int>(cartRiverpod.totalPrice),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
             ],
           ),
           TextButton(

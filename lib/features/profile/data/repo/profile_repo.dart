@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:process/core/entities/user.dart';
 import 'package:process/features/profile/data/service/profile_service.dart';
 
 class ProfileRepo {
@@ -16,7 +18,6 @@ class ProfileRepo {
   Future<void> register({
     required String first_name,
     required String last_name,
-    required String middle_name,
     required String email,
     required String phone,
     required String password,
@@ -31,4 +32,10 @@ class ProfileRepo {
       password_confirm: password_confirm,
     );
   }
+
+  Future<User> getUser() async{
+    return await service.getUser();
+  }
 }
+
+final profileRepoProvider = Provider((ref) => ProfileRepo());
