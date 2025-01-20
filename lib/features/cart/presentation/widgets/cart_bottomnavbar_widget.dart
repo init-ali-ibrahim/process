@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/features/cart/presentation/riverpod/cart_riverpod.dart';
+import 'package:process/features/cart/presentation/widgets/cart_bottom_sheet_widget.dart';
 
-class CartBottomWidget extends ConsumerWidget {
-  const CartBottomWidget({super.key});
+class CartBottomnavbarWidget extends ConsumerWidget {
+  const CartBottomnavbarWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +43,14 @@ class CartBottomWidget extends ConsumerWidget {
             ],
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const CartBottomSheetWidget(),
+              );
+            },
             style: TextButton.styleFrom(
               shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
               backgroundColor: Colors.red,
