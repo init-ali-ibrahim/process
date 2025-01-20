@@ -45,9 +45,9 @@ class SearchAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TextField(
-                  controller: searchController,
+                  // controller: searchController,
                   onChanged: (value) {
-                    ref.read(searchQueryProvider.notifier).state = value;
+                    // ref.read(searchQueryProvider.notifier).state = value;
                   },
                   decoration: const InputDecoration(
                     hintText: 'Что будем искать?',

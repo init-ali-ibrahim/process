@@ -7,8 +7,4 @@ class SearchRepo {
   Future<Map<String, List<Product>>> getAllProducts(String citySlug) async {
     return await service.getAllProducts(citySlug);
   }
-
-// Future<List<Product>> searchProduct(String citySlug, String query) async {
-//   return await service.searchProducts(citySlug, query);
-// }
 }

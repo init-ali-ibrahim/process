@@ -12,16 +12,27 @@ class ProfileScreen extends ConsumerWidget {
 
   final storage = const FlutterSecureStorage();
 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileProvider);
-    final User? user = profileState.user;
+    final user = profileState.user;
+
+    logger.i('Current user: $user');
+    logger.i('Is loading: ${profileState.isLoading}');
+    logger.i('Error: ${profileState.error}');
 
     if (profileState.isLoading) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (profileState.error != null) {
+      return Scaffold(
+        body: Center(
+          child: Text('Ошибка: ${profileState.error}'),
         ),
       );
     }
@@ -38,10 +49,6 @@ class ProfileScreen extends ConsumerWidget {
               const SizedBox(height: 14),
               _buildProfileDataSection(user),
               const SizedBox(height: 30),
-
-              ///
-              ///
-              ///
               user != null
                   ? Column(
                       children: [
@@ -51,26 +58,26 @@ class ProfileScreen extends ConsumerWidget {
                     )
                   : const SizedBox(),
               _buildSettingsSection(),
-
-              ///
-              ///
-              ///
               const SizedBox(height: 30),
-
-              ///
-              // ElevatedButton(
-              //   onPressed: () {
-              //     StaticBottomSheet.show(context);
-              //   },
-              //   child: const Text('Показать BottomSheet'),
-              // ),
               user != null
                   ? SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 40,
                       child: TextButton(
                         onPressed: () async {
-                          await ref.read(profileProvider.notifier).logout();
+                          try {
+                            logger.i('Logging out...');
+                            await ref.read(profileProvider.notifier).logout();
+                            logger.i('Logout completed');
+                            final token = await storage.read(key: 'token');
+                            logger.i('Token after logout: $token');
+                            ref.refresh(profileProvider);
+                          } catch (e) {
+                            logger.e('Logout error: $e');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Ошибка при выходе: ${e.toString()}')),
+                            );
+                          }
                         },
                         style: TextButton.styleFrom(
                           elevation: 1.5,
@@ -83,34 +90,12 @@ class ProfileScreen extends ConsumerWidget {
                           shadowColor: Colors.grey.withOpacity(0.3),
                         ),
                         child: const Text(
-                          'Закрыть',
+                          'Выйти',
                           style: TextStyle(color: Colors.red),
                         ),
                       ),
                     )
-                  : SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 40,
-                      child: TextButton(
-                        onPressed: () async {
-                          logger.i(await storage.read(key: 'token'));
-                        },
-                        style: TextButton.styleFrom(
-                          elevation: 1.5,
-                          backgroundColor: Colors.white,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12),
-                            ),
-                          ),
-                          shadowColor: Colors.grey.withOpacity(0.3),
-                        ),
-                        child: const Text(
-                          'token',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ),
+                  : const SizedBox(),
             ],
           ),
         ),
@@ -268,6 +253,14 @@ class ProfileScreen extends ConsumerWidget {
       );
     }
   }
+
+  ///
+  // ElevatedButton(
+  //   onPressed: () {
+  //     StaticBottomSheet.show(context);
+  //   },
+  //   child: const Text('Показать BottomSheet'),
+  // ),
 
   Widget _buildSettingsSection() {
     return Material(

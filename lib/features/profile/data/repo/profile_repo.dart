@@ -33,7 +33,7 @@ class ProfileRepo {
     );
   }
 
-  Future<User> getUser() async{
+  Future<User?> getUser() async{
     return await service.getUser();
   }
 }

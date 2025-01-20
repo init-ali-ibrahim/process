@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:process/core/entities/product.dart';
+import 'package:process/core/entities/product.dart' as Product;
 import 'package:process/core/router/route_guard.dart';
 import 'package:process/features/cart/presentation/screens/cart_screen.dart';
 import 'package:process/features/detail_product/presentation/screens/detail_product_screen.dart';
@@ -33,6 +33,7 @@ final guard = RouteGuard();
 final router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: RouteNames.home.path,
+    debugLogDiagnostics: true,
     redirect: (context, state) async {
       // return await guard.someMethod();
       return null;
@@ -48,7 +49,7 @@ final router = GoRouter(
           name: RouteNames.singleProduct.name,
           builder: (context, state) {
             final Map<String, dynamic> extraData = state.extra as Map<String, dynamic>;
-            final Product product = extraData['product'];
+            final Product.Product product = extraData['product'];
             return DetailProductScreen(product: product);
           }
       ),

@@ -97,11 +97,13 @@ class ProfileService {
   ///
   ///
   ///
-  Future<UserModel> getUser() async {
+  Future<UserModel?> getUser() async {
     const baseUrl = 'https://admin.samalcakes.kz/api/v1/auth/check';
 
     final token = await storage.read(key: 'token');
-
+    if (token == null) {
+      return null;
+    }
     final Map<String, dynamic> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -124,7 +126,7 @@ class ProfileService {
       }
     } on DioException catch (e) {
       logger.e('e: ${e.response}');
-      rethrow;
+      throw Exception('e: ${e.message}');
     }
   }
 }

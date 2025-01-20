@@ -62,24 +62,4 @@ class SearchService {
       throw Exception('e: $e');
     }
   }
-
-
-// Future<List<ProductModel>> searchProducts(String citySlug, String query) async {
-//   try {
-//     final response = await dio.get(
-//       'https://admin.samalcakes.kz/api/v1/catalog/products',
-//       queryParameters: {'search': query},
-//       options: Options(headers: {'City': citySlug}),
-//     );
-//
-//     if (response.statusCode == 200 || response.statusCode == 201) {
-//       final List<dynamic> data = response.data;
-//       return data.map((json) => ProductModel.fromJson(json)).toList();
-//     } else {
-//       throw Exception('statusCode: ${response.statusCode}');
-//     }
-//   } catch (e) {
-//     throw Exception('searchProducts() error: $e');
-//   }
-// }
 }
