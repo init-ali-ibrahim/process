@@ -17,10 +17,6 @@ class ProfileScreen extends ConsumerWidget {
     final profileState = ref.watch(profileProvider);
     final user = profileState.user;
 
-    logger.i('Current user: $user');
-    logger.i('Is loading: ${profileState.isLoading}');
-    logger.i('Error: ${profileState.error}');
-
     if (profileState.isLoading) {
       return const Scaffold(
         body: Center(
@@ -47,7 +43,7 @@ class ProfileScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 14),
-              _buildProfileDataSection(user),
+              _buildProfileDataSection(user, context),
               const SizedBox(height: 30),
               user != null
                   ? Column(
@@ -66,17 +62,10 @@ class ProfileScreen extends ConsumerWidget {
                       child: TextButton(
                         onPressed: () async {
                           try {
-                            logger.i('Logging out...');
                             await ref.read(profileProvider.notifier).logout();
-                            logger.i('Logout completed');
-                            final token = await storage.read(key: 'token');
-                            logger.i('Token after logout: $token');
                             ref.refresh(profileProvider);
                           } catch (e) {
-                            logger.e('Logout error: $e');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Ошибка при выходе: ${e.toString()}')),
-                            );
+                            logger.e('e: $e');
                           }
                         },
                         style: TextButton.styleFrom(
@@ -103,7 +92,7 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProfileDataSection(User? user) {
+  Widget _buildProfileDataSection(User? user, BuildContext context) {
     if (user != null) {
       return Container(
         decoration: BoxDecoration(
@@ -183,7 +172,8 @@ class ProfileScreen extends ConsumerWidget {
 
       return InkWell(
         onTap: () {
-          router.pushNamed(RouteNames.register.name);
+          // router.pushNamed(RouteNames.register.name);
+          StaticBottomSheet.show(context);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -254,14 +244,6 @@ class ProfileScreen extends ConsumerWidget {
     }
   }
 
-  ///
-  // ElevatedButton(
-  //   onPressed: () {
-  //     StaticBottomSheet.show(context);
-  //   },
-  //   child: const Text('Показать BottomSheet'),
-  // ),
-
   Widget _buildSettingsSection() {
     return Material(
       elevation: 1.5,
@@ -303,15 +285,6 @@ class ProfileScreen extends ConsumerWidget {
                   style: TextStyle(color: Colors.grey, fontSize: 11),
                 ),
                 onTap: () {}),
-
-            ///
-            // _buildCustomDivider(),
-            // _buildSettingsTile(
-            //   icon: Icons.notifications_outlined,
-            //   onTap: () {},
-            //   title: 'Уведомления',
-            // ),
-            ///
 
             _buildCustomDivider(),
             _buildSettingsTile(

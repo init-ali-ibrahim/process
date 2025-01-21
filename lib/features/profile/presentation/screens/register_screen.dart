@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:process/core/router/routes.dart';
 import 'package:process/core/util/logger.dart';
 import 'package:process/features/profile/data/repo/profile_repo.dart';
 import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
@@ -100,18 +101,24 @@ class _RegisterScreen extends ConsumerState<RegisterScreen> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      final phoneFormat = formatPhoneNumber(_phoneController.text);
 
-      await repo.register(
-        email: _emailController.text,
-        first_name: _firstNameController.text,
-        last_name: _lastNameController.text,
-        password: _passwordController.text,
-        password_confirm: _passwordConfirmationController.text,
-        phone: phoneFormat,
-      ).then((_) async {
-        await ref.read(profileProvider.notifier).getUser();
-      });
+      try {
+        final phoneFormat = formatPhoneNumber(_phoneController.text);
+
+        await repo.register(
+          email: _emailController.text,
+          first_name: _firstNameController.text,
+          last_name: _lastNameController.text,
+          password: _passwordController.text,
+          password_confirm: _passwordConfirmationController.text,
+          phone: phoneFormat,
+        ).then((_) async {
+          await ref.read(profileProvider.notifier).getUser();
+          router.pop();
+        });
+      } catch (e) {
+        logger.e('e: $e');
+      }
     }
   }
 
@@ -188,8 +195,7 @@ class _RegisterScreen extends ConsumerState<RegisterScreen> {
                         onPressed: _togglePasswordVisibility,
                       ),
                     ),
-                    validator:
-                        ValidationBuilder(localeName: 'ru').required('Введите пароль').minLength(8, 'Пароль должен содержать минимум 8 символов').build(),
+                    validator: ValidationBuilder(localeName: 'ru').required('Введите пароль').minLength(8, 'Пароль должен содержать минимум 8 символов').build(),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(

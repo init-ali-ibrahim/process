@@ -54,7 +54,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   //   try {
   //     state = state.copyWith(isLoading: true, error: null);
   //     state = state.copyWith(user: null);
-  //     await storage.delete(key: 'token');
+  //     await storage.delet e(key: 'token');
   //     state = state.copyWith(isLoading: false);
   //     await getUser();
   //   } catch (e) {

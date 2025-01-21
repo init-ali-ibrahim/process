@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/entities/user.dart';
+import 'package:process/core/util/logger.dart';
 import 'package:process/features/profile/data/service/profile_service.dart';
 
 class ProfileRepo {
@@ -9,10 +10,15 @@ class ProfileRepo {
     required String phone,
     required String password,
   }) async {
-    return await service.loginUser(
-      phone: phone,
-      password: password,
-    );
+    try {
+      return await service.loginUser(
+        phone: phone,
+        password: password,
+      );
+    } catch (e) {
+      logger.e('e: $e');
+      throw Exception('e: $e');
+    }
   }
 
   Future<void> register({
@@ -23,17 +29,22 @@ class ProfileRepo {
     required String password,
     required String password_confirm,
   }) async {
-    return await service.registerUser(
-      first_name: first_name,
-      last_name: last_name,
-      email: email,
-      phone: phone,
-      password: password,
-      password_confirm: password_confirm,
-    );
+    try {
+      return await service.registerUser(
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        phone: phone,
+        password: password,
+        password_confirm: password_confirm,
+      );
+    } catch (e) {
+      logger.e('e: $e');
+      throw Exception('e: $e');
+    }
   }
 
-  Future<User?> getUser() async{
+  Future<User?> getUser() async {
     return await service.getUser();
   }
 }

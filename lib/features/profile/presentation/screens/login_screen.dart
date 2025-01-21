@@ -1,44 +1,54 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:process/core/router/routes.dart';
+import 'package:process/core/util/logger.dart';
+import 'package:process/features/profile/data/repo/profile_repo.dart';
+import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
 import 'package:process/features/profile/presentation/widgets/register/register_appbar_widget.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreen();
+  _LoginScreen createState() => _LoginScreen();
 }
 
-class _LoginScreen extends State<LoginScreen> {
+class _LoginScreen extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _phoneController;
   late TextEditingController _passwordController;
+  late ProfileRepo repo;
 
   @override
   void initState() {
     super.initState();
+    repo = ProfileRepo();
     _phoneController = TextEditingController();
     _passwordController = TextEditingController();
   }
 
   bool _obscureText = true;
-  bool _obscureTextR = true;
   final maskFormatter = MaskTextInputFormatter(
     mask: '+7 (###) ###-##-##',
     filter: {"#": RegExp(r'[0-9]')},
   );
 
+  String formatPhoneNumber(String input) {
+    String digitsOnly = input.replaceAll(RegExp(r'\D'), '');
+
+    if (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) {
+      digitsOnly = '7${digitsOnly.substring(1)}';
+    }
+
+    return digitsOnly;
+  }
+
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
-    });
-  }
-
-  void _togglePasswordVisibilityR() {
-    setState(() {
-      _obscureTextR = !_obscureTextR;
     });
   }
 
@@ -74,9 +84,22 @@ class _LoginScreen extends State<LoginScreen> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
+      try {
+        final phoneFormat = formatPhoneNumber(_phoneController.text);
 
+        await repo.login(
+          phone: phoneFormat,
+          password: _passwordController.text,
+        )
+            .then((_) async {
+          await ref.read(profileProvider.notifier).getUser();
+          router.pop();
+        });
+      } catch (e) {
+        logger.e('e: $e');
+      }
     }
   }
 
@@ -128,7 +151,6 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                     validator: ValidationBuilder(localeName: 'ru').required('Введите пароль').minLength(8, 'Пароль должен содержать минимум 8 символов').build(),
                   ),
-
                   const SizedBox(height: 32),
 
                   RichText(
@@ -154,8 +176,15 @@ class _LoginScreen extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
+                  // Submit Button
                   ElevatedButton(
-                    onPressed: _submitForm,
+                    onPressed: () async {
+                      try {
+                        _submitForm();
+                      } catch (e) {
+                        logger.e(e);
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,

@@ -9,9 +9,6 @@ class ProfileService {
   final Dio dio = Dio();
   final storage = const FlutterSecureStorage();
 
-  ///
-  ///
-  ///
   Future<void> loginUser({
     required String phone,
     required String password,
@@ -35,19 +32,19 @@ class ProfileService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        logger.i('good: ${response.data}');
+        final data = response.data;
+        final token = data['token'];
+        await storage.write(key: 'token', value: token);
       } else {
-        throw Exception('e: e');
+        logger.e('e: ${response.statusCode}');
+        throw Exception('e: ${response.statusCode}');
       }
     } on DioException catch (e) {
       logger.e('e: ${e.response}');
-      rethrow;
+      throw Exception('e: ${e.message}');
     }
   }
 
-  ///
-  ///
-  ///
   Future<void> registerUser({
     required String first_name,
     required String last_name,
@@ -79,24 +76,19 @@ class ProfileService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        logger.i('good: ${response.data}');
         final data = response.data;
         final token = data['token'];
-
         await storage.write(key: 'token', value: token);
-
       } else {
-        throw Exception('e: e');
+        logger.e('e: ${response.statusCode}');
+        throw Exception('e: ${response.statusCode}');
       }
     } on DioException catch (e) {
       logger.e('e: ${e.response}');
-      rethrow;
+      throw Exception('e: ${e.message}');
     }
   }
 
-  ///
-  ///
-  ///
   Future<UserModel?> getUser() async {
     const baseUrl = 'https://admin.samalcakes.kz/api/v1/auth/check';
 
@@ -116,13 +108,12 @@ class ProfileService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        logger.i('good: ${response.data}');
         final data = response.data;
 
         return UserModel.fromJson(data['data']);
-
       } else {
-        throw Exception('e: e');
+        logger.e('e: ${response.statusCode}');
+        throw Exception('e: ${response.statusCode}');
       }
     } on DioException catch (e) {
       logger.e('e: ${e.response}');
