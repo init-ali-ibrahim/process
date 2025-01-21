@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/router/routes.dart';
 
-class RegisterAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
-  const RegisterAppbarWidget({
+class LoginAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
+  const LoginAppbarWidget({
     super.key,
   });
 

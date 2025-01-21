@@ -7,7 +7,7 @@ import 'package:process/core/router/routes.dart';
 import 'package:process/core/util/logger.dart';
 import 'package:process/features/profile/data/repo/profile_repo.dart';
 import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
-import 'package:process/features/profile/presentation/widgets/register/register_appbar_widget.dart';
+import 'package:process/features/profile/presentation/widgets/login/login_appbar_widget.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -108,7 +108,7 @@ class _LoginScreen extends ConsumerState<LoginScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.grey.shade100,
-      appBar: const RegisterAppbarWidget(),
+      appBar: const LoginAppbarWidget(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(

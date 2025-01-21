@@ -15,15 +15,15 @@ class ProfileAppbarWidget extends ConsumerWidget implements PreferredSizeWidget 
         'Профиль',
         style: TextStyle(fontWeight: FontWeight.w500),
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 4),
-          child: IconButton(
-            onPressed: () async {},
-            icon: const Icon(Icons.logout),
-          ),
-        ),
-      ],
+      // actions: [
+      //   Padding(
+      //     padding: const EdgeInsets.only(right: 4),
+      //     child: IconButton(
+      //       onPressed: () async {},
+      //       icon: const Icon(Icons.logout),
+      //     ),
+      //   ),
+      // ],
       leading: IconButton(
         onPressed: () {
           router.pop();

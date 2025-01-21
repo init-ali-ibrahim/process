@@ -75,12 +75,12 @@ final router = GoRouter(
       GoRoute(
         path: RouteNames.register.path,
         name: RouteNames.register.name,
-        builder: (context, state) => RegisterScreen(),
+        builder: (context, state) => const RegisterScreen(),
       ),
 
       GoRoute(
         path: RouteNames.login.path,
         name: RouteNames.login.name,
-        builder: (context, state) => LoginScreen(),
+        builder: (context, state) => const LoginScreen(),
       ),
     ]);
