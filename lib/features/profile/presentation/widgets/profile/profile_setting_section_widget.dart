@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider.dart';
-import 'package:process/features/profile/presentation/widgets/profile/settings_tile.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider_widget.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_tile_widget.dart';
 
-class SettingsSection extends StatelessWidget {
-  const SettingsSection({super.key});
+class ProfileSettingsSectionWidget extends StatelessWidget {
+  const ProfileSettingsSectionWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class SettingsSection extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
               ),
             ),
-            SettingsTile(
+            ProfileSettingTileWidget(
               icon: Icons.location_on_outlined,
               title: 'Город',
               onTap: () {},
@@ -36,8 +36,8 @@ class SettingsSection extends StatelessWidget {
                 style: TextStyle(color: Colors.grey, fontSize: 11),
               ),
             ),
-            const ProfileCustomDivider(),
-            SettingsTile(
+            const ProfileCustomDividerWidget(),
+            ProfileSettingTileWidget(
               icon: Icons.language,
               title: 'Язык',
               trailing: const Text(
@@ -46,34 +46,10 @@ class SettingsSection extends StatelessWidget {
               ),
               onTap: () {},
             ),
-            const ProfileCustomDivider(),
-            SettingsTile(
+            const ProfileCustomDividerWidget(),
+            ProfileSettingTileWidget(
               icon: Icons.dark_mode_outlined,
               title: 'Тема',
-              onTap: () {},
-            ),
-            const ProfileCustomDivider(),
-            SettingsTile(
-              icon: Icons.home_repair_service_outlined,
-              title: 'О приложении',
-              onTap: () {},
-            ),
-            const ProfileCustomDivider(),
-            SettingsTile(
-              icon: Icons.support_agent,
-              title: 'Поддержка',
-              onTap: () {},
-            ),
-            const ProfileCustomDivider(),
-            SettingsTile(
-              icon: Icons.insert_page_break_outlined,
-              title: 'Доки',
-              onTap: () {},
-            ),
-            const ProfileCustomDivider(),
-            SettingsTile(
-              icon: Icons.find_in_page_outlined,
-              title: 'Политика конфиденциальности',
               onTap: () {},
             ),
           ],

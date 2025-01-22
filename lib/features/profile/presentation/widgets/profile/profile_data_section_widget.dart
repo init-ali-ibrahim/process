@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:process/core/entities/user.dart';
-import 'package:process/features/profile/presentation/widgets/profile/static_bottom_sheet.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_bottom_sheet_widget.dart';
 
-class ProfileDataSection extends StatelessWidget {
+class ProfileDataSectionWidget extends StatelessWidget {
   final User? user;
 
-  const ProfileDataSection({super.key, required this.user});
+  const ProfileDataSectionWidget({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

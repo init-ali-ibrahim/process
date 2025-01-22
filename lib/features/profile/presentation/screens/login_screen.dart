@@ -13,7 +13,7 @@ class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreen createState() => _LoginScreen();
+  ConsumerState<LoginScreen> createState() => _LoginScreen();
 }
 
 class _LoginScreen extends ConsumerState<LoginScreen> {

@@ -30,6 +30,7 @@ class ProfileAppbarWidget extends ConsumerWidget implements PreferredSizeWidget 
         },
         icon: const Icon(Icons.arrow_back),
       ),
+      backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
       centerTitle: true,
       surfaceTintColor: Colors.white,

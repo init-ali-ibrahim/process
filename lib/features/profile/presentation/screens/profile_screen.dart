@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
 import 'package:process/features/profile/presentation/widgets/profile/profile_appbar_widget.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_data_section.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_logout_button.dart';
-import 'package:process/features/profile/presentation/widgets/profile/second_section.dart';
-import 'package:process/features/profile/presentation/widgets/profile/settings_section.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_data_section_widget.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_help_section_widget.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_logout_button_widget.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_second_section_widget.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_setting_section_widget.dart';
 import 'package:process/core/util/logger.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -42,41 +43,15 @@ class ProfileScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 14),
-              ProfileDataSection(user: user),
+              ProfileDataSectionWidget(user: user),
               const SizedBox(height: 30),
-              if (user != null) const SecondSection(),
+              if (user != null) const ProfileSecondSectionWidget(),
               if (user != null) const SizedBox(height: 14),
-              const SettingsSection(),
+              const ProfileSettingsSectionWidget(),
+              const SizedBox(height: 14),
+              const ProfileHelpSectionWidget(),
               if (user != null) const SizedBox(height: 14),
-              if (user != null)
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 40,
-                  child: TextButton(
-                    onPressed: () async {
-                      try {
-                        await ref.read(profileProvider.notifier).logout();
-                        ref.refresh(profileProvider);
-                      } catch (e) {
-                        logger.e('e: $e');
-                      }
-                    },
-                    style: TextButton.styleFrom(
-                      elevation: 1.5,
-                      backgroundColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12),
-                        ),
-                      ),
-                      shadowColor: Colors.grey.withOpacity(0.3),
-                    ),
-                    child: const Text(
-                      'Выйти',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                ),
+              if (user != null) const ProfileLogoutButtonWidget(),
             ],
           ),
         ),

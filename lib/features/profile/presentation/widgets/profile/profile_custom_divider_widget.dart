@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class ProfileCustomDivider extends StatelessWidget {
+class ProfileCustomDividerWidget extends StatelessWidget {
   final double? indent;
   final double? endIndent;
 
-  const ProfileCustomDivider({super.key, this.indent = 18, this.endIndent = 18});
+  const ProfileCustomDividerWidget({super.key, this.indent = 18, this.endIndent = 18});
 
   @override
   Widget build(BuildContext context) {

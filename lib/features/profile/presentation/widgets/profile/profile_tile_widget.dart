@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SettingsTile extends StatelessWidget {
+class ProfileSettingTileWidget extends StatelessWidget {
   final IconData icon;
   final String title;
   final Widget? trailing;
   final VoidCallback? onTap;
   final Color? tileColor;
 
-  const SettingsTile({
+  const ProfileSettingTileWidget({
     super.key,
     required this.icon,
     required this.title,

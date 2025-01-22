@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:process/core/router/routes.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider.dart';
-import 'package:process/features/profile/presentation/widgets/profile/settings_tile.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider_widget.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_tile_widget.dart';
 
 class StaticBottomSheet {
   static void show(BuildContext context) {
@@ -33,11 +33,11 @@ class StaticBottomSheet {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 14),
-                SettingsTile(icon: Icons.language, title: 'Казакша', onTap: () {}),
-                const ProfileCustomDivider(),
-                SettingsTile(icon: Icons.language, title: 'Русский', onTap: () {}),
-                const ProfileCustomDivider(),
-                SettingsTile(icon: Icons.language, title: 'Английский', onTap: () {}),
+                ProfileSettingTileWidget(icon: Icons.language, title: 'Казакша', onTap: () {}),
+                const ProfileCustomDividerWidget(),
+                ProfileSettingTileWidget(icon: Icons.language, title: 'Русский', onTap: () {}),
+                const ProfileCustomDividerWidget(),
+                ProfileSettingTileWidget(icon: Icons.language, title: 'Английский', onTap: () {}),
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/service/cart_product_service.dart';
 import 'package:process/core/util/logger.dart';
-import 'package:process/core/util/scaffold_messanger.dart';
+import 'package:process/core/util/scaffold_messenger.dart';
 
 class CartAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
   const CartAppbarWidget({
