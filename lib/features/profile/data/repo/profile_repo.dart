@@ -45,7 +45,12 @@ class ProfileRepo {
   }
 
   Future<User?> getUser() async {
-    return await service.getUser();
+    try {
+      return await service.getUser();
+    } catch (e) {
+      logger.e('e: $e');
+      throw Exception('e: $e');
+    }
   }
 }
 

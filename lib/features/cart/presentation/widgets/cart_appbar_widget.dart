@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
 import 'package:process/core/service/cart_product_service.dart';
 import 'package:process/core/util/logger.dart';
+import 'package:process/core/util/scaffold_messanger.dart';
 
 class CartAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
   const CartAppbarWidget({
@@ -23,19 +23,12 @@ class CartAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () async {
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   const SnackBar(
-            //     content: ScafTest(),
-            //     backgroundColor: Colors.white,
-            //     behavior: SnackBarBehavior.floating,
-            //     dismissDirection: DismissDirection.horizontal,
-            //   ),
-            // );
-            // try {
-            //   await cartService.clearCartProducts();
-            // } catch (e) {
-            //   logger.e('e :$e');
-            // }
+            showScaffoldMessenger(context: context, lottieAssetsJson: 'assets/anima/bin.json', textContent: 'da');
+            try {
+              await cartService.clearCartProducts();
+            } catch (e) {
+              logger.e('e :$e');
+            }
           },
           icon: const Icon(Icons.delete_outline),
         ),
@@ -43,61 +36,72 @@ class CartAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
+  void showCustomDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      barrierColor: Colors.black.withOpacity(0.5),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return const Center(
+          child: CustomAlertDialog(),
+        );
+      },
+    );
+  }
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight + 10);
 }
 
-
-
-///
-class ScafTest extends StatefulWidget {
-  const ScafTest({super.key});
-
-  @override
-  State<ScafTest> createState() => _ScafTestState();
-}
-
-class _ScafTestState extends State<ScafTest> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+class CustomAlertDialog extends StatelessWidget {
+  const CustomAlertDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Lottie.asset(
-          fit: BoxFit.fitHeight,
-          height: 40,
-          'assets/anima/trash3.json',
-          controller: _controller,
-          onLoaded: (composition) {
-            _controller.duration = composition.duration;
-
-            _controller.forward();
-          },
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
-        const SizedBox(width: 8),
-        const Text(
-          'Корзина пуста',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Очистить корзину?',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Назад'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Очистить'),
+                ),
+              ],
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

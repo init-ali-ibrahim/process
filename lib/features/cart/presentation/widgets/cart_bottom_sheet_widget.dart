@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:process/core/router/routes.dart';
 
 class CartBottomSheetWidget extends StatelessWidget {
   const CartBottomSheetWidget({super.key, required this.totalPrice});
@@ -17,7 +16,6 @@ class CartBottomSheetWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 12),
-          // Bottom sheet handle
           Container(
             width: 40,
             height: 4,
@@ -27,8 +25,6 @@ class CartBottomSheetWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-
-          // Customer info
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
@@ -75,12 +71,9 @@ class CartBottomSheetWidget extends StatelessWidget {
               ],
             ),
           ),
-
           const SizedBox(height: 20),
           const Divider(height: 1),
           const SizedBox(height: 20),
-
-          // Delivery info
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
@@ -95,16 +88,28 @@ class CartBottomSheetWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(Icons.location_on_outlined, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'asdas',
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 16,
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.location_on_outlined, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Какойто коше',
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
                     ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('изменить', style: TextStyle(color: Colors.red),),
+                    )
                   ],
                 ),
               ],
@@ -284,7 +289,7 @@ class CartBottomSheetWidget extends StatelessWidget {
           ),
 
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 16),
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             width: MediaQuery.of(context).size.width,
             height: 45,
             child: TextButton(

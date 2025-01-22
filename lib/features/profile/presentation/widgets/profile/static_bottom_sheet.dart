@@ -131,7 +131,7 @@ class StaticBottomSheet {
                           ),
                           child: const Text(
                             'Логин',
-                            style: TextStyle(color: Colors.green, fontSize: 16),
+                            style: TextStyle(color: Colors.red, fontSize: 16),
                           ),
                         ),
                       ),
@@ -153,7 +153,7 @@ class StaticBottomSheet {
                           },
                           style: TextButton.styleFrom(
                             elevation: 1.5,
-                            backgroundColor: Colors.green,
+                            backgroundColor: Colors.red,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(12),
