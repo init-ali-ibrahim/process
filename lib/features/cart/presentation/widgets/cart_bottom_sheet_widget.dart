@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:process/core/router/routes.dart';
 
 class CartBottomSheetWidget extends StatelessWidget {
-  const CartBottomSheetWidget({super.key});
+  const CartBottomSheetWidget({super.key, required this.totalPrice});
+
+  final int totalPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -108,160 +111,160 @@ class CartBottomSheetWidget extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 20),
-          const Divider(height: 1),
-          const SizedBox(height: 20),
+          // const SizedBox(height: 20),
+          // const Divider(height: 1),
+          // const SizedBox(height: 20),
 
           // Products
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Товары',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Standard product
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[200]!),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(Icons.shopping_bag_outlined),
-                      ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Стандартный товар',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Количество: 1',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Custom product
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[200]!),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(Icons.cake_outlined),
-                          ),
-                          const SizedBox(width: 12),
-                          const Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Кастомный торт',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Количество: 2',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Text(
-                            '21 ₸',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          _buildChip('Синий'),
-                          _buildChip('Квадратный'),
-                          _buildChip('Черный торт'),
-                        ],
-                      ),
-                      if (true) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          'dsadsadsa',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       const Text(
+          //         'Товары',
+          //         style: TextStyle(
+          //           fontSize: 18,
+          //           fontWeight: FontWeight.w600,
+          //         ),
+          //       ),
+          //       const SizedBox(height: 12),
+          //       // Standard product
+          //       Container(
+          //         padding: const EdgeInsets.all(12),
+          //         decoration: BoxDecoration(
+          //           border: Border.all(color: Colors.grey[200]!),
+          //           borderRadius: BorderRadius.circular(12),
+          //         ),
+          //         child: Row(
+          //           children: [
+          //             Container(
+          //               width: 60,
+          //               height: 60,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.grey[100],
+          //                 borderRadius: BorderRadius.circular(8),
+          //               ),
+          //               child: const Icon(Icons.shopping_bag_outlined),
+          //             ),
+          //             const SizedBox(width: 12),
+          //             const Expanded(
+          //               child: Column(
+          //                 crossAxisAlignment: CrossAxisAlignment.start,
+          //                 children: [
+          //                   Text(
+          //                     'Стандартный товар',
+          //                     style: TextStyle(
+          //                       fontSize: 16,
+          //                       fontWeight: FontWeight.w500,
+          //                     ),
+          //                   ),
+          //                   SizedBox(height: 4),
+          //                   Text(
+          //                     'Количество: 1',
+          //                     style: TextStyle(
+          //                       fontSize: 14,
+          //                       color: Colors.grey,
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       const SizedBox(height: 12),
+          //       // Custom product
+          //       Container(
+          //         padding: const EdgeInsets.all(12),
+          //         decoration: BoxDecoration(
+          //           border: Border.all(color: Colors.grey[200]!),
+          //           borderRadius: BorderRadius.circular(12),
+          //         ),
+          //         child: Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             Row(
+          //               children: [
+          //                 Container(
+          //                   width: 60,
+          //                   height: 60,
+          //                   decoration: BoxDecoration(
+          //                     color: Colors.grey[100],
+          //                     borderRadius: BorderRadius.circular(8),
+          //                   ),
+          //                   child: const Icon(Icons.cake_outlined),
+          //                 ),
+          //                 const SizedBox(width: 12),
+          //                 const Expanded(
+          //                   child: Column(
+          //                     crossAxisAlignment: CrossAxisAlignment.start,
+          //                     children: [
+          //                       Text(
+          //                         'Кастомный торт',
+          //                         style: TextStyle(
+          //                           fontSize: 16,
+          //                           fontWeight: FontWeight.w500,
+          //                         ),
+          //                       ),
+          //                       SizedBox(height: 4),
+          //                       Text(
+          //                         'Количество: 2',
+          //                         style: TextStyle(
+          //                           fontSize: 14,
+          //                           color: Colors.grey,
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ),
+          //                 const Text(
+          //                   '21 ₸',
+          //                   style: TextStyle(
+          //                     fontSize: 16,
+          //                     fontWeight: FontWeight.w600,
+          //                   ),
+          //                 ),
+          //               ],
+          //             ),
+          //             const SizedBox(height: 12),
+          //             Wrap(
+          //               spacing: 8,
+          //               runSpacing: 8,
+          //               children: [
+          //                 _buildChip('Синий'),
+          //                 _buildChip('Квадратный'),
+          //                 _buildChip('Черный торт'),
+          //               ],
+          //             ),
+          //             if (true) ...[
+          //               const SizedBox(height: 8),
+          //               Text(
+          //                 'dsadsadsa',
+          //                 style: TextStyle(
+          //                   fontSize: 14,
+          //                   color: Colors.grey[600],
+          //                 ),
+          //               ),
+          //             ],
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
 
           const SizedBox(height: 20),
           const Divider(height: 1),
           const SizedBox(height: 12),
 
           // Total
-          const Padding(
-            padding: EdgeInsets.all(16),
+          Padding(
+            padding: const EdgeInsets.all(16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Итого:',
                   style: TextStyle(
                     fontSize: 18,
@@ -269,16 +272,42 @@ class CartBottomSheetWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '42 ₸',
-                  style: TextStyle(
+                  '$totalPrice ₸',
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: Colors.blue,
+                    color: Colors.red,
                   ),
                 ),
               ],
             ),
           ),
+
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            width: MediaQuery.of(context).size.width,
+            height: 45,
+            child: TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              style: TextButton.styleFrom(
+                elevation: 1.5,
+                backgroundColor: Colors.red,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                ),
+                shadowColor: Colors.grey.withOpacity(0.3),
+              ),
+              child: const Text(
+                'Заказать',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ),
+          const SizedBox(height: 60)
         ],
       ),
     );

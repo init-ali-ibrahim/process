@@ -48,7 +48,7 @@ class CartBottomnavbarWidget extends ConsumerWidget {
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
-                builder: (context) => const CartBottomSheetWidget(),
+                builder: (context) => CartBottomSheetWidget(totalPrice: cartRiverpod.totalPrice),
               );
             },
             style: TextButton.styleFrom(
