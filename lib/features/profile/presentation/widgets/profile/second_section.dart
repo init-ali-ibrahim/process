@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:process/features/profile/presentation/widgets/profile/custom_divider.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider.dart';
 import 'package:process/features/profile/presentation/widgets/profile/settings_tile.dart';
 
 class SecondSection extends StatelessWidget {
@@ -20,7 +20,7 @@ class SecondSection extends StatelessWidget {
         child: Column(
           children: [
             SettingsTile(icon: Icons.book_outlined, title: 'Заказы', onTap: () {}),
-            const CustomDivider(),
+            const ProfileCustomDivider(),
             SettingsTile(icon: Icons.history, title: 'История', onTap: () {}),
           ],
         ),

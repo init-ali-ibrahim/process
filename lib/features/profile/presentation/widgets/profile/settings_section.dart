@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:process/features/profile/presentation/widgets/profile/custom_divider.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider.dart';
 import 'package:process/features/profile/presentation/widgets/profile/settings_tile.dart';
 
 class SettingsSection extends StatelessWidget {
@@ -36,7 +36,7 @@ class SettingsSection extends StatelessWidget {
                 style: TextStyle(color: Colors.grey, fontSize: 11),
               ),
             ),
-            const CustomDivider(),
+            const ProfileCustomDivider(),
             SettingsTile(
               icon: Icons.language,
               title: 'Язык',
@@ -46,31 +46,31 @@ class SettingsSection extends StatelessWidget {
               ),
               onTap: () {},
             ),
-            const CustomDivider(),
+            const ProfileCustomDivider(),
             SettingsTile(
               icon: Icons.dark_mode_outlined,
               title: 'Тема',
               onTap: () {},
             ),
-            const CustomDivider(),
+            const ProfileCustomDivider(),
             SettingsTile(
               icon: Icons.home_repair_service_outlined,
               title: 'О приложении',
               onTap: () {},
             ),
-            const CustomDivider(),
+            const ProfileCustomDivider(),
             SettingsTile(
               icon: Icons.support_agent,
               title: 'Поддержка',
               onTap: () {},
             ),
-            const CustomDivider(),
+            const ProfileCustomDivider(),
             SettingsTile(
               icon: Icons.insert_page_break_outlined,
               title: 'Доки',
               onTap: () {},
             ),
-            const CustomDivider(),
+            const ProfileCustomDivider(),
             SettingsTile(
               icon: Icons.find_in_page_outlined,
               title: 'Политика конфиденциальности',

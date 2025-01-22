@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:process/core/router/routes.dart';
-import 'package:process/features/profile/presentation/widgets/profile/custom_divider.dart';
+import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider.dart';
 import 'package:process/features/profile/presentation/widgets/profile/settings_tile.dart';
 
 class StaticBottomSheet {
@@ -34,9 +34,9 @@ class StaticBottomSheet {
                 ),
                 const SizedBox(height: 14),
                 SettingsTile(icon: Icons.language, title: 'Казакша', onTap: () {}),
-                const CustomDivider(),
+                const ProfileCustomDivider(),
                 SettingsTile(icon: Icons.language, title: 'Русский', onTap: () {}),
-                const CustomDivider(),
+                const ProfileCustomDivider(),
                 SettingsTile(icon: Icons.language, title: 'Английский', onTap: () {}),
                 const SizedBox(height: 16),
                 TextButton(

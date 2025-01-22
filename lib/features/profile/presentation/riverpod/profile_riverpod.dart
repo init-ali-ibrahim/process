@@ -50,21 +50,6 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
     }
   }
 
-  // Future<void> logout() async {
-  //   try {
-  //     state = state.copyWith(isLoading: true, error: null);
-  //     state = state.copyWith(user: null);
-  //     await storage.delet e(key: 'token');
-  //     state = state.copyWith(isLoading: false);
-  //     await getUser();
-  //   } catch (e) {
-  //     state = state.copyWith(
-  //       isLoading: false,
-  //       error: e.toString(),
-  //     );
-  //   }
-  // }
-
   Future<void> logout() async {
     try {
       state = state.copyWith(isLoading: true);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/router/routes.dart';
 import 'package:process/features/search/presentation/riverpod/search_provider.dart';
-import 'package:process/features/search/presentation/widgets/search_filter_bottom_sheet.dart';
 
 class SearchAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
   const SearchAppbarWidget({super.key});
@@ -67,7 +66,7 @@ class SearchAppbarWidget extends ConsumerWidget implements PreferredSizeWidget {
               ),
               child: IconButton(
                 icon: const Icon(Icons.tune),
-                onPressed: () => showFilterMenu(context, ref),
+                onPressed: () {},
               ),
             ),
             const SizedBox(width: 16),

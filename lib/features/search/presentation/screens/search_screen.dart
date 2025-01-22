@@ -1,196 +1,8 @@
 import 'dart:async';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-class Category {
-  final String name;
-  final String slug;
-
-  Category({required this.name, required this.slug});
-
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
-      name: json['name'] ?? '',
-      slug: json['slug'] ?? '',
-    );
-  }
-}
-
-class Product {
-  final String name;
-  final String slug;
-  final double price;
-
-  Product({
-    required this.name,
-    required this.slug,
-    required this.price,
-  });
-
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      name: json['name'] ?? '',
-      slug: json['slug'] ?? '',
-      price: (json['price'] ?? 0).toDouble(),
-    );
-  }
-}
-
-class SearchService {
-  final Dio dio;
-  final int maxRetries;
-
-  SearchService({int? maxRetries})
-      : this.dio = Dio()..interceptors.add(RetryInterceptor()),
-        this.maxRetries = maxRetries ?? 3;
-
-  Future<List<Category>> getCategoryProducts() async {
-    try {
-      final response = await dio.get(
-        'https://admin.samalcakes.kz/api/v1/categories',
-        options: Options(
-          headers: {'Accept': 'application/json'},
-          validateStatus: (status) => status! < 500,
-        ),
-      );
-
-      if (response.statusCode == 429) {
-        final retryAfter = int.tryParse(response.headers.value('retry-after') ?? '5') ?? 5;
-
-        await Future.delayed(Duration(seconds: retryAfter));
-        return getCategoryProducts();
-      }
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final List<dynamic> data = response.data;
-        return data.map((json) => Category.fromJson(json)).toList();
-      } else {
-        throw DioException(
-          requestOptions: response.requestOptions,
-          response: response,
-          message: 'Failed to load categories: ${response.statusCode}',
-        );
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 429) {
-        await Future.delayed(const Duration(seconds: 5));
-        return getCategoryProducts();
-      }
-      throw Exception('Failed to load categories: ${e.message}');
-    }
-  }
-
-  Future<List<Product>> getProductsByCategory(String citySlug, String category) async {
-    try {
-      final response = await dio.get(
-        'https://admin.samalcakes.kz/api/v1/catalog/products',
-        queryParameters: {'category': category},
-        options: Options(
-          headers: {'City': citySlug, 'Accept': 'application/json'},
-          validateStatus: (status) => status! < 500,
-        ),
-      );
-
-      if (response.statusCode == 429) {
-        final retryAfter = int.tryParse(response.headers.value('retry-after') ?? '5') ?? 5;
-        await Future.delayed(Duration(seconds: retryAfter));
-        return getProductsByCategory(citySlug, category);
-      }
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final List<dynamic> data = response.data['data'];
-        return data.map((json) => Product.fromJson(json)).toList();
-      } else {
-        throw DioException(
-          requestOptions: response.requestOptions,
-          response: response,
-          message: 'Failed to load products: ${response.statusCode}',
-        );
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 429) {
-        await Future.delayed(const Duration(seconds: 5));
-        return getProductsByCategory(citySlug, category);
-      }
-      throw Exception('Failed to load products: ${e.message}');
-    }
-  }
-}
-
-class RetryInterceptor extends Interceptor {
-  @override
-  Future onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 429) {
-      final retryAfter = int.tryParse(err.response?.headers.value('retry-after') ?? '5') ?? 5;
-
-      await Future.delayed(Duration(seconds: retryAfter));
-
-      try {
-        final opts = Options(
-          method: err.requestOptions.method,
-          headers: err.requestOptions.headers,
-        );
-
-        final response = await Dio().request(
-          err.requestOptions.path,
-          options: opts,
-          data: err.requestOptions.data,
-          queryParameters: err.requestOptions.queryParameters,
-        );
-
-        return handler.resolve(response);
-      } catch (e) {
-        return handler.next(err);
-      }
-    }
-    return handler.next(err);
-  }
-}
-
-final searchServiceProvider = Provider((ref) => SearchService());
-
-final searchQueryProvider = StateProvider<String>((ref) => '');
-final selectedCityProvider = StateProvider<String>((ref) => 'almaty');
-final selectedCategoriesProvider = StateProvider<List<String>>((ref) => []);
-
-final categoriesProvider = FutureProvider<List<Category>>((ref) async {
-  final searchService = ref.watch(searchServiceProvider);
-  return await searchService.getCategoryProducts();
-});
-
-final productsProvider = FutureProvider<Map<String, List<Product>>>((ref) async {
-  final searchService = ref.watch(searchServiceProvider);
-  final citySlug = ref.watch(selectedCityProvider).toLowerCase();
-  final selectedCategories = ref.watch(selectedCategoriesProvider);
-  final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
-
-  try {
-    final categories = await ref.watch(categoriesProvider.future);
-    final Map<String, List<Product>> allProducts = {};
-
-    for (final category in categories) {
-      if (selectedCategories.isNotEmpty && !selectedCategories.contains(category.name)) {
-        continue;
-      }
-
-      final products = await searchService.getProductsByCategory(citySlug, category.slug);
-
-      final filteredProducts = products.where((product) {
-        return product.name.toLowerCase().contains(searchQuery) || product.slug.toLowerCase().contains(searchQuery);
-      }).toList();
-
-      if (filteredProducts.isNotEmpty) {
-        allProducts[category.name] = filteredProducts;
-      }
-    }
-
-    return allProducts;
-  } catch (e) {
-    throw Exception('Failed to load products: $e');
-  }
-});
+import 'package:process/core/router/routes.dart';
+import 'package:process/features/search/presentation/riverpod/search_provider.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -228,12 +40,26 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final productsAsync = ref.watch(productsProvider);
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text('Поиск'),
+        toolbarHeight: kToolbarHeight + 10,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        surfaceTintColor: Colors.white,
+        elevation: 1,
+        shadowColor: Colors.grey.shade50,
+        title: const Text(
+          'Поиск',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        leading: IconButton(
+          onPressed: () => router.pop(),
+          icon: const Icon(Icons.arrow_back),
+        ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(70),
+          preferredSize: const Size.fromHeight(65),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Row(
               children: [
                 Expanded(
@@ -282,29 +108,88 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          category,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: categoryProducts.length,
                         itemBuilder: (context, productIndex) {
                           final product = categoryProducts[productIndex];
-                          return ListTile(
-                            title: Text(product.name),
-                            subtitle: Text(product.slug),
-                            trailing: Text(
-                              '${product.price.toStringAsFixed(0)} ₸',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  spreadRadius: 0.5,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: ListTile(
+                              onTap: () {
+                                router.pushNamed(
+                                  RouteNames.singleProduct.name,
+                                  extra: {'product': product},
+                                );
+                              },
+                              contentPadding: const EdgeInsets.all(12),
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  product.imageUrl,
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      width: 70,
+                                      height: 70,
+                                      color: Colors.grey[200],
+                                      child: const Icon(
+                                        Icons.image_not_supported,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              title: Text(
+                                product.name,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    product.category,
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.red[50],
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  '${product.price.toStringAsFixed(0)} ₸',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red[700],
+                                    fontSize: 12,
+                                  ),
+                                ),
                               ),
                             ),
                           );
@@ -345,18 +230,25 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   void _showFilterBottomSheet(BuildContext context) {
+    // showModalBottomSheet(
+    //   context: context,
+    //   isScrollControlled: true,
+    //   shape: const RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+    //   ),
+    //   builder: (context) => Padding(
+    //     padding: EdgeInsets.only(
+    //       bottom: MediaQuery.of(context).viewInsets.bottom,
+    //     ),
+    //     child: const FilterBottomSheet(),
+    //   ),
+    // );
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: const FilterBottomSheet(),
-      ),
+      backgroundColor: Colors.transparent,
+      builder: (context) => const FilterBottomSheet(),
     );
   }
 }
@@ -370,78 +262,59 @@ class FilterBottomSheet extends ConsumerWidget {
     final selectedCategories = ref.watch(selectedCategoriesProvider);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Фильтры',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
               ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          // City Filter
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: const Offset(0, 1),
-                ),
-              ],
             ),
+          ),
+          const SizedBox(height: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Город',
+                Text(
+                  'Города',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 12),
-                const ChoiceChip(
-                  selected: true,
-                  label: Text('Алматы'),
-                  selectedColor: Colors.red,
-                  labelStyle: TextStyle(color: Colors.white),
-                  onSelected: null,
+                SizedBox(height: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ChoiceChip(
+                      selected: true,
+                      label: Text('Алматы'),
+                      selectedColor: Colors.red,
+                      labelStyle: TextStyle(color: Colors.white),
+                      onSelected: null,
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          // Categories Filter
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -449,7 +322,7 @@ class FilterBottomSheet extends ConsumerWidget {
                   'Категории',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -506,33 +379,177 @@ class FilterBottomSheet extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          // City Filter
+          // Container(
+          //   padding: const EdgeInsets.all(12),
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     borderRadius: BorderRadius.circular(12),
+          //     boxShadow: [
+          //       BoxShadow(
+          //         color: Colors.black.withOpacity(0.1),
+          //         blurRadius: 5,
+          //         offset: const Offset(0, 1),
+          //       ),
+          //     ],
+          //   ),
+          //   child: const Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text(
+          //         'Город',
+          //         style: TextStyle(
+          //           fontSize: 18,
+          //           fontWeight: FontWeight.w500,
+          //         ),
+          //       ),
+          //       SizedBox(height: 12),
+          //       ChoiceChip(
+          //         selected: true,
+          //         label: Text('Алматы'),
+          //         selectedColor: Colors.red,
+          //         labelStyle: TextStyle(color: Colors.white),
+          //         onSelected: null,
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(height: 24),
+          // // Categories Filter
+          // Container(
+          //   padding: const EdgeInsets.all(12),
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     borderRadius: BorderRadius.circular(12),
+          //     boxShadow: [
+          //       BoxShadow(
+          //         color: Colors.black.withOpacity(0.1),
+          //         blurRadius: 5,
+          //         offset: const Offset(0, 1),
+          //       ),
+          //     ],
+          //   ),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       const Text(
+          //         'Категории',
+          //         style: TextStyle(
+          //           fontSize: 18,
+          //           fontWeight: FontWeight.w500,
+          //         ),
+          //       ),
+          //       const SizedBox(height: 12),
+          //       categoriesAsync.when(
+          //         data: (categories) => Wrap(
+          //           spacing: 8,
+          //           runSpacing: 8,
+          //           children: categories.map((category) {
+          //             final isSelected = selectedCategories.contains(category.name);
+          //             return FilterChip(
+          //               selected: isSelected,
+          //               label: Text(category.name),
+          //               selectedColor: Colors.red,
+          //               backgroundColor: Colors.grey[100],
+          //               labelStyle: TextStyle(
+          //                 color: isSelected ? Colors.white : Colors.black,
+          //               ),
+          //               onSelected: (bool selected) {
+          //                 final notifier = ref.read(selectedCategoriesProvider.notifier);
+          //                 if (selected) {
+          //                   notifier.state = [...selectedCategories, category.name];
+          //                 } else {
+          //                   notifier.state = selectedCategories.where((name) => name != category.name).toList();
+          //                 }
+          //               },
+          //             );
+          //           }).toList(),
+          //         ),
+          //         loading: () => const Center(
+          //           child: CircularProgressIndicator(),
+          //         ),
+          //         error: (error, stack) => Center(
+          //           child: Column(
+          //             children: [
+          //               const Icon(
+          //                 Icons.error_outline,
+          //                 color: Colors.red,
+          //                 size: 32,
+          //               ),
+          //               const SizedBox(height: 8),
+          //               Text(
+          //                 'Ошибка загрузки категорий: $error',
+          //                 textAlign: TextAlign.center,
+          //               ),
+          //               const SizedBox(height: 8),
+          //               ElevatedButton(
+          //                 onPressed: () => ref.refresh(categoriesProvider),
+          //                 child: const Text('Попробовать снова'),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(height: 24),
           // Apply Button
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 20),
+
+          // Container(
+          //   width: double.infinity,
+          //   height: 50,
+          //   margin: const EdgeInsets.symmetric(horizontal: 16),
+          //   child: ElevatedButton(
+          //     onPressed: () {
+          //       ref.invalidate(productsProvider);
+          //       Navigator.pop(context);
+          //     },
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.red,
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(12),
+          //       ),
+          //     ),
+          //     child: const Text(
+          //       'Применить фильтры',
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //         fontSize: 16,
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            width: MediaQuery.of(context).size.width,
+            height: 45,
+            child: TextButton(
               onPressed: () {
                 ref.invalidate(productsProvider);
                 Navigator.pop(context);
               },
-              style: ElevatedButton.styleFrom(
+              style: TextButton.styleFrom(
+                elevation: 1.5,
                 backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12),
+                  ),
                 ),
+                shadowColor: Colors.grey.withOpacity(0.3),
               ),
               child: const Text(
                 'Применить фильтры',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 60)
         ],
       ),
     );

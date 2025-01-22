@@ -67,11 +67,11 @@ class HomeHorizontalItemWidget extends StatelessWidget {
                         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFFBB4242)),
                       ),
                       Container(
-                          decoration: BoxDecoration(color: const Color(0xFFBB4242), borderRadius: BorderRadius.circular(4)),
+                          decoration: BoxDecoration(color:  Colors.transparent, borderRadius: BorderRadius.circular(4)),
                           child: const Icon(
-                            size: 19,
-                            Icons.add,
-                            color: Colors.white,
+                            size: 20,
+                            Icons.keyboard_arrow_right,
+                            color: Colors.red,
                           ))
                     ],
                   )
