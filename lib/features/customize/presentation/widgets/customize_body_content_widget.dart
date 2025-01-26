@@ -1,8 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:process/core/entities/cart_product.dart';
+import 'package:process/core/router/routes.dart';
+import 'package:process/core/util/logger.dart';
+import 'package:process/core/util/nil_protect.dart';
+import 'package:process/features/cart/presentation/riverpod/cart_riverpod.dart';
 import 'package:process/features/customize/presentation/bloc/customization_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -166,6 +172,7 @@ class _BuildFlavorSelectionState extends State<BuildFlavorSelection> {
                 const SizedBox(height: 8),
                 Text(
                   flavorName[flavor]!,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -247,6 +254,7 @@ class _BuildColourSelectionState extends State<BuildColourSelection> {
                 const SizedBox(height: 8),
                 Text(
                   colourName[colour]!,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 14,
                   ),
@@ -260,7 +268,6 @@ class _BuildColourSelectionState extends State<BuildColourSelection> {
   }
 }
 //---------------------------------------------------------------------
-
 
 //---------------------------------------------------------------------
 class BuildCustomSelection extends StatefulWidget {
@@ -282,6 +289,11 @@ class _BuildCustomSelectionState extends State<BuildCustomSelection> {
 
   void _removeImage() {
     context.read<CustomizationBloc>().add(ImageRemoved());
+  }
+
+  int generateProductId(Shape shape, Colour colour, Flavor flavor) {
+    final uniqueString = '${shape.name}_${colour.name}_${flavor.name}';
+    return uniqueString.hashCode;
   }
 
   @override
@@ -342,14 +354,43 @@ class _BuildCustomSelectionState extends State<BuildCustomSelection> {
                     ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
-                child: const Text('Добавить в корзину'),
+              padding: EdgeInsets.all(10),
+              child: Consumer(
+                builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                  final cartRiverpod = ref.read(cartProvider.notifier);
+
+                  return ElevatedButton(
+                    onPressed: () {
+                      final productId = generateProductId(state.shape, state.colour, state.flavor);
+
+                      CartProduct cartProduct = CartProduct(
+                        category: nilProtect.string,
+                        name: nilProtect.string,
+                        product_id: productId,
+                        quantity: 1,
+                        slug: nilProtect.string,
+                        price: state.totalPrice,
+                        shape: state.shape.toString(),
+                        colour: state.colour.toString(),
+                        flavor: state.flavor.toString(),
+                        imageUrl: nilProtect.imageUrl,
+                      );
+
+                      try {
+                        cartRiverpod.addCartProduct(cartProduct);
+                        router.pop();
+                      } catch (e) {
+                        logger.e('e: $e');
+                      }
+                    },
+
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: const Text('Добавить в корзину'),
+                  );
+                },
               ),
             ),
           ],

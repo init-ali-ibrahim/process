@@ -16,11 +16,11 @@ class DetailProductScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cartRiverpod = ref.read(cartProvider.notifier);
 
-    final cartProduct = CartProduct(
+    CartProduct cartProduct = CartProduct(
       category: product.category,
       name: product.name,
       product_id: product.id,
-      quantity: product.quantity,
+      quantity: 1,
       slug: product.slug,
       price: product.price,
       shape: nilProtect.string,
@@ -38,8 +38,6 @@ class DetailProductScreen extends ConsumerWidget {
             onPressed: () => router.pop(context),
             style: IconButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.8)),
           ),
-          // title: Text(product.name),
-          // centerTitle: true,
         ),
         body: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -84,7 +82,7 @@ class DetailProductScreen extends ConsumerWidget {
                             backgroundColor: Colors.red,
                             minimumSize: Size(MediaQuery.of(context).size.width - 40, 52),
                           ),
-                          onPressed: () async {
+                          onPressed: () {
                             try {
                               cartRiverpod.addCartProduct(cartProduct);
                               router.pop();

@@ -13,7 +13,9 @@ class AppTheme {
     useMaterial3: true,
     fontFamily: 'Inter',
     scaffoldBackgroundColor: AppColors.white,
-
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    hoverColor: Colors.grey.withOpacity(0.2),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
