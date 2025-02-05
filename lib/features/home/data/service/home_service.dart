@@ -14,7 +14,7 @@ class HomeService {
         final List<dynamic> data = response.data;
         return data.map((json) => CategoryModel.fromJson(json)).toList();
       } else {
-        throw Exception('statusCode: ${response.statusCode}');
+        throw Exception('statusCode: ${response.data}');
       }
     } catch (e) {
       throw Exception('getCategoryProducts() error: $e');
