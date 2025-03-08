@@ -1,12 +1,12 @@
 import 'dart:io';
 
-class HttpOverridesInit {
-  static void setup() {
-    HttpOverrides.global = HttpOverride();
+class HttpOverridesSetup {
+  Future<void> call() async {
+    HttpOverrides.global = HttpOverrideCustom();
   }
 }
 
-class HttpOverride extends HttpOverrides {
+class HttpOverrideCustom extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)

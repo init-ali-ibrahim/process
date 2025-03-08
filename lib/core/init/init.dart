@@ -3,29 +3,24 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:process/core/dependency/dotenv_init.dart';
 import 'package:process/core/dependency/form_validator_init.dart';
-import 'package:process/core/dependency/http_override_init.dart';
-import 'package:process/core/dependency/uisystem_init.dart';
+import 'package:process/core/init/setups/http_override_init.dart';
+import 'package:process/core/init/setups/system_ui_setup.dart';
 import 'package:process/firebase_options.dart';
 import 'package:process/core/dependency/local_notification_init.dart';
 import 'package:process/core/dependency/firebase_messaging_init.dart';
 
 
 class AppInit {
-  // static AppRepo repo = AppRepo();
-
   static Future<void> initialize() async {
 
     /// Flutter Widgets initialization
     WidgetsFlutterBinding.ensureInitialized();
 
-    /// Http overrides initialization
-    HttpOverridesInit.setup();
+    HttpOverridesSetup();
+    SystemUiSetup();
 
     /// Validator form initialization (uses the "form_validator" package)
     FormValidatorInit.setup();
-
-    /// UISystemInit initialization
-    UISystemInit.setup();
 
     /// Read .env file and load variables (uses the "flutter_dotenv" package)
     await DotEnvInit.setup();

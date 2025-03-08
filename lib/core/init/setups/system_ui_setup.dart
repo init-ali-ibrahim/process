@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class UISystemInit {
-  static void setup() {
+class SystemUiSetup {
+  Future<void> call() async {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.transparent,
       systemNavigationBarContrastEnforced: true,
@@ -10,5 +10,4 @@ class UISystemInit {
     ));
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
-
 }
