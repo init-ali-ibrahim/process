@@ -1,13 +1,3 @@
-# Self ignores
-*.env
-.env
-analysis_options.yaml
-my_new_keystore_name.jks
-pubspec.lock
-.metadata
-
-
-
 # Miscellaneous
 *.class
 *.log
@@ -51,3 +41,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# our
+*.env
+.env
+my_new_keystore_name.jks
+pubspec.lock
+.metadata

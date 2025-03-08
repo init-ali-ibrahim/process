@@ -8,7 +8,7 @@ import 'package:process/core/theme/extensions/custom_theme_extension.dart';
 
 class AppTheme {
   /// ThemeData lightTheme;
-  static final lightTheme = ThemeData(
+  static final ThemeData lightTheme = ThemeData(
     primaryColor: AppColors.primary,
     useMaterial3: true,
     fontFamily: 'Inter',
@@ -55,7 +55,7 @@ class AppTheme {
 
     /// Animation of screen transitions (uses the "animations" package)
     pageTransitionsTheme: const PageTransitionsTheme(
-      builders: {
+      builders: <TargetPlatform, PageTransitionsBuilder>{
         TargetPlatform.android: SharedAxisPageTransitionsBuilder(
           transitionType: SharedAxisTransitionType.horizontal,
         ),
@@ -67,7 +67,7 @@ class AppTheme {
   );
 
   /// ThemeData darkTheme;
-  static final darkTheme = ThemeData(
+  static final ThemeData darkTheme = ThemeData(
     colorScheme: const ColorScheme.dark(
       surface: Colors.black,
       shadow: Colors.black54,
@@ -111,7 +111,7 @@ class AppTheme {
 
     /// Animation of screen transitions (uses the "animations" package)
     pageTransitionsTheme: const PageTransitionsTheme(
-      builders: {
+      builders: <TargetPlatform, PageTransitionsBuilder>{
         TargetPlatform.android: SharedAxisPageTransitionsBuilder(
           transitionType: SharedAxisTransitionType.horizontal,
         ),
