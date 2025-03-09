@@ -24,29 +24,36 @@ class HomeHorizontalItemWidget extends StatelessWidget {
         width: 175,
         child: Column(
           children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
-                imageUrl: product.imageUrl,
-                placeholder: (BuildContext context, String url) => Image.asset(
-                  'assets/image/loadingItem.jpg',
-                  width: 170,
-                  height: 155,
-                  fit: BoxFit.cover,
+
+            Hero(
+              tag: 'product_imageUrl_${product.id}',
+              child: Material(
+                type: MaterialType.transparency,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImage(
+                    imageUrl: product.imageUrl,
+                    placeholder: (BuildContext context, String url) => Image.asset(
+                      'assets/image/loadingItem.jpg',
+                      width: 170,
+                      height: 155,
+                      fit: BoxFit.cover,
+                    ),
+                    errorWidget: (BuildContext context, String url, Object error) => Container(
+                      color: Colors.white,
+                      width: 170,
+                      height: 155,
+                    ),
+                    width: 170,
+                    height: 155,
+                    fit: BoxFit.cover,
+                    memCacheWidth: 800,
+                    memCacheHeight: 800,
+                    cacheKey: 'product_${product.id}',
+                    maxWidthDiskCache: 800,
+                    maxHeightDiskCache: 800,
+                  ),
                 ),
-                errorWidget: (BuildContext context, String url, Object error) => Container(
-                  color: Colors.white,
-                  width: 170,
-                  height: 155,
-                ),
-                width: 170,
-                height: 155,
-                fit: BoxFit.cover,
-                memCacheWidth: 340,
-                memCacheHeight: 310,
-                cacheKey: 'product_${product.id}',
-                maxWidthDiskCache: 340,
-                maxHeightDiskCache: 310,
               ),
             ),
             Container(

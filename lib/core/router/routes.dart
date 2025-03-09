@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:process/core/global/entities/product.dart';
 import 'package:process/features/cart/presentation/screens/cart_screen.dart';
-import 'package:process/features/detail_product/presentation/screens/detail_product_screen.dart';
+import 'package:process/features/detail_product/ui/screens/detail_product_screen.dart';
 import 'package:process/features/home/ui/screens/home_screen.dart';
 import 'package:process/features/profile/ui/screens/login_screen.dart';
 import 'package:process/features/profile/ui/screens/profile_screen.dart';
@@ -31,7 +31,7 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: RouteNames.home.path,
-    debugLogDiagnostics: true,
+    // debugLogDiagnostics: true,
     routes: <RouteBase>[
       GoRoute(
         path: RouteNames.home.path,

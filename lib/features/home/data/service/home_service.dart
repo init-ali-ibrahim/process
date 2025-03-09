@@ -8,6 +8,8 @@ import 'package:process/core/util/logger.dart';
 import 'package:process/features/home/data/models/category_model.dart';
 import 'package:process/features/home/data/models/product_model.dart';
 
+
+/// TODO: write that function more beautifully
 class HomeService {
   late final Dio dio;
   late final Future<void> _initFuture;
