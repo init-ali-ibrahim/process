@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider_widget.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_tile_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_bottom_sheet_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_custom_divider_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_tile_widget.dart';
 
 class ProfileSettingsSectionWidget extends StatelessWidget {
   const ProfileSettingsSectionWidget({super.key});
@@ -9,12 +10,12 @@ class ProfileSettingsSectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       elevation: 1.5,
-      shadowColor: Colors.grey.withOpacity(0.3),
+      shadowColor: Colors.grey.withValues(alpha: 0.3),
       clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white.withValues(alpha: 0.9),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -33,24 +34,40 @@ class ProfileSettingsSectionWidget extends StatelessWidget {
               onTap: () {},
               trailing: const Text(
                 'Алматы',
-                style: TextStyle(color: Colors.grey, fontSize: 11),
+                style: TextStyle(color: Colors.grey, fontSize: 10),
               ),
             ),
             const ProfileCustomDividerWidget(),
             ProfileSettingTileWidget(
               icon: Icons.language,
               title: 'Язык',
+              onTap: () {},
               trailing: const Text(
                 'Русский',
-                style: TextStyle(color: Colors.grey, fontSize: 11),
+                style: TextStyle(color: Colors.grey, fontSize: 10),
               ),
-              onTap: () {},
             ),
             const ProfileCustomDividerWidget(),
             ProfileSettingTileWidget(
               icon: Icons.dark_mode_outlined,
               title: 'Тема',
               onTap: () {},
+              trailing: const Text(
+                'Системное',
+                style: TextStyle(color: Colors.grey, fontSize: 10),
+              ),
+            ),
+            const ProfileCustomDividerWidget(),
+            ProfileSettingTileWidget(
+              icon: Icons.text_fields_outlined,
+              title: 'Шрифт',
+              onTap: () {
+                StaticBottomSheet.showFont(context);
+              },
+              trailing: const Text(
+                'По умалчанию',
+                style: TextStyle(color: Colors.grey, fontSize: 10),
+              ),
             ),
           ],
         ),

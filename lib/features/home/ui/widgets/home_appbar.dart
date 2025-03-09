@@ -10,7 +10,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      toolbarHeight: kToolbarHeight + 10,
+      toolbarHeight: kToolbarHeight,
       surfaceTintColor: Colors.transparent,
       title: InkWell(
         highlightColor: Colors.transparent,
@@ -20,7 +20,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
         },
         child: Image.asset(
           'assets/image/logo_appbar.png',
-          width: 160,
+          width: 130,
         ),
       ),
       actions: [
@@ -60,5 +60,5 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 10);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

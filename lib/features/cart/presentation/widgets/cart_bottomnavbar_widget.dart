@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/features/cart/presentation/riverpod/cart_riverpod.dart';
 import 'package:process/features/cart/presentation/widgets/cart_bottom_sheet_widget.dart';
-import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
+import 'package:process/features/profile/state/profile_riverpod.dart';
 
 class CartBottomnavbarWidget extends ConsumerWidget {
   const CartBottomnavbarWidget({super.key});
@@ -10,7 +10,7 @@ class CartBottomnavbarWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartRefRiverpod = ref.watch(cartProvider);
-    final profileRefProvider = ref.watch(profileProvider);
+    final profileRefProvider = ref.watch(profileStateProvider);
     final user = profileRefProvider.user;
 
     return Container(

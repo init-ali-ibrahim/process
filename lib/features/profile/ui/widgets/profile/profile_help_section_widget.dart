@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_custom_divider_widget.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_tile_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_custom_divider_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_tile_widget.dart';
 
 class ProfileHelpSectionWidget extends StatelessWidget {
   const ProfileHelpSectionWidget({super.key});

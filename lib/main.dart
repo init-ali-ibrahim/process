@@ -9,9 +9,9 @@ void main() async {
   await AppInit.initialize();
 
   runApp(
-    const LocalizationShell(
+    const ProviderScope(
       child: ThemeShell(
-        child: ProviderScope(
+        child: LocalizationShell(
           child: App(),
         ),
       ),

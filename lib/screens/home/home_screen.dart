@@ -6,7 +6,7 @@
 // import 'package:process/screens/cart/bloc/cart_bloc.dart';
 // import 'package:process/screens/color.dart';
 // import 'package:process/screens/home/widgets/home_horizontal_item_title_widget.dart';
-// import 'package:process/screens/home/widgets/home_banner_widget.dart';
+// import 'package:process/screens/home/widgets/home_banner.dart';
 // import 'package:process/screens/home/widgets/home_horizontal_item_widget.dart';
 // import 'package:url_launcher/url_launcher.dart';
 // import 'package:process/main.dart';

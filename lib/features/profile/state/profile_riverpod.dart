@@ -39,7 +39,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   Future<void> getUser() async {
     try {
       state = state.copyWith(isLoading: true, error: null);
-      final user = await repo.getUser();
+      User? user = await repo.getUser();
       state = state.copyWith(user: user, isLoading: false);
     } catch (e) {
       state = state.copyWith(
@@ -61,8 +61,8 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   }
 }
 
-
-final profileProvider = StateNotifierProvider<ProfileNotifier, ProfileState>((ref) {
-  final repo = ref.watch(profileRepoProvider);
+final StateNotifierProvider<ProfileNotifier, ProfileState> profileStateProvider =
+    StateNotifierProvider<ProfileNotifier, ProfileState>((Ref ref) {
+  ProfileRepo repo = ref.watch(profileRepoProvider);
   return ProfileNotifier(repo);
 });

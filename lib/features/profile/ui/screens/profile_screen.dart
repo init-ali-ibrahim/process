@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_appbar_widget.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_data_section_widget.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_help_section_widget.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_logout_button_widget.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_second_section_widget.dart';
-import 'package:process/features/profile/presentation/widgets/profile/profile_setting_section_widget.dart';
-import 'package:process/core/util/logger.dart';
+import 'package:process/features/profile/state/profile_riverpod.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_appbar_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_data_section_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_help_section_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_logout_button_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_second_section_widget.dart';
+import 'package:process/features/profile/ui/widgets/profile/profile_setting_section_widget.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = ref.watch(profileProvider);
+    final profileState = ref.watch(profileStateProvider);
     final user = profileState.user;
 
     if (profileState.isLoading) {

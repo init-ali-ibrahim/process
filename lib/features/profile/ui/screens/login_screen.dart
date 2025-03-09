@@ -1,45 +1,36 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:process/core/router/routes.dart';
 import 'package:process/core/util/logger.dart';
 import 'package:process/features/profile/data/repo/profile_repo.dart';
-import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
-import 'package:process/features/profile/presentation/widgets/register/register_appbar_widget.dart';
+import 'package:process/features/profile/state/profile_riverpod.dart';
+import 'package:process/features/profile/ui/widgets/login/login_appbar_widget.dart';
 
-class RegisterScreen extends ConsumerStatefulWidget {
-  const RegisterScreen({super.key});
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  ConsumerState<RegisterScreen> createState() => _RegisterScreen();
+  ConsumerState<LoginScreen> createState() => _LoginScreen();
 }
 
-class _RegisterScreen extends ConsumerState<RegisterScreen> {
+class _LoginScreen extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _firstNameController;
-  late TextEditingController _lastNameController;
   late TextEditingController _phoneController;
-  late TextEditingController _emailController;
   late TextEditingController _passwordController;
-  late TextEditingController _passwordConfirmationController;
   late ProfileRepo repo;
 
   @override
   void initState() {
     super.initState();
     repo = ProfileRepo();
-    _firstNameController = TextEditingController();
-    _lastNameController = TextEditingController();
     _phoneController = TextEditingController();
-    _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    _passwordConfirmationController = TextEditingController();
   }
 
   bool _obscureText = true;
-  bool _obscureTextR = true;
   final maskFormatter = MaskTextInputFormatter(
     mask: '+7 (###) ###-##-##',
     filter: {"#": RegExp(r'[0-9]')},
@@ -58,12 +49,6 @@ class _RegisterScreen extends ConsumerState<RegisterScreen> {
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
-    });
-  }
-
-  void _togglePasswordVisibilityR() {
-    setState(() {
-      _obscureTextR = !_obscureTextR;
     });
   }
 
@@ -101,19 +86,15 @@ class _RegisterScreen extends ConsumerState<RegisterScreen> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-
       try {
         final phoneFormat = formatPhoneNumber(_phoneController.text);
 
-        await repo.register(
-          email: _emailController.text,
-          first_name: _firstNameController.text,
-          last_name: _lastNameController.text,
-          password: _passwordController.text,
-          password_confirm: _passwordConfirmationController.text,
+        await repo.login(
           phone: phoneFormat,
-        ).then((_) async {
-          await ref.read(profileProvider.notifier).getUser();
+          password: _passwordController.text,
+        )
+            .then((_) async {
+          await ref.read(profileStateProvider.notifier).getUser();
           router.pop();
         });
       } catch (e) {
@@ -127,7 +108,7 @@ class _RegisterScreen extends ConsumerState<RegisterScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.grey.shade100,
-      appBar: const RegisterAppbarWidget(),
+      appBar: const LoginAppbarWidget(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -139,26 +120,6 @@ class _RegisterScreen extends ConsumerState<RegisterScreen> {
                 children: [
                   const SizedBox(height: 32),
 
-                  TextFormField(
-                    controller: _firstNameController,
-                    decoration: _getInputDecoration('Имя'),
-                    validator: ValidationBuilder(localeName: 'ru')
-                        .required('Введите имя')
-                        .minLength(2, 'Имя должно содержать минимум 2 символа')
-                        .maxLength(50, 'Имя слишком длинное')
-                        .build(),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _lastNameController,
-                    decoration: _getInputDecoration('Фамилия'),
-                    validator: ValidationBuilder(localeName: 'ru')
-                        .required('Введите фамилию')
-                        .minLength(2, 'Фамилия должна содержать минимум 2 символа')
-                        .maxLength(50, 'Фамилия слишком длинная')
-                        .build(),
-                  ),
-                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _phoneController,
                     inputFormatters: [maskFormatter],
@@ -176,13 +137,6 @@ class _RegisterScreen extends ConsumerState<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: _getInputDecoration('Email'),
-                    validator: ValidationBuilder(localeName: 'ru').required('Введите email').email('Введите корректный email').build(),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
                     controller: _passwordController,
                     obscureText: _obscureText,
                     decoration: _getInputDecoration(
@@ -197,33 +151,8 @@ class _RegisterScreen extends ConsumerState<RegisterScreen> {
                     ),
                     validator: ValidationBuilder(localeName: 'ru').required('Введите пароль').minLength(8, 'Пароль должен содержать минимум 8 символов').build(),
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordConfirmationController,
-                    obscureText: _obscureTextR,
-                    decoration: _getInputDecoration(
-                      'Повторите пароль',
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureTextR ? Icons.visibility_off : Icons.visibility,
-                          color: Colors.grey[500],
-                        ),
-                        onPressed: _togglePasswordVisibilityR,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Повторите пароль';
-                      }
-                      if (value != _passwordController.text) {
-                        return 'Пароли не совпадают';
-                      }
-                      return null;
-                    },
-                  ),
                   const SizedBox(height: 32),
 
-                  // Terms and Conditions
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(

@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/global/entities/product.dart';
 import 'package:process/features/home/data/models/product_model.dart';
@@ -39,8 +38,6 @@ class HomeNotifier extends StateNotifier<HomeState> {
       Map<String, List<ProductModel>> products =
           await _homeService.getAllProducts('almaty') ?? <String, List<ProductModel>>{};
       state = state.copyWith(products: products, isLoading: false);
-    } on DioException catch (e) {
-      state = state.copyWith(isLoading: false, error: e.message);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

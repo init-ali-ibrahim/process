@@ -4,9 +4,9 @@ import 'package:process/core/global/entities/product.dart';
 import 'package:process/features/cart/presentation/screens/cart_screen.dart';
 import 'package:process/features/detail_product/presentation/screens/detail_product_screen.dart';
 import 'package:process/features/home/ui/screens/home_screen.dart';
-import 'package:process/features/profile/presentation/screens/login_screen.dart';
-import 'package:process/features/profile/presentation/screens/profile_screen.dart';
-import 'package:process/features/profile/presentation/screens/register_screen.dart';
+import 'package:process/features/profile/ui/screens/login_screen.dart';
+import 'package:process/features/profile/ui/screens/profile_screen.dart';
+import 'package:process/features/profile/ui/screens/register_screen.dart';
 import 'package:process/features/search/presentation/screens/search_screen.dart';
 
 /// Names of route (typo secure)

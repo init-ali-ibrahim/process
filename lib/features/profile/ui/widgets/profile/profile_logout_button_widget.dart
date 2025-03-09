@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:process/core/util/logger.dart';
-import 'package:process/features/profile/presentation/riverpod/profile_riverpod.dart';
+import 'package:process/features/profile/state/profile_riverpod.dart';
 
 class ProfileLogoutButtonWidget extends ConsumerStatefulWidget {
   const ProfileLogoutButtonWidget({super.key});
@@ -19,9 +19,9 @@ class _ProfileLogoutButtonState extends ConsumerState<ProfileLogoutButtonWidget>
       child: TextButton(
         onPressed: () async {
           try {
-            await ref.read(profileProvider.notifier).logout();
+            await ref.read(profileStateProvider.notifier).logout();
             if (mounted) {
-              ref.refresh(profileProvider);
+              ref.refresh(profileStateProvider);
             }
           } catch (e) {
             if (mounted) {

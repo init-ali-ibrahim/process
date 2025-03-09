@@ -1,7 +1,7 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:process/core/router/routes.dart';
-import 'package:process/core/theme/app_theme.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -9,18 +9,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      /// Theme
-      theme: AppTheme.lightTheme,
-
-      /// Localization
+      theme: AdaptiveTheme.of(context).lightTheme,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-
-      /// Router
       routerConfig: router,
-
-      /// Other
       debugShowCheckedModeBanner: false,
     );
   }

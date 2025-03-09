@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ProfileSettingTileWidget extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
   final String title;
   final Widget? trailing;
   final VoidCallback? onTap;
@@ -9,7 +9,7 @@ class ProfileSettingTileWidget extends StatelessWidget {
 
   const ProfileSettingTileWidget({
     super.key,
-    required this.icon,
+    this.icon,
     required this.title,
     this.trailing,
     this.onTap,
@@ -21,13 +21,12 @@ class ProfileSettingTileWidget extends StatelessWidget {
     return ListTile(
       dense: true,
       tileColor: tileColor,
-      leading: Icon(icon, color: Colors.red[300]),
+      leading: icon != null ? Icon(icon, color: Colors.red[300]) : null,
       title: Text(
         title,
         style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
       ),
-      trailing: trailing ??
-          const Icon(Icons.chevron_right, color: Colors.grey),
+      trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.grey),
       onTap: onTap,
       splashColor: Colors.black,
     );

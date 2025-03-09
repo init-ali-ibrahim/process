@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:process/features/customize/presentation/screens/customize_screen.dart';
 
-class HomeBannerWidget extends StatelessWidget {
-  const HomeBannerWidget({super.key});
+class HomeBanner extends StatelessWidget {
+  const HomeBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +9,7 @@ class HomeBannerWidget extends StatelessWidget {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomizeScreen()));
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomizeScreen()));
       },
       child: Container(
         margin: const EdgeInsetsDirectional.symmetric(horizontal: 14),
@@ -31,9 +30,9 @@ class HomeBannerWidget extends StatelessWidget {
             ],
             tileMode: TileMode.mirror,
           ),
-          boxShadow: [
+          boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 1,
               offset: const Offset(0, 1),
             ),
@@ -42,32 +41,41 @@ class HomeBannerWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   const Text(
                     'Никто не может это сделать лучше вас',
                     style: TextStyle(color: Colors.white, fontSize: 11),
                   ),
                   const Text(
                     'Можно сделать свой торт!',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 17, letterSpacing: -0.2),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      letterSpacing: -0.2,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/cake_create');
                     },
-                    style: TextButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.2), padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5)),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white.withValues(alpha: 0.2),
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                    ),
                     child: const Text(
                       'Сделать сейчас',
-                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -78,7 +86,7 @@ class HomeBannerWidget extends StatelessWidget {
                 height: 90,
                 width: 90,
               ),
-            )
+            ),
           ],
         ),
       ),
