@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:process/core/entities/cart_product.dart';
-import 'package:process/core/service/cart_product_service.dart';
+import 'package:process/core/global/entities/cart_product.dart';
+import 'package:process/core/global/service/cart_product_service.dart';
 
 class CartState {
   final List<CartProduct> products;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:process/core/entities/product.dart';
+import 'package:process/core/global/entities/product.dart';
 import 'package:process/features/cart/presentation/screens/cart_screen.dart';
 import 'package:process/features/detail_product/presentation/screens/detail_product_screen.dart';
-import 'package:process/features/home/presentation/screens/home_screen.dart';
+import 'package:process/features/home/ui/screens/home_screen.dart';
 import 'package:process/features/profile/presentation/screens/login_screen.dart';
 import 'package:process/features/profile/presentation/screens/profile_screen.dart';
 import 'package:process/features/profile/presentation/screens/register_screen.dart';

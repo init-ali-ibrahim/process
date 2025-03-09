@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:process/core/router/routes.dart';
 
-class HomeAppbarWidget extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppbarWidget({
+class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
+  const HomeAppbar({
     super.key,
   });
 

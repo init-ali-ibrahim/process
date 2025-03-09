@@ -1,4 +1,5 @@
-import 'package:process/core/entities/user.dart';
+
+import 'package:process/core/global/entities/user.dart';
 
 class UserModel extends User {
   UserModel({

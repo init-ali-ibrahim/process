@@ -1,4 +1,4 @@
-// import 'package:process/core/entities/product.dart';
+// import 'package:process/core/global/entities/product.dart'
 // import 'package:process/features/search/data/service/search_service.dart';
 //
 // class SearchRepo {

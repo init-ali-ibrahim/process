@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:process/core/entities/user.dart';
+import 'package:process/core/global/entities/user.dart';
 import 'package:process/features/profile/presentation/widgets/profile/profile_bottom_sheet_widget.dart';
 
 class ProfileDataSectionWidget extends StatelessWidget {

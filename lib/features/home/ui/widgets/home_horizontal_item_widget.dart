@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:process/core/entities/product.dart';
+import 'package:process/core/global/entities/product.dart';
 import 'package:process/core/router/routes.dart';
 
 class HomeHorizontalItemWidget extends StatelessWidget {

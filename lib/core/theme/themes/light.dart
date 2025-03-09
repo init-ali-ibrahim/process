@@ -1,12 +1,11 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:process/core/constants/app_colors.dart';
 
 ThemeData lightAppTheme = ThemeData(
-  primaryColor: AppColors.primary,
+  primaryColor: Colors.red,
   useMaterial3: true,
   fontFamily: 'Inter',
-  scaffoldBackgroundColor: AppColors.white,
+  scaffoldBackgroundColor: Colors.white,
   splashColor: Colors.transparent,
   highlightColor: Colors.transparent,
   appBarTheme: const AppBarTheme(
@@ -22,13 +21,13 @@ ThemeData lightAppTheme = ThemeData(
     surface: Colors.white,
     shadow: Colors.grey,
   ),
-  dividerColor: AppColors.greyShade200,
-  dividerTheme: const DividerThemeData(
-    color: AppColors.greyShade200,
+  dividerColor: Colors.grey.shade200,
+  dividerTheme: DividerThemeData(
+    color: Colors.grey.shade200,
     thickness: 1,
   ),
-  drawerTheme: const DrawerThemeData(
-    backgroundColor: AppColors.greyShade50,
+  drawerTheme: DrawerThemeData(
+    backgroundColor: Colors.grey.shade50,
   ),
 
   /// Animation of screen transitions (uses the "animations" package)

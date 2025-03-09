@@ -4,7 +4,6 @@ import 'package:process/app.dart';
 import 'package:process/core/init/init.dart';
 import 'package:process/core/init/localization_shell.dart';
 import 'package:process/core/init/theme_shell.dart';
-import 'core/dependency/eazy_localization_widget.dart';
 
 void main() async {
   await AppInit.initialize();

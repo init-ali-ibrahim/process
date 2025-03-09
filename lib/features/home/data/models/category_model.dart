@@ -1,4 +1,4 @@
-import 'package:process/core/entities/category.dart';
+import 'package:process/core/global/entities/category.dart';
 
 class CategoryModel extends Category {
   CategoryModel({

@@ -1,4 +1,4 @@
-import 'package:process/core/entities/product.dart';
+import 'package:process/core/global/entities/product.dart';
 
 class ProductModel extends Product {
   ProductModel({
@@ -10,14 +10,14 @@ class ProductModel extends Product {
     required String category,
     required String imageUrl,
   }) : super(
-    id: id,
-    name: name,
-    slug: slug,
-    price: price,
-    quantity: quantity,
-    category: category,
-    imageUrl: imageUrl,
-  );
+          id: id,
+          name: name,
+          slug: slug,
+          price: price,
+          quantity: quantity,
+          category: category,
+          imageUrl: imageUrl,
+        );
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(

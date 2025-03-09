@@ -1,4 +1,5 @@
-import 'package:process/core/entities/product.dart';
+
+import 'package:process/core/global/entities/product.dart';
 
 class ProductModel extends Product {
   ProductModel({

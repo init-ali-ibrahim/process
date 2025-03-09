@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:process/core/entities/user.dart';
+import 'package:process/core/global/entities/user.dart';
 import 'package:process/core/util/logger.dart';
 import 'package:process/features/profile/data/repo/profile_repo.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:process/core/entities/cart_product.dart';
+import 'package:process/core/global/entities/cart_product.dart';
 import 'package:process/core/router/routes.dart';
 import 'package:process/core/util/logger.dart';
 import 'package:process/core/util/nil_protect.dart';

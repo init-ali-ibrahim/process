@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
-import 'package:process/core/entities/cart_product.dart';
+import 'package:process/core/global/entities/cart_product.dart';
 import 'package:process/core/util/isar_get.dart';
 import 'package:flutter/foundation.dart';
 import 'package:process/core/util/logger.dart';
