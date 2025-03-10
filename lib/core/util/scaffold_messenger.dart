@@ -1,44 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:process/app.dart';
 
 void showScaffoldMessenger({
   required BuildContext context,
   required String textContent,
-  required String lottieAssetsJson,
+  String? lottieAssetsJson,
   Widget? content,
   bool isCustom = false,
   Duration duration = const Duration(seconds: 2),
 }) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: isCustom == true
-          ? content!
-          : ScaffoldMessengerContent(
-        lottieAssetsJson: lottieAssetsJson,
-        textContent: textContent,
+  ScaffoldMessengerState? messenger = AppGlobals.scaffoldMessengerKey.currentState;
+
+  if (messenger != null) {
+    messenger.hideCurrentSnackBar();
+
+    messenger.showSnackBar(
+      SnackBar(
+        content: isCustom
+            ? content!
+            : ScaffoldMessengerContent(
+                lottieAssetsJson: lottieAssetsJson,
+                textContent: textContent,
+              ),
         duration: duration,
+        behavior: SnackBarBehavior.fixed,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+        dismissDirection: DismissDirection.horizontal,
+        clipBehavior: Clip.antiAlias,
+        padding: EdgeInsets.zero,
       ),
-      duration: duration,
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      dismissDirection: DismissDirection.horizontal,
-      padding: const EdgeInsets.all(0),
-    ),
-  );
+    );
+  }
 }
 
 class ScaffoldMessengerContent extends StatefulWidget {
   const ScaffoldMessengerContent({
     super.key,
     required this.textContent,
-    required this.lottieAssetsJson,
-    required this.duration,
+    this.lottieAssetsJson,
   });
 
   final String textContent;
-  final String lottieAssetsJson;
-  final Duration duration;
+  final String? lottieAssetsJson;
 
   @override
   State<ScaffoldMessengerContent> createState() => _ScaffoldMessengerContentState();
@@ -47,46 +53,34 @@ class ScaffoldMessengerContent extends StatefulWidget {
 class _ScaffoldMessengerContentState extends State<ScaffoldMessengerContent>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  bool _isDisposed = false;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 300),
     );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.linear,
-    ));
-
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.3),
+      begin: const Offset(0, 1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+    _fadeAnimation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.linear,
-    ));
-
+      curve: Curves.easeIn,
+    );
     _controller.forward();
-
-    Future.delayed(widget.duration - const Duration(milliseconds: 100), () {
-      if (!_isDisposed) {
-        _controller.reverse();
-      }
-    });
   }
 
   @override
   void dispose() {
-    _isDisposed = true;
     _controller.dispose();
     super.dispose();
   }
@@ -98,8 +92,9 @@ class _ScaffoldMessengerContentState extends State<ScaffoldMessengerContent>
       child: FadeTransition(
         opacity: _fadeAnimation,
         child: Padding(
-          padding: const EdgeInsets.all(1),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: Material(
+            clipBehavior: Clip.antiAlias,
             borderRadius: BorderRadius.circular(12),
             elevation: 1,
             color: Colors.white,
@@ -109,22 +104,14 @@ class _ScaffoldMessengerContentState extends State<ScaffoldMessengerContent>
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Lottie.asset(
-                    widget.lottieAssetsJson,
-                    fit: BoxFit.fitHeight,
-                    height: 20,
-                    controller: _controller,
-                    onLoaded: (composition) {
-                      if (!_isDisposed) {
-                        setState(() {
-                          _controller.duration = composition.duration;
-                          _controller.forward();
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 8),
+                children: <Widget>[
+                  if (widget.lottieAssetsJson != null)
+                    Lottie.asset(
+                      widget.lottieAssetsJson!,
+                      fit: BoxFit.fitHeight,
+                      height: 20,
+                    ),
+                  if (widget.lottieAssetsJson != null) const SizedBox(width: 8),
                   Text(
                     widget.textContent,
                     style: const TextStyle(
@@ -142,4 +129,3 @@ class _ScaffoldMessengerContentState extends State<ScaffoldMessengerContent>
     );
   }
 }
-

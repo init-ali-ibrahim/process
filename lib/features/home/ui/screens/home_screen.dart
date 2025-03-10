@@ -23,7 +23,7 @@ class HomeScreen extends ConsumerWidget {
       body: homeState.error != null
           ? Center(child: Text('e: ${homeState.error}'))
           : SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              // physics: const BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -73,7 +73,7 @@ class _LoadingShimmerContent extends StatelessWidget {
           child: HomeHorizontalItemTitleShimmer(),
         ),
         SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          // physics: BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           child: Row(
             children: <Widget>[
@@ -90,7 +90,7 @@ class _LoadingShimmerContent extends StatelessWidget {
           child: HomeHorizontalItemTitleShimmer(),
         ),
         SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          // physics: BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           child: Row(
             children: <Widget>[
@@ -131,7 +131,7 @@ class _ActualContent extends StatelessWidget {
               child: HomeHorizontalItemTitleWidget(title: category),
             ),
             SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              // physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: categoryProducts.map((Product product) {

@@ -14,7 +14,22 @@ class App extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       routerConfig: router,
+      scrollBehavior: BounceScrollBehavior(),
+      scaffoldMessengerKey: AppGlobals.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
+      title: 'Da',
     );
+  }
+}
+
+class AppGlobals {
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+}
+
+class BounceScrollBehavior extends MaterialScrollBehavior {
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics();
   }
 }

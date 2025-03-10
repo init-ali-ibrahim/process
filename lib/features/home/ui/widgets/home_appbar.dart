@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:process/core/router/routes.dart';
+import 'package:process/core/util/scaffold_messenger.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppbar({
@@ -23,7 +24,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
           width: 130,
         ),
       ),
-      actions: [
+      actions: <Widget>[
         IconButton(
           icon: const Icon(
             Icons.search,
@@ -31,6 +32,15 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
           ),
           onPressed: () {
             router.pushNamed(RouteNames.search.name);
+          },
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.add,
+            color: Colors.red,
+          ),
+          onPressed: () {
+            showScaffoldMessenger(context: context, textContent: 'dara');
           },
         ),
         IconButton(
