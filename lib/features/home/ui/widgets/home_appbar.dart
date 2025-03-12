@@ -10,8 +10,8 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
       toolbarHeight: kToolbarHeight,
+      backgroundColor: Colors.white,
       surfaceTintColor: Colors.transparent,
       title: InkWell(
         highlightColor: Colors.transparent,
@@ -64,8 +64,8 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
         const SizedBox(width: 4),
 
       ],
-      elevation: 1,
-      shadowColor: Colors.grey.shade50,
+      // elevation: 1,
+      // shadowColor: Colors.grey.shade50,
     );
   }
 

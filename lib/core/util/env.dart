@@ -5,7 +5,7 @@ String urlAuthFromEnv = dotenv.get('BASE_AUTH_URL'); //"https://init:14501451@au
 String urlChatFromEnv = dotenv.get('BASE_CHAT_URL'); //"https://init:14501451@chat.init.kz"
 String apiKey = dotenv.get('X-API-KEY');
 
-class EnvConfig {
+class EnvUtil {
   static final String urlAuthFromEnv = dotenv.get('BASE_AUTH_URL');
   static final String urlChatFromEnv = dotenv.get('BASE_CHAT_URL');
   static final String apiKey = dotenv.get('X-API-KEY');

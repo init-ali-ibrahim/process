@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:process/screens/color.dart';
 
 class HomeHorizontalItemTitleWidget extends StatelessWidget {
   const HomeHorizontalItemTitleWidget({super.key, required this.title});
@@ -13,26 +12,23 @@ class HomeHorizontalItemTitleWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            child: Row(children: [
-              const SizedBox(
-                width: 12,
-              ),
-              Text(
-                title,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-              ),
-            ]),
-          ),
+        children: <Widget>[
+          Row(children: <Widget>[
+            const SizedBox(
+              width: 12,
+            ),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+          ]),
           InkWell(
               onTap: () => Navigator.pushNamed(context, '/see_all_item'),
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               child: const Text(
                 'Еще',
-                style: TextStyle(fontSize: 14, color: colorDark, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ))
         ],
       ),

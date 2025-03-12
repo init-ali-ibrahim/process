@@ -18,8 +18,9 @@ class HomeScreen extends ConsumerWidget {
     HomeState homeState = ref.watch(homeStateProvider);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: const HomeAppbar(),
+      // backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
+      appBar: HomeAppbar(),
       body: homeState.error != null
           ? Center(child: Text('e: ${homeState.error}'))
           : SingleChildScrollView(
