@@ -18,45 +18,65 @@ class HomeScreen extends ConsumerWidget {
     HomeState homeState = ref.watch(homeStateProvider);
 
     return Scaffold(
-      // backgroundColor: Colors.grey.shade100,
-      backgroundColor: Colors.white,
-      appBar: HomeAppbar(),
-      body: homeState.error != null
-          ? Center(child: Text('e: ${homeState.error}'))
-          : SingleChildScrollView(
-              // physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(height: 30),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    transitionBuilder: (Widget child, Animation<double> animation) {
-                      return FadeTransition(opacity: animation, child: child);
-                    },
-                    child: homeState.isLoading
-                        ? const HomeBannerShimmer(key: ValueKey<dynamic>('shimmer_banner'))
-                        : const HomeBanner(key: ValueKey<dynamic>('actual_banner')),
-                  ),
-                  const SizedBox(height: 30),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 600),
-                    transitionBuilder: (Widget child, Animation<double> animation) {
-                      return FadeTransition(opacity: animation, child: child);
-                    },
-                    child: homeState.isLoading
-                        ? const _LoadingShimmerContent(key: ValueKey<dynamic>('shimmer_content'))
-                        : _ActualContent(
-                            categories: homeState.products.keys.take(5).toList(),
-                            products: homeState.products,
-                            key: const ValueKey<dynamic>('actual_content'),
-                          ),
-                  ),
-                  const SizedBox(height: 100),
-                ],
+        // backgroundColor: Colors.grey.shade100,
+        // appBar: const HomeAppbar(),
+        backgroundColor: Colors.white,
+        body: CustomScrollView(
+          slivers: <Widget>[
+            const HomeAppbar(),
+            SliverToBoxAdapter(
+              child: Container(
+                width: 100,
+                height: 1000,
+                color: Colors.red,
               ),
             ),
-    );
+            SliverToBoxAdapter(
+              child: Container(
+                width: 100,
+                height: 1000,
+                color: Colors.grey,
+              ),
+            )
+          ],
+        )
+
+        // homeState.error != null
+        //     ? Center(child: Text('e: ${homeState.error}'))
+        //     : SingleChildScrollView(
+        //         // physics: const BouncingScrollPhysics(),
+        //         child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: <Widget>[
+        //             const SizedBox(height: 30),
+        //             AnimatedSwitcher(
+        //               duration: const Duration(milliseconds: 500),
+        //               transitionBuilder: (Widget child, Animation<double> animation) {
+        //                 return FadeTransition(opacity: animation, child: child);
+        //               },
+        //               child: homeState.isLoading
+        //                   ? const HomeBannerShimmer(key: ValueKey<dynamic>('shimmer_banner'))
+        //                   : const HomeBanner(key: ValueKey<dynamic>('actual_banner')),
+        //             ),
+        //             const SizedBox(height: 30),
+        //             AnimatedSwitcher(
+        //               duration: const Duration(milliseconds: 600),
+        //               transitionBuilder: (Widget child, Animation<double> animation) {
+        //                 return FadeTransition(opacity: animation, child: child);
+        //               },
+        //               child: homeState.isLoading
+        //                   ? const _LoadingShimmerContent(key: ValueKey<dynamic>('shimmer_content'))
+        //                   : _ActualContent(
+        //                       categories: homeState.products.keys.take(5).toList(),
+        //                       products: homeState.products,
+        //                       key: const ValueKey<dynamic>('actual_content'),
+        //                     ),
+        //             ),
+        //             const SizedBox(height: 100),
+        //           ],
+        //         ),
+        //       ),
+        );
   }
 }
 
